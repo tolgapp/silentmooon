@@ -1,11 +1,47 @@
+import { Link } from "react-router-dom";
+
 type ButtonProps = {
-    text: string
-}
+  text: string;
+  type?: "submit" | "reset" | "button" | undefined;
+  onClick?: () => void;
+};
 
-const Button: React.FC<ButtonProps> = ({text}) => {
+const Button: React.FC<ButtonProps> = ({ text, type, onClick }) => {
+  if (type === "submit") {
+    return (
+      <button
+        className="py-8 text-center rounded-full w-full bg-red-400 text-2xl text-white"
+        type={type}
+        onClick={onClick}
+      >
+        {text}
+      </button>
+    );
+  }
+
+  if (text === "GET STARTED") {
+    return (
+      <Link className="w-full" to={`/settings`}>
+        <button
+          className="py-8 text-center rounded-full w-full bg-red-400 text-2xl text-white"
+          type={type}
+        >
+          {text}
+        </button>
+      </Link>
+    );
+  }
+
   return (
-    <button className="py-6 px-56 rounded-full w-full bg-red-400 text-2xl text-white">{text}</button>
+    <Link className="w-full" to={`/${text.replace(" ", "").toLowerCase()}`}>
+      <button
+        className="py-8 text-center rounded-full w-full bg-red-400 text-2xl text-white"
+        type={type}
+      >
+        {text}
+      </button>
+    </Link>
+  );
+};
 
-  )
-}
-export default Button
+export default Button;

@@ -1,22 +1,120 @@
-import BackButton from "./BackButton"
-import Button from "./Button"
-import Input from "./Input"
+import axios from "axios";
+import { useState } from "react";
+import BackButton from "./BackButton";
+import Button from "./Button";
+import Input from "./Input";
+import { useNavigate } from "react-router-dom";
 
-const SignUp = () => {
+type FormData = {
+  name: string;
+  surname: string;
+  email: string;
+  password: string;
+};
+
+const SignUp: React.FC = () => {
+  const VITE_API_URL = import.meta.env.VITE_API_URL;
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState<FormData>({
+    name: "",
+    surname: "",
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post(
+        `${VITE_API_URL}/api/signup`,
+        {
+          name: formData.name,
+          surname: formData.surname,
+          email: formData.email,
+          password: formData.password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      // TODO: set userID and get it for stayed logged in
+      // if response then setItem
+
+      // On success redirect to login page
+      if (response.status === 200 || response.status === 201) {
+        navigate("/login", {
+          state: { message: "Registration successful! Please login." },
+        });
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          console.error("Server error:", error.response.data);
+          console.error("Status:", error.response.status);
+        } else if (error.request) {
+          console.error("No response received:", error.request);
+        } else {
+          console.error("Error:", error.message);
+        }
+      } else {
+        console.error("Unexpected error:", error);
+      }
+    }
+  };
+
   return (
     <div className="bg-[url('/images/motiveBg.jpg')] bg-no-repeat bg-contain min-h-screen flex flex-col items-center justify-center bg-[#FEFCF8] gap-4">
       <BackButton />
       <div className="greeting flex mb-48">
-        <h2 className="text-5xl tracking-wider font-bold text-[#4A503D]">Create your account</h2>
+        <h2 className="text-5xl tracking-wider font-bold text-[#4A503D]">
+          Create your account
+        </h2>
       </div>
-      <div className="login-data flex flex-col items-center gap-4 pr-6 pl-6">
-        <Input placeholderName={"NAME"} inputType={"text"} />
-        <Input placeholderName={"SURNAME"} inputType={"text"} />
-        <Input placeholderName={"EMAIL"} inputType={"email"} />
-        <Input placeholderName={"PASSWORD"} inputType={"password"} />
-        <Button text={"REGISTER"} />
-      </div>
+      <form
+        className="login-data flex flex-col items-center gap-4 w-full pl-6 pr-6"
+        onSubmit={handleSubmit}
+      >
+        <Input
+          placeholderName="NAME"
+          inputType="text"
+          name="name"
+          onChange={handleChange}
+        />
+        <Input
+          placeholderName="SURNAME"
+          inputType="text"
+          name="surname"
+          onChange={handleChange}
+        />
+        <Input
+          placeholderName="EMAIL"
+          inputType="email"
+          name="email"
+          onChange={handleChange}
+        />
+        <Input
+          placeholderName="PASSWORD"
+          inputType="password"
+          name="password"
+          onChange={handleChange}
+        />
+        <Button text="REGISTER" type={"submit"} />
+      </form>
     </div>
-  )
-}
-export default SignUp
+  );
+};
+
+export default SignUp;

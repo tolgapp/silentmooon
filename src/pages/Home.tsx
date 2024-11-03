@@ -24,7 +24,7 @@ const Home = () => {
         <div className="space-y-4 flex items-center flex-col ">
           <Button text={"SIGN UP"} />
           <p className="text-xl">
-            ALREADY HAVE AN ACCOUNT?{" "}
+            ALREADY HAVE AN ACCOUNT?
             <Link className="text-red-400 text-xl pl-2" to={"/login"}>
               LOG IN
             </Link>

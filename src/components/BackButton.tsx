@@ -6,7 +6,7 @@ const BackButton = () => {
   return (
     <img
       onClick={() => navigate(-1)}
-      className="absolute top-12 left-12 z-50 cursor-pointer"
+      className="absolute top-12 left-6 z-50 cursor-pointer"
       src="/images/Arrow.svg"
     />
   );

@@ -1,0 +1,68 @@
+{
+    "days": [
+      {
+        "id": 1,
+        "day": "mo",
+        "value": "Monday",
+        "icons": {
+          "active": "/icons/mo_active_btn.svg",
+          "inactive": "/icons/mo_btn.svg"
+        }
+      },
+      {
+        "id": 2, 
+        "day": "tu",
+        "value": "Tuesday", 
+        "icons": {
+          "active": "/icons/tu_active_btn.svg",
+          "inactive": "/icons/tu_btn.svg"
+        }
+      },
+      {
+        "id": 3,
+        "day": "we", 
+        "value": "Wednesday",
+        "icons": {
+          "active": "/icons/we_active_btn.svg",
+          "inactive": "/icons/we_btn.svg"
+        }
+      },
+      {
+        "id": 4,
+        "day": "th",
+        "value": "Thursday", 
+        "icons": {
+          "active": "/icons/th_active_btn.svg",
+          "inactive": "/icons/th_btn.svg"
+        }
+      },
+      {
+        "id": 5,
+        "day": "fr",
+        "value": "Friday",
+        "icons": {
+          "active": "/icons/fr_active_btn.svg",
+          "inactive": "/icons/fr_btn.svg"
+        }
+      },
+      {
+        "id": 6,
+        "day": "sa", 
+        "value": "Saturday",
+        "icons": {
+          "active": "/icons/sa_active_btn.svg",
+          "inactive": "/icons/sa_btn.svg"
+        }
+      },
+      {
+        "id": 7,
+        "day": "su",
+        "value": "Sunday",
+        "icons": {
+          "active": "/icons/su_active_btn.svg",
+          "inactive": "/icons/su_btn.svg" 
+        }
+      }
+    ]
+  }
+  
