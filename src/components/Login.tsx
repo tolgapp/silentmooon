@@ -3,6 +3,7 @@ import Button from "./Button";
 import Input from "./Input";
 import BackButton from "./BackButton";
 import { useState } from "react";
+import axios from "axios";
 
 type LoginFormData = {
   email: string;
@@ -19,6 +20,7 @@ const Login: React.FC<LoginProps> = ({ setIsLoggedIn }) => {
     password: "",
   });
 
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,24 +31,33 @@ const Login: React.FC<LoginProps> = ({ setIsLoggedIn }) => {
     }));
   };
 
-  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setError(null);
 
     try {
-      if (formData.email && formData.password) {
+      const response = await axios.post(
+        "http://localhost:5002/api/login",
+        formData,
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (response.status === 200) {
+        console.log(response)
         setIsLoggedIn(true);
         navigate("/welcome");
-      } else {
-        throw new Error("Please fill in all fields");
       }
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      console.error("Login error:", error);
+      setError(error.response?.data || "Login failed. Please try again.");
       setIsLoggedIn(false);
     }
   };
 
   return (
-    <div className="bg-[url('/images/motiveBg.jpg')] w-full bg-no-repeat bg-contain  min-h-screen flex flex-col items-center justify-center bg-[#FEFCF8] gap-4">
+    <div className="bg-[url('/images/motiveBg.jpg')] w-full bg-no-repeat bg-contain min-h-screen flex flex-col items-center justify-center bg-[#FEFCF8] gap-4">
       <BackButton />
       <div className="greeting flex mb-48">
         <h2 className="text-6xl tracking-wider font-bold text-[#4A503D]">
@@ -72,6 +83,7 @@ const Login: React.FC<LoginProps> = ({ setIsLoggedIn }) => {
           onChange={handleChange}
         />
         <Button text="LOGIN" type="submit" />
+        {error && <p className="text-red-500">{error}</p>}
       </form>
       <p className="text-xl">
         DON'T HAVE AN ACCOUNT YET?

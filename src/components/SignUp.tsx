@@ -50,8 +50,6 @@ const SignUp: React.FC = () => {
         }
       );
 
-      // TODO: set userID and get it for stayed logged in
-      // if response then setItem
 
       // On success redirect to login page
       if (response.status === 200 || response.status === 201) {
