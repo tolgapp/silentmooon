@@ -45,7 +45,6 @@ const Login: React.FC<LoginProps> = ({ setIsLoggedIn }) => {
       );
 
       if (response.status === 200) {
-        console.log(response)
         setIsLoggedIn(true);
         navigate("/welcome");
       }

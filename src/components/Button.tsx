@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 type ButtonProps = {
   text: string;
@@ -7,6 +7,9 @@ type ButtonProps = {
 };
 
 const Button: React.FC<ButtonProps> = ({ text, type, onClick }) => {
+
+  const {pathname} = useLocation()
+
   if (type === "submit") {
     return (
       <button
@@ -31,6 +34,7 @@ const Button: React.FC<ButtonProps> = ({ text, type, onClick }) => {
       </Link>
     );
   }
+
 
   return (
     <Link className="w-full" to={`/${text.replace(" ", "").toLowerCase()}`}>
