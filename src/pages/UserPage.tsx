@@ -13,7 +13,7 @@ type UserValues = {
 type UserPageProps = {
   selectedDays: number[];
   toggleDay: (dayId: number) => void;
-  userName: string;
+  userName: string | null;
 };
 
 const UserPage: React.FC<UserPageProps> = ({ selectedDays, toggleDay, userName }) => {

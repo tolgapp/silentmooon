@@ -8,6 +8,9 @@ import WelcomePage from "./components/WelcomePage";
 import SettingsPage from "./components/SettingsPage";
 import UserPage from "./pages/UserPage";
 import LandingPage from "./pages/LandingPage";
+import Yoga from "./pages/Yoga";
+import Meditation from "./pages/Meditation";
+import Music from "./pages/Music";
 
 type ProtectedProps = {
   isLoggedIn: boolean;
@@ -28,7 +31,6 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
   const [userName, setUserName] = useState<string | null>(null);
-  const [saveTimeout, setSaveTimeout] = useState<null>(null);
   const [selectedDays, setSelectedDays] = useState<number[]>([]);
 
   useEffect(() => {
@@ -68,30 +70,6 @@ function App() {
     }
   };
 
-  const updateDaysInDatabase = async (days: number[]) => {
-    try {
-      await axios.post(
-        `${VITE_API_URL}/api/settings`,
-        { days },
-        {
-          withCredentials: true,
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-    } catch (error) {
-      console.error("Error updating days in database:", error);
-    }
-  };
-
-  const debouncedSave = (days: number[]) => {
-    if (saveTimeout) clearTimeout(saveTimeout);
-
-    const timeout = setTimeout(() => {
-      updateDaysInDatabase(days);
-    }, 2000);
-
-    setSaveTimeout(timeout);
-  };
 
   const toggleDay = (dayId: number) => {
     setSelectedDays((prev) => {
@@ -100,7 +78,7 @@ function App() {
         : [...prev, dayId];
       const sortedDays = updatedDays.sort((a, b) => a - b);
 
-      debouncedSave(sortedDays);
+     
       return sortedDays;
     });
   };
@@ -140,13 +118,23 @@ function App() {
               <SettingsPage toggleDay={toggleDay} selectedDays={selectedDays} />
             }
           />
-          <Route path="/home" element={<Home userName={userName}/>} />
+          <Route path="/home" element={<Home userName={userName} />} />
           <Route
             path="/userpage"
             element={
-              <UserPage selectedDays={selectedDays} toggleDay={toggleDay} userName={userName}/>
+              <UserPage
+                selectedDays={selectedDays}
+                toggleDay={toggleDay}
+                userName={userName}
+              />
             }
           />
+          <Route path="/yoga" element={<Yoga 
+                userName={userName}/>} />
+          <Route path="/meditation" element={<Meditation 
+                userName={userName}/>} />
+          <Route path="/music" element={<Music 
+                userName={userName}/>} />
         </Route>
       </Routes>
     </div>
