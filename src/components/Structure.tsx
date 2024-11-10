@@ -2,7 +2,12 @@ import IconsBar from "./IconsBar"
 import SearchBar from "./SearchBar"
 import SilentMoonLogo from "./SilentMoonLogo"
 
-const Structure = ({title, description}) => {
+type StructureProps = {
+  title: string;
+  description: string
+}
+
+const Structure: React.FC<StructureProps> = ({title, description}) => {
   return (
     <div className="flex flex-col items-center">
         <SilentMoonLogo />

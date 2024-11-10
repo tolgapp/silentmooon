@@ -56,7 +56,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({selectedDays, toggleDay}) =>
       );
 
       if (response.status === 201) {
-        navigate("/userpage");
+        navigate("/home");
       }
     } catch (error: unknown) {
       if (error instanceof Error) {

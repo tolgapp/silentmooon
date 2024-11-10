@@ -26,12 +26,23 @@ const ProtectedRoute: React.FC<ProtectedProps> = ({ isLoggedIn }) => {
   return <Outlet />;
 };
 
+// Funktion zum Abrufen der Daten von der API, abhängig von der Kategorie
+const fetchData = async (category: string) => {
+  const response = await axios.get(`/api/${category}`);
+  return response.data;
+};
+
 function App() {
   const VITE_API_URL = import.meta.env.VITE_API_URL;
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
   const [userName, setUserName] = useState<string | null>(null);
   const [selectedDays, setSelectedDays] = useState<number[]>([]);
+
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [data, setData] = useState<any[]>([]); 
+  const [filteredData, setFilteredData] = useState<any[]>([]); 
+  const [category, setCategory] = useState<string>("home"); 
 
   useEffect(() => {
     const checkAuthStatus = async () => {
@@ -40,9 +51,10 @@ function App() {
         if (response.status === 200) {
           setIsLoggedIn(true);
           const userName = response.data.userName;
-          const capitalizedUserName =
-            userName.charAt(0).toUpperCase() + userName.slice(1);
+          const capitalizedUserName = userName.charAt(0).toUpperCase() + userName.slice(1);
           setUserName(capitalizedUserName);
+
+          
         } else {
           setIsLoggedIn(false);
         }
@@ -70,22 +82,42 @@ function App() {
     }
   };
 
-
   const toggleDay = (dayId: number) => {
     setSelectedDays((prev) => {
       const updatedDays = prev.includes(dayId)
         ? prev.filter((id) => id !== dayId)
         : [...prev, dayId];
-      const sortedDays = updatedDays.sort((a, b) => a - b);
-
-     
-      return sortedDays;
+      return updatedDays.sort((a, b) => a - b);
     });
   };
 
   useEffect(() => {
     loadDaysFromDatabase();
   }, []);
+
+  // Fetch-Daten basierend auf der Kategorie
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const dataFromDb = await fetchData(category);
+        setData(dataFromDb);
+        setFilteredData(dataFromDb); // Keine Filterung initial
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    getData();
+  }, [category]);
+
+  // Funktion zur Behandlung der Suchanfrage und Filterung der Daten
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    const filtered = data.filter((item) =>
+      item.name.toLowerCase().includes(query.toLowerCase())
+    );
+    setFilteredData(filtered); // Gefilterte Daten setzen
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -129,12 +161,18 @@ function App() {
               />
             }
           />
-          <Route path="/yoga" element={<Yoga 
-                userName={userName}/>} />
-          <Route path="/meditation" element={<Meditation 
-                userName={userName}/>} />
-          <Route path="/music" element={<Music 
-                userName={userName}/>} />
+          <Route
+            path="/yoga"
+            element={<Yoga data={filteredData} onSearch={handleSearch} userName={userName} />}
+          />
+          <Route
+            path="/meditation"
+            element={<Meditation data={filteredData} onSearch={handleSearch} userName={userName} />}
+          />
+          <Route
+            path="/music"
+            element={<Music data={filteredData} onSearch={handleSearch} userName={userName} />}
+          />
         </Route>
       </Routes>
     </div>

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import all from "/images/all.png";
 import anxious from "/images/anxious.png";
 import favorites from "/images/favorites.png";
@@ -5,6 +6,8 @@ import kids from "/images/kids.png";
 import sleep from "/images/sleep.png";
 
 const IconsBar = () => {
+  const [activeIcon, setActiveIcon] = useState("");
+
   const icons = [
     { name: "All", icon: all },
     { name: "Favorites", icon: favorites },
@@ -14,20 +17,31 @@ const IconsBar = () => {
   ];
 
   return (
-    <div className="flex justify-between items-center  w-full bg-[#fff] px-4 py-2 md:py-4  min-h-32">
-      {icons.map((item) => (
-        <div className="flex flex-col items-center justify-center flex-1">
+    <div className="flex justify-between items-center w-full bg-[#fff] px-4 py-2 md:py-4 min-h-32">
+      {icons.map((item, index) => (
+        <div
+          key={index}
+          className="flex flex-col items-center justify-center flex-1"
+          onClick={() => setActiveIcon(item.name)}  
+        >
           {item.icon && (
             <img
               src={item.icon}
               alt={item.name}
-              className="w-13 h-13 mb-4 bg-[#A1A4B2] active:bg-[#4A503D] p-6 rounded-[2rem]"
+              className={`w-13 h-13 mb-4 p-6 rounded-[2rem] ${
+                activeIcon === item.name ? "bg-[#8E9775]" : "bg-[#A1A4B2]"
+              }`}  
             />
           )}
-          <span className="text-[#A1A4B2] text-2xl">{item.name}</span>
+          <span
+            className={`text-2xl text-[#A1A4B2]`}
+          >
+            {item.name}
+          </span>
         </div>
       ))}
     </div>
   );
 };
+
 export default IconsBar;
