@@ -20,7 +20,7 @@ const Navbar: React.FC<NavbarProps> = ({ userName }) => {
   ];
 
   return (
-    <div className="flex justify-between items-center fixed bottom-0 w-full bg-[#fff] px-4 py-2 md:py-4 border-t border-gray-300 min-h-32">
+    <div className="flex justify-between items-center fixed bottom-0 w-full bg-[#fff] px-4 py-2 md:py-4 border-t border-gray-300 min-h-32 z-50">
       {navItems.map((item, index) => (
         item.link && (
           <Link key={index} to={item.link} className="flex flex-col items-center justify-center flex-1">

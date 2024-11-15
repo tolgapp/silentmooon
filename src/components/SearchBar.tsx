@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-interface SearchBarProps {
+type SearchBarProps = {
   onSearch: (query: string) => void;
 }
 
@@ -12,7 +12,7 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
   };
 
   return (
-    <div className="mt-14 flex justify-between bg-slate-100 w-[90%] rounded-2xl">
+    <div className="mt-12 flex justify-between bg-slate-100 w-[90%] rounded-2xl">
       <input
         type="text"
         value={value}

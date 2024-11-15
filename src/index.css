@@ -5,9 +5,6 @@
 @layer base {
   @font-face {
     font-family: 'SourceSans';
-    font-style: normal;
-    font-weight: 500;
-    font-display: swap;
     src: url(/src/font/SourceSans3-VariableFont_wght.ttf) format('SourceSans');
   }
 }
@@ -16,6 +13,31 @@
   margin: 0;
   box-sizing: border-box;
   font-size: 10px;
-  /* font-family: 'Rubik'; */
 }
 
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-down {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.6s ease-out forwards;
+
+}
+
+.animate-slide-down {
+  animation: slide-down 0.7s ease-out forwards;
+}

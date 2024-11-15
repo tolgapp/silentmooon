@@ -16,7 +16,7 @@ type MusicProps = {
 
 const Music: React.FC<MusicProps> = ({userName}) => {
   return (
-    <div>Music
+    <div className="">Music
       <Navbar userName={userName} />
     </div>
   )

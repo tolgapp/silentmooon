@@ -6,6 +6,7 @@ import axios from "axios";
 import Navbar from "../components/Navbar";
 import SearchBar from "../components/SearchBar";
 import SilentMoonLogo from "../components/SilentMoonLogo";
+import PreviewBox from "../components/PreviewBox";
 
 type UserValues = {
   time: string;
@@ -81,17 +82,7 @@ const UserPage: React.FC<UserPageProps> = ({
         {/* Video Component for Yoga */}
         <div className="flex overflow-x-scroll gap-8 w-full whitespace-nowrap mt-4">
           {Array.from({ length: 8 }).map((_, index) => (
-            <div
-              key={index}
-              className="h-fit w-96 border border-black overflow-hidden"
-            >
-              <div className="w-full h-28 border border-black"></div>
-              <p>Fatburner</p>
-              <div className="flex justify-between">
-                <p>Beginner</p>
-                <p>Time</p>
-              </div>
-            </div>
+            <PreviewBox key={index} />
           ))}
         </div>
       </section>

@@ -28,7 +28,7 @@ const ProtectedRoute: React.FC<ProtectedProps> = ({ isLoggedIn }) => {
 
 // Funktion zum Abrufen der Daten von der API, abhängig von der Kategorie
 const fetchData = async (category: string) => {
-  const response = await axios.get(`/api/${category}`);
+  const response = await axios.get(`/${category}`);
   return response.data;
 };
 
@@ -95,13 +95,12 @@ function App() {
     loadDaysFromDatabase();
   }, []);
 
-  // Fetch-Daten basierend auf der Kategorie
   useEffect(() => {
     const getData = async () => {
       try {
         const dataFromDb = await fetchData(category);
         setData(dataFromDb);
-        setFilteredData(dataFromDb); // Keine Filterung initial
+        setFilteredData(dataFromDb); 
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -124,7 +123,7 @@ function App() {
   }
 
   return (
-    <div className="bg-white min-h-screen w-full overflow-hidden">
+    <>
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route
@@ -175,7 +174,7 @@ function App() {
           />
         </Route>
       </Routes>
-    </div>
+    </>
   );
 }
 
