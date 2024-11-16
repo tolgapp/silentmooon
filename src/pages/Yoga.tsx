@@ -34,8 +34,6 @@ const Yoga: React.FC<YogaProps> = ({ userName }) => {
         headers: { "Content-Type": "application/json" },
       });
 
-      console.log( response)
-
       if (response.status === 200 && response.data) {
         setYogaVideos(
           response.data.map((video: DataItem) => ({

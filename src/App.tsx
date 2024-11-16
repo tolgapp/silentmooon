@@ -149,7 +149,7 @@ function App() {
               <SettingsPage toggleDay={toggleDay} selectedDays={selectedDays} />
             }
           />
-          <Route path="/home" element={<Home userName={userName} />} />
+          <Route path="/home" element={<Home userName={userName} onSearch={handleSearch} />} />
           <Route
             path="/userpage"
             element={

@@ -4,7 +4,7 @@ const BackButton = ({onClose}) => {
   const navigate = useNavigate();
   const {pathname} = useLocation()
 
-  if (pathname === "/yoga" || pathname === "/meditation") {
+  if (pathname === "/yoga" || pathname === "/meditation" || pathname === "/home") {
     return (
       <img
         onClick={onClose}
@@ -13,7 +13,6 @@ const BackButton = ({onClose}) => {
       />
     );
   }
-
 
   return (
     <img

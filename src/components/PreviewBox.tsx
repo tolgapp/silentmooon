@@ -28,7 +28,7 @@ const PreviewBox: React.FC<PreviewBoxProps> = ({
   if (pathname === "/yoga") {
     return (
       <div
-        className="h-48 w-64 bg-cover bg-center relative rounded-xl overflow-hidden"
+        className="h-48  w-64 bg-cover bg-center relative rounded-xl overflow-hidden"
         style={{ backgroundImage: `url(${image})` }}
         onClick={showDetailPage}
       >

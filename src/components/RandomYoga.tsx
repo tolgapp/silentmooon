@@ -1,5 +1,6 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
+import axios from "axios";
+import { randomNum } from "../helper/helperFunctions";
 
 type DataItem = {
   id: string;
@@ -52,17 +53,17 @@ const RandomYoga: React.FC<Random> = () => {
     fetchYogaVideos();
   }, []);
 
-  const generateRandomNumber = (max: number) => Math.floor(Math.random() * max);
+
 
   if (loading || yogaVideos.length < 2) {
     return <div>Loading...</div>;
   }
 
-  const randomIndex1 = generateRandomNumber(yogaVideos.length);
-  let randomIndex2 = generateRandomNumber(yogaVideos.length);
+  const randomIndex1 = randomNum(yogaVideos.length);
+  let randomIndex2 = randomNum(yogaVideos.length);
 
   while (randomIndex1 === randomIndex2) {
-    randomIndex2 = generateRandomNumber(yogaVideos.length);
+    randomIndex2 = randomNum(yogaVideos.length);
   }
 
   const randomVideo1 = yogaVideos[randomIndex1];
