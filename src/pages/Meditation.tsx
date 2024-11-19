@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
-import PreviewBox from "../components/PreviewBox";
 import Structure from "../components/Structure";
 import axios from "axios";
+import { containerClassMeditation } from "../helper/classNames";
 
 type DataItem = {
   id: string;
@@ -18,7 +18,6 @@ type DataItem = {
   description: string;
 };
 
-
 type MeditateProps = {
   data: DataItem[];
   onSearch: (query: string) => void;
@@ -26,7 +25,8 @@ type MeditateProps = {
 };
 
 const Meditation: React.FC<MeditateProps> = ({ userName }) => {
-  const [meditateAudio, setMeditateAudi] = useState<DataItem[]>([]);
+  const [meditateAudio, setMeditateAudio] = useState<DataItem[]>([]);
+  const [isSpotified, setIsSpotified] = useState(false);
 
   const fetchMeditateData = async () => {
     try {
@@ -36,7 +36,7 @@ const Meditation: React.FC<MeditateProps> = ({ userName }) => {
       });
 
       if (response.status === 200 && response.data) {
-        setMeditateAudi(
+        setMeditateAudio(
           response.data.map((meditate: DataItem) => ({
             ...meditate,
             url: `${meditate.videoUrl}`,
@@ -61,21 +61,23 @@ const Meditation: React.FC<MeditateProps> = ({ userName }) => {
           "Audio-only meditation techniques to help you minimize your screen time and practice on the go."
         }
       />
-      <div className="pr-10 pl-10 w-full pb-48">
-        <div className="flex flex-wrap items-center justify-center gap-8 mt-10">
-          {meditateAudio.map((video) => (
-            <PreviewBox
-              key={video.id}
-              title={video.title}
-              image={import.meta.env.VITE_API_URL + video.image}
-              level={video.level}
-              time={video.time}
-              description={video.description}
-              videoUrl={video.url}
-            />
-          ))}
+      {isSpotified ? (
+        <>
+          <h2>Welcome Spotifyer</h2>
+          
+        </>
+      ) : (
+        <div className={containerClassMeditation}>
+          <h3 className="text-3xl font-semibold text-gray-600 text-balance text-center mb-8">
+          Audio guides only after successfull authentication with spotify.
+          </h3>
+          <img
+            src="/images/spotify-login.png"
+            alt="Spotify Login"
+            className="h-16 w-auto"
+          />
         </div>
-      </div>
+      )}
       <Navbar userName={userName} />
     </div>
   );

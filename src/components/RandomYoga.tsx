@@ -31,8 +31,6 @@ const RandomYoga: React.FC<Random> = () => {
         headers: { "Content-Type": "application/json" },
       });
 
-      console.log(response);
-
       if (response.status === 200 && response.data) {
         setYogaVideos(
           response.data.map((video: any) => ({
@@ -52,8 +50,6 @@ const RandomYoga: React.FC<Random> = () => {
   useEffect(() => {
     fetchYogaVideos();
   }, []);
-
-
 
   if (loading || yogaVideos.length < 2) {
     return <div>Loading...</div>;

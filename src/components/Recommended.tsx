@@ -16,7 +16,10 @@ const Recommended: React.FC<DataItem> = ({
   const hideDetailPage = () => setShowDetail(false);
 
   return (
-    <div className="overflow-hidden w-72 pb-60 flex-shrink-0" onClick={showDetailPage}>
+    <div
+      className="overflow-hidden w-72 pb-60 flex-shrink-0"
+      onClick={showDetailPage}
+    >
       <img
         src={image}
         alt={title}
@@ -30,15 +33,15 @@ const Recommended: React.FC<DataItem> = ({
         </div>
       </section>
       {showDetail && (
-          <DetailPage
-            title={title}
-            level={level}
-            time={time}
-            description={description}
-            videoUrl={videoUrl}
-            onClose={hideDetailPage}
-          />
-        )}
+        <DetailPage
+          title={title}
+          level={level}
+          time={time}
+          description={description}
+          videoUrl={videoUrl}
+          onClose={hideDetailPage}
+        />
+      )}
     </div>
   );
 };

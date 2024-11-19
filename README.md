@@ -1,3 +1,5 @@
-# SILENTMOON created with React,TypeScript, Vite & TailwindCSS
+# The fullstack project from the bootcamp recreated 
 
-# Reproduced the Fullstack Project from Bootcamp 
+
+# SILENTMOON - Frontend created with React,TypeScript, Vite & TailwindCSS 
+# Backend created with NodeJS, Express, MongoDB, Mongoose + Spotify API 
