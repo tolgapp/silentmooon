@@ -1,12 +1,11 @@
-import { useState } from 'react';
 import all from "/images/all.png";
 import anxious from "/images/anxious.png";
 import favorites from "/images/favorites.png";
 import kids from "/images/kids.png";
 import sleep from "/images/sleep.png";
+import { IconsBarProps } from "../helper/props";
 
-const IconsBar = () => {
-  const [activeIcon, setActiveIcon] = useState("");
+const IconsBar: React.FC<IconsBarProps> = ({activeIcon, setActiveIcon}) => {
 
   const icons = [
     { name: "All", icon: all },

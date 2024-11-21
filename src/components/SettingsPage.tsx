@@ -1,5 +1,5 @@
 // SettingsPage.tsx
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SilentMoonLogo from "./SilentMoonLogo";
 import { TimePicker } from "react-ios-time-picker";
 import DayPicker from "./DayPicker";
@@ -35,7 +35,14 @@ const SettingsPage: React.FC<SettingsPageProps> = ({selectedDays, toggleDay}) =>
     }));
   };
 
-  
+  useEffect(() => {
+
+    setUserValues((prev) => ({
+      ...prev,
+      days: selectedDays,
+    }));
+  }, [selectedDays]);
+
 
   const onSave = async () => {
 
@@ -54,6 +61,10 @@ const SettingsPage: React.FC<SettingsPageProps> = ({selectedDays, toggleDay}) =>
           },
         }
       );
+
+    if (response.data.user.hasCompletedSettings) {
+      navigate("/home")
+    }
 
       if (response.status === 201) {
         navigate("/home");

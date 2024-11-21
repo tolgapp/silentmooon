@@ -23,7 +23,7 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
           }
         }}
         className="border rounded-xl bg-slate-100 h-14 ml-6 text-2xl"
-        placeholder="e.g Recovery"
+        placeholder="e.g Stretch or Focus"
       />
       <img
         src="/images/search.svg"

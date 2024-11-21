@@ -2,125 +2,99 @@ import React, { useEffect, useRef, useState } from "react";
 import Navbar from "../components/Navbar";
 import SilentMoonLogo from "../components/SilentMoonLogo";
 import { containerClass } from "../helper/classNames";
-import axios from "axios";
 import MusicDetail from "../components/MusicDetail";
+import { useSpotify } from "../context/SpotifyContext";
+import { handleLogin } from "../helper/helperFunctions";
 
 type MusicProps = {
   userName: string | null;
 };
 
+type Playlist = {
+  id: string;
+  name: string;
+  images: { url: string }[];
+};
+
+type Track = {
+  id: string;
+  name: string;
+  preview_url: string | null;
+  artists: { name: string }[];
+};
+
 const Music: React.FC<MusicProps> = ({ userName }) => {
-  const SPOTIFY_CLIENT_ID = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
-  const REDIRECT_URI = import.meta.env.VITE_SPOTIFY_REDIRECT_URI;
-  const SCOPES = "playlist-read-private playlist-read-collaborative";
 
-  const [isSpotifyConnected, setIsSpotifyConnected] = useState<boolean | null>(
-    null
-  );
-  const [accessToken, setAccessToken] = useState<string | null>(null);
-  const [spotifyData, setSpotifyData] = useState([]);
-  const [tracks, setTracks] = useState([]);
+  const { isSpotifyConnected, accessToken, fetchPlaylists, fetchTracks } =
+    useSpotify();
+  const [spotifyData, setSpotifyData] = useState<Playlist[]>([]);
+  const [tracks, setTracks] = useState<Track[]>([]);
   const [openTracks, setOpenTracks] = useState<boolean>(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const audioRef = useRef<HTMLAudioElement | null>(null); // Ref für Audio-Instanz
-
-  const handleLogin = () => {
-    const authUrl = `https://accounts.spotify.com/authorize?client_id=${SPOTIFY_CLIENT_ID}&response_type=code&redirect_uri=${encodeURIComponent(
-      REDIRECT_URI
-    )}&scope=${encodeURIComponent(SCOPES)}`;
-    window.location.href = authUrl;
-  };
-
-  const handleSpotifyCallback = async (code: string) => {
-    try {
-      const response = await axios.post("/spotifytoken", { code: code });
-      const { access_token } = response.data;
-      if (access_token) {
-        localStorage.setItem("spotifyAccessToken", access_token);
-        setAccessToken(access_token);
-        setIsSpotifyConnected(true);
-      }
-    } catch (error) {
-      console.error("Error fetching access token:", error);
-    }
-  };
+  // useEffect(() => {
+  //   if (isSpotifyConnected && accessToken) {
+  //     fetchPlaylists().then(setSpotifyData);
+  //   }
+  // }, [isSpotifyConnected, accessToken, fetchPlaylists]);
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("spotifyAccessToken");
-    if (storedToken) {
-      setAccessToken(storedToken);
-      setIsSpotifyConnected(true);
-    } else {
-      const searchParams = new URLSearchParams(window.location.search);
-      const code = searchParams.get("code");
-      if (code && isSpotifyConnected === null) {
-        handleSpotifyCallback(code);
-      }
-    }
-  }, [isSpotifyConnected]);
-
-  const fetchMeditationPlaylists = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:5002/api/spotify/playlists",
-        {
-          params: { accessToken },
+    const fetchData = async () => {
+      if (isSpotifyConnected && accessToken) {
+        try {
+          const playlists = await fetchPlaylists();
+          if (playlists.length === 0) {
+            // Fallback: Retry nach einer kurzen Verzögerung
+            setTimeout(async () => {
+              const retryPlaylists = await fetchPlaylists();
+              setSpotifyData(retryPlaylists);
+            }, 1000);
+          } else {
+            setSpotifyData(playlists);
+          }
+        } catch (error) {
+          console.error("Error fetching playlists:", error);
         }
-      );
-      setSpotifyData(response.data.playlists);
-    } catch (error) {
-      console.error("Error fetching meditation playlists:", error);
-    }
-  };
+      }
+    };
+  
+    fetchData();
+  }, [isSpotifyConnected, accessToken, fetchPlaylists]);
+  
 
   const fetchPlaylistTracks = async (playlistId: string) => {
     try {
-      const response = await axios.get(
-        `http://localhost:5002/api/spotify/playlists/${playlistId}/tracks`,
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        }
-      );
-      console.log(response.data.items);
-      setTracks(response.data.items);
-      setOpenTracks(true); // Öffne die MusicDetail-Komponente
+      const tracks = await fetchTracks(playlistId);
+      setTracks(tracks);
+      setOpenTracks(true);
     } catch (error) {
       console.error("Error fetching playlist tracks:", error);
     }
   };
 
-  useEffect(() => {
-    if (accessToken) {
-      fetchMeditationPlaylists();
-    }
-  }, [accessToken]);
-
   const playTrack = (previewUrl: string) => {
     if (audioRef.current) {
-      audioRef.current.pause(); // Pausiere vorherige Instanz
+      audioRef.current.pause();
     }
     const audio = new Audio(previewUrl);
-    audioRef.current = audio; // Speichere die neue Instanz
+    audioRef.current = audio;
     audio.play();
   };
 
   const handleCloseTracks = () => {
     if (audioRef.current) {
-      audioRef.current.pause(); // Stoppe Audio-Wiedergabe
-      audioRef.current = null; // Setze Ref zurück
+      audioRef.current.pause();
+      audioRef.current = null;
     }
-    setOpenTracks(false); // Schließe MusicDetail
+    setOpenTracks(false);
   };
 
   return (
     <div className={containerClass}>
       <SilentMoonLogo />
       {isSpotifyConnected ? (
-        <div className="mt-16 flex flex-col items-center w-full">
-          <h2 className="text-3xl font-bold mb-8 text-center">
-            Welcome, you're connected to Spotify!
-          </h2>
-          <div className="flex flex-wrap gap-6 justify-center items-start w-full">
+        <div className="mt-20 flex flex-col items-center w-full">
+          <div className="flex flex-wrap gap-8 justify-center items-start w-full">
             {spotifyData.map((playlist: any) => (
               <div
                 className="flex flex-col items-center w-64 bg-slate-300 rounded-2xl shadow-lg"
@@ -144,12 +118,12 @@ const Music: React.FC<MusicProps> = ({ userName }) => {
             <MusicDetail
               tracks={tracks}
               playTrack={playTrack}
-              onClose={handleCloseTracks} // Close-Funktion übergeben
+              onClose={handleCloseTracks}
             />
           )}
         </div>
       ) : (
-        <>
+        <div className="min-h-screen flex flex-col items-center justify-center">
           <h3 className="text-3xl font-semibold text-gray-600 text-center mb-8">
             Get the full potential by connecting to Spotify for your playlists.
           </h3>
@@ -157,9 +131,9 @@ const Music: React.FC<MusicProps> = ({ userName }) => {
             src="/images/spotify-login.png"
             alt="Spotify Login"
             className="h-16 w-auto cursor-pointer"
-            onClick={handleLogin}
+            onClick={() => handleLogin()}
           />
-        </>
+        </div>
       )}
       <Navbar userName={userName} />
     </div>

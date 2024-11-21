@@ -1,80 +1,92 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useSpotify } from "../Context/SpotifyContext";
 import Navbar from "../components/Navbar";
 import Structure from "../components/Structure";
-import axios from "axios";
-import { containerClassMeditation } from "../helper/classNames";
+import MusicDetail from "../components/MusicDetail";
+import { CombinedMeditation } from "../helper/props";
+import { handleLogin } from "../helper/helperFunctions";
 
-type DataItem = {
-  id: string;
-  name?: string;
-  type: "video" | "audio";
-  url?: string;
-  videoUrl?: string;
-  category: "yoga" | "meditation" | "music";
-  image: string;
-  title: string;
-  level: string;
-  time: string;
-  description: string;
-};
-
-type MeditateProps = {
-  data: DataItem[];
-  onSearch: (query: string) => void;
-  userName: string | null;
-};
-
-const Meditation: React.FC<MeditateProps> = ({ userName }) => {
-  const [meditateAudio, setMeditateAudio] = useState<DataItem[]>([]);
-  const [isSpotified, setIsSpotified] = useState(false);
-
-  const fetchMeditateData = async () => {
-    try {
-      const response = await axios.get("/meditation", {
-        withCredentials: true,
-        headers: { "Content-Type": "application/json" },
-      });
-
-      if (response.status === 200 && response.data) {
-        setMeditateAudio(
-          response.data.map((meditate: DataItem) => ({
-            ...meditate,
-            url: `${meditate.videoUrl}`,
-            image: `${meditate.image}`,
-          }))
-        );
-      }
-    } catch (error) {
-      console.error("Error fetching yoga videos:", error);
-    }
-  };
+const Meditation: React.FC<CombinedMeditation> = ({ userName }) => {
+  const { isSpotifyConnected, fetchPlaylists, fetchTracks } = useSpotify();
+  const [playlists, setPlaylists] = useState<any[]>([]);
+  const [selectedTracks, setSelectedTracks] = useState<any[]>([]);
+  const [activeIcon, setActiveIcon] = useState("meditate");
 
   useEffect(() => {
-    fetchMeditateData();
-  }, []);
+    if (isSpotifyConnected) {
+      if (activeIcon === "All") {
+        Promise.all([
+          fetchPlaylists("meditate"),
+          fetchPlaylists("anti-anxiety"),
+          fetchPlaylists("sleep"),
+          fetchPlaylists("kidsstories"),
+        ])
+          .then((results) => setPlaylists(results.flat())) 
+          .catch((error) => console.error("Error fetching playlists for All:", error));
+      } else if (activeIcon === "Anxious") {
+        fetchPlaylists("anti-anxiety").then(setPlaylists);
+      }
+      
+      else {
+        const query = activeIcon === "Kids" ? "kidsstories" : activeIcon.toLowerCase();
+        fetchPlaylists(query).then(setPlaylists);
+      }
+    }
+  }, [isSpotifyConnected, fetchPlaylists, activeIcon]);
+  
+
+  const handleViewTracks = (playlistId: string) => {
+    fetchTracks(playlistId).then(setSelectedTracks);
+  };
 
   return (
     <div>
       <Structure
-        title={"Meditate"}
-        description={
-          "Audio-only meditation techniques to help you minimize your screen time and practice on the go."
-        }
+        title="Meditate"
+        description="Audio-only meditation techniques to help you relax."
+        activeIcon={activeIcon}
+        setActiveIcon={setActiveIcon}
       />
-      {isSpotified ? (
-        <>
-          <h2>Welcome Spotifyer</h2>
-          
-        </>
+      {isSpotifyConnected ? (
+        <div className="mt-16 flex flex-col items-center w-full">
+          <div className="flex flex-wrap gap-8 items-start w-full px-10 pb-60">
+            {playlists.map((playlist) => (
+              <div
+                className="flex flex-col w-64 rounded-2xl shadow-lg"
+                key={playlist.id}
+              >
+                <img
+                  src={playlist.images[0]?.url}
+                  alt={playlist.name}
+                  className="w-full h-64 rounded-t-xl"
+                />
+                <button
+                  onClick={() => handleViewTracks(playlist.id)}
+                  className="w-full p-4 bg-[#8E9775] text-white rounded-b-lg text-2xl font-semibold hover:bg-[#8E9775]"
+                >
+                  View Tracks
+                </button>
+              </div>
+            ))}
+          </div>
+          {selectedTracks.length > 0 && (
+            <MusicDetail
+              tracks={selectedTracks}
+              playTrack={(url) => console.log(url)}
+              onClose={() => setSelectedTracks([])}
+            />
+          )}
+        </div>
       ) : (
-        <div className={containerClassMeditation}>
-          <h3 className="text-3xl font-semibold text-gray-600 text-balance text-center mb-8">
-          Audio guides only after successfull authentication with spotify.
+        <div className="flex flex-col items-center mt-40 gap-10">
+          <h3 className="text-3xl text-balance font-semibold">
+            Connect to Spotify to get audio guided playlists
           </h3>
           <img
             src="/images/spotify-login.png"
             alt="Spotify Login"
-            className="h-16 w-auto"
+            className="h-16 w-auto cursor-pointer"
+            onClick={() => handleLogin()}
           />
         </div>
       )}
@@ -82,4 +94,5 @@ const Meditation: React.FC<MeditateProps> = ({ userName }) => {
     </div>
   );
 };
+
 export default Meditation;

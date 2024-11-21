@@ -6,26 +6,36 @@ import Structure from "../components/Structure";
 
 type DataItem = {
   id: string;
-  name?: string;
-  type: "video" | "audio";
-  url?: string;
-  videoUrl?: string;
-  category: "yoga" | "meditation" | "music";
-  image: string;
   title: string;
   level: string;
   time: string;
+  image: string;
+  videoUrl: string;
   description: string;
+  types: string[];
 };
 
 type YogaProps = {
-  data?: DataItem[];
-  onSearch?: (query: string) => void;
   userName: string | null;
+  onSearch: (search: string) => void;
+  userId: string
 };
 
-const Yoga: React.FC<YogaProps> = ({ userName }) => {
+const Yoga: React.FC<YogaProps> = ({ userName, onSearch, userId }) => {
   const [yogaVideos, setYogaVideos] = useState<DataItem[]>([]);
+  const [filteredYogaVideos, setFilteredYogaVideos] = useState<DataItem[]>([]);
+  const [activeIcon, setActiveIcon] = useState("All");
+
+  const filterYogaVideos = () => {
+    if (activeIcon === "All" || activeIcon === "") {
+      setFilteredYogaVideos(yogaVideos);
+    } else {
+      const filtered = yogaVideos.filter((video) =>
+        video.types.includes(activeIcon)
+      );
+      setFilteredYogaVideos(filtered);
+    }
+  };
 
   const fetchYogaVideos = async () => {
     try {
@@ -35,13 +45,8 @@ const Yoga: React.FC<YogaProps> = ({ userName }) => {
       });
 
       if (response.status === 200 && response.data) {
-        setYogaVideos(
-          response.data.map((video: DataItem) => ({
-            ...video,
-            url: `${video.videoUrl}`,
-            image: `${video.image}`,
-          }))
-        );
+        setYogaVideos(response.data);
+        setFilteredYogaVideos(response.data);
       }
     } catch (error) {
       console.error("Error fetching yoga videos:", error);
@@ -52,15 +57,22 @@ const Yoga: React.FC<YogaProps> = ({ userName }) => {
     fetchYogaVideos();
   }, []);
 
+  useEffect(() => {
+    filterYogaVideos();
+  }, [activeIcon, yogaVideos]);
+
   return (
     <div>
       <Structure
         title="Yoga"
         description="Find your inner zen from anywhere."
+        activeIcon={activeIcon}
+        setActiveIcon={setActiveIcon}
+        onSearch={onSearch}
       />
       <div className="pr-10 pl-10 w-full pb-48">
-        <div className="flex flex-wrap items-center justify-center gap-8 mt-10">
-          {yogaVideos.map((video) => (
+        <div className="flex flex-wrap  items-center gap-8 mt-10 transition-all duration-900 ease-in">
+          {filteredYogaVideos.map((video) => (
             <PreviewBox
               key={video.id}
               title={video.title}
@@ -68,7 +80,9 @@ const Yoga: React.FC<YogaProps> = ({ userName }) => {
               level={video.level}
               time={video.time}
               description={video.description}
-              videoUrl={import.meta.env.VITE_API_URL + video.url}
+              videoUrl={video.videoUrl}
+              userId={userId}
+
             />
           ))}
         </div>

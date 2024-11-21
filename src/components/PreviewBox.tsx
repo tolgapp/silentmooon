@@ -9,6 +9,7 @@ type PreviewBoxProps = {
   time: string;
   description: string;
   videoUrl?: string;
+  userId: string
 };
 
 const PreviewBox: React.FC<PreviewBoxProps> = ({
@@ -17,7 +18,8 @@ const PreviewBox: React.FC<PreviewBoxProps> = ({
   level,
   time,
   description,
-  videoUrl
+  videoUrl,
+  userId
 }) => {
   const { pathname } = useLocation();
   const [showDetail, setShowDetail] = useState(false);
@@ -41,6 +43,8 @@ const PreviewBox: React.FC<PreviewBoxProps> = ({
             description={description}
             videoUrl={videoUrl}
             onClose={hideDetailPage}
+            userId={userId}
+      
           />
         )}
       </div>

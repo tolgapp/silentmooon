@@ -11,10 +11,11 @@ type LoginFormData = {
 };
 
 type LoginProps = {
+  setUserId: (value: string) => void;
   setIsLoggedIn: (value: boolean) => void;
 };
 
-const Login: React.FC<LoginProps> = ({ setIsLoggedIn }) => {
+const Login: React.FC<LoginProps> = ({ setIsLoggedIn, setUserId }) => {
   const [formData, setFormData] = useState<LoginFormData>({
     email: "",
     password: "",
@@ -44,9 +45,15 @@ const Login: React.FC<LoginProps> = ({ setIsLoggedIn }) => {
         }
       );
 
-      if (response.status === 200) {
+      if (response.status === 200 && response.data.user) {
+        const { user } = response.data;
         setIsLoggedIn(true);
-        navigate("/welcome");
+        setUserId(user.id)
+        if (user.hasCompletedSettings) {
+          navigate("/home");
+        } else {
+          navigate("/settings");
+        }
       }
     } catch (error: any) {
       console.error("Login error:", error);

@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import SilentMoonLogo from "./SilentMoonLogo";
 import BackButton from "./BackButton";
+import Favorite from "./Favorite";
 
 type DetailPageProps = {
   title: string;
@@ -8,6 +9,7 @@ type DetailPageProps = {
   time: string;
   description: string;
   videoUrl?: string;
+  userId: string;
   onClose: () => void;
 };
 
@@ -18,6 +20,7 @@ const DetailPage: React.FC<DetailPageProps> = ({
   description,
   videoUrl,
   onClose,
+  userId,
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
@@ -25,7 +28,7 @@ const DetailPage: React.FC<DetailPageProps> = ({
 
   const handlePlay = () => videoRef.current?.play();
   const handleClose = () => {
-    setIsClosing(true); // Startet die Schließanimation
+    setIsClosing(true);
   };
 
   return (
@@ -35,10 +38,14 @@ const DetailPage: React.FC<DetailPageProps> = ({
                    isClosing ? "animate-slide-down" : "animate-slide-up"
                  }`}
       onClick={(e) => e.stopPropagation()}
-      onAnimationEnd={() => isClosing && onClose()} // Schließt vollständig nach der Animation
+      onAnimationEnd={() => isClosing && onClose()}
     >
       <SilentMoonLogo />
-      <BackButton onClose={handleClose} />
+      <section className="flex justify-center">
+        <BackButton onClose={handleClose} />
+        <Favorite userId={userId} contentId={videoUrl} />
+        {/* contentId={contentId} for Favorite */}
+      </section>
       {videoUrl && (
         <div className="relative mt-48 w-full max-h-80 rounded-lg overflow-hidden">
           <video

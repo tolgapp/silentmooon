@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Route, Routes, Navigate, Outlet } from "react-router-dom";
+import { Route, Routes, Navigate, Outlet, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Home from "./pages/Home";
 import Login from "./components/Login";
@@ -37,12 +37,14 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
   const [userName, setUserName] = useState<string | null>(null);
+  const [userId, setUserId] = useState("");
   const [selectedDays, setSelectedDays] = useState<number[]>([]);
 
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [data, setData] = useState<any[]>([]); 
-  const [filteredData, setFilteredData] = useState<any[]>([]); 
-  const [category, setCategory] = useState<string>("home"); 
+  const [data, setData] = useState<any[]>([]);
+  const [filteredData, setFilteredData] = useState<any[]>([]);
+  const [category, setCategory] = useState<string>("home");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const checkAuthStatus = async () => {
@@ -51,10 +53,9 @@ function App() {
         if (response.status === 200) {
           setIsLoggedIn(true);
           const userName = response.data.userName;
-          const capitalizedUserName = userName.charAt(0).toUpperCase() + userName.slice(1);
+          const capitalizedUserName =
+            userName.charAt(0).toUpperCase() + userName.slice(1);
           setUserName(capitalizedUserName);
-
-          
         } else {
           setIsLoggedIn(false);
         }
@@ -71,7 +72,7 @@ function App() {
 
   const loadDaysFromDatabase = async () => {
     try {
-      const response = await axios.get(`${VITE_API_URL}/api/settings`, {
+      const response = await axios.get(`/settings`, {
         withCredentials: true,
       });
       if (response.status === 200 && response.data.settings.days) {
@@ -96,26 +97,60 @@ function App() {
   }, []);
 
   useEffect(() => {
+    if (!isLoggedIn) return;
+
     const getData = async () => {
       try {
         const dataFromDb = await fetchData(category);
         setData(dataFromDb);
-        setFilteredData(dataFromDb); 
+        setFilteredData(dataFromDb);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
     getData();
-  }, [category]);
+  }, [category, isLoggedIn]);
 
-  // Funktion zur Behandlung der Suchanfrage und Filterung der Daten
   const handleSearch = (query: string) => {
     setSearchQuery(query);
-    const filtered = data.filter((item) =>
-      item.name.toLowerCase().includes(query.toLowerCase())
-    );
-    setFilteredData(filtered); // Gefilterte Daten setzen
+
+
+    if (typeof data === "string") {
+      const lowerCaseData = data.toLowerCase();
+      const lowerCaseQuery = query.toLowerCase();
+
+      if (lowerCaseData.includes(lowerCaseQuery)) {
+        setFilteredData([data]);
+      } else {
+        setFilteredData([]);
+      }
+    } else {
+      console.error("Data is not a string:", data);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await axios.post(
+        `${VITE_API_URL}/api/logout`,
+        {},
+        { withCredentials: true }
+      );
+
+      setIsLoggedIn(false);
+      setUserName(null);
+
+      localStorage.clear();
+      sessionStorage.clear();
+
+      navigate("/");
+    } catch (error) {
+      console.error(
+        "Fehler beim Logout:",
+        error instanceof Error ? error.message : error
+      );
+    }
   };
 
   if (loading) {
@@ -132,7 +167,7 @@ function App() {
             isLoggedIn ? (
               <Navigate to="/welcome" replace />
             ) : (
-              <Login setIsLoggedIn={setIsLoggedIn} />
+              <Login setIsLoggedIn={setIsLoggedIn} setUserId={setUserId} />
             )
           }
         />
@@ -149,7 +184,10 @@ function App() {
               <SettingsPage toggleDay={toggleDay} selectedDays={selectedDays} />
             }
           />
-          <Route path="/home" element={<Home userName={userName} onSearch={handleSearch} />} />
+          <Route
+            path="/home"
+            element={<Home userName={userName} onSearch={handleSearch} />}
+          />
           <Route
             path="/userpage"
             element={
@@ -157,20 +195,40 @@ function App() {
                 selectedDays={selectedDays}
                 toggleDay={toggleDay}
                 userName={userName}
+                handleLogout={handleLogout}
               />
             }
           />
           <Route
             path="/yoga"
-            element={<Yoga data={filteredData} onSearch={handleSearch} userName={userName} />}
+            element={
+              <Yoga
+                data={filteredData}
+                onSearch={handleSearch}
+                userName={userName}
+                userId={userId}
+              />
+            }
           />
           <Route
             path="/meditation"
-            element={<Meditation data={filteredData} onSearch={handleSearch} userName={userName} />}
+            element={
+              <Meditation
+                data={filteredData}
+                onSearch={handleSearch}
+                userName={userName}
+              />
+            }
           />
           <Route
             path="/music"
-            element={<Music data={filteredData} onSearch={handleSearch} userName={userName} />}
+            element={
+              <Music
+                data={filteredData}
+                onSearch={handleSearch}
+                userName={userName}
+              />
+            }
           />
         </Route>
       </Routes>

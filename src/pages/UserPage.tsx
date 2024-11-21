@@ -7,22 +7,24 @@ import Navbar from "../components/Navbar";
 import SearchBar from "../components/SearchBar";
 import SilentMoonLogo from "../components/SilentMoonLogo";
 import PreviewBox from "../components/PreviewBox";
+import { UserPageCombined } from "../helper/props";
 
 type UserValues = {
   time: string;
   days: number[];
 };
 
-type UserPageProps = {
-  selectedDays: number[];
-  toggleDay: (dayId: number) => void;
-  userName: string | null;
-};
-
-const UserPage: React.FC<UserPageProps> = ({
+const UserPage: React.FC<UserPageCombined> = ({
   selectedDays,
   toggleDay,
   userName,
+  handleLogout,
+  onSearch,
+  description,
+  image,
+  level,
+  time,
+  title,
 }) => {
   const [value, setValue] = useState<string>("17:00");
   const [userValues, setUserValues] = useState<UserValues>({
@@ -30,9 +32,7 @@ const UserPage: React.FC<UserPageProps> = ({
     days: [],
   });
   const VITE_API_URL = import.meta.env.VITE_API_URL;
-  const navigate = useNavigate();
 
-  // Fetch initial settings
   useEffect(() => {
     const fetchSettings = async () => {
       const response = await axios.get(`${VITE_API_URL}/api/settings`, {
@@ -46,10 +46,10 @@ const UserPage: React.FC<UserPageProps> = ({
   }, []);
 
   // Save updated settings
+
   const onSave = async () => {
     try {
-      const response = await axios.put(
-        `${VITE_API_URL}/api/settings/update`,
+      const response = await axios.post(`/settings/update`,
         { ...userValues, days: selectedDays },
         {
           withCredentials: true,
@@ -71,19 +71,21 @@ const UserPage: React.FC<UserPageProps> = ({
   return (
     <div className="min-h-screen flex flex-col items-center">
       <SilentMoonLogo />
-      <div className="flex items-center w-full mt-36 ml-24 justify-start">
+      <div className="flex items-center w-full mt-36 px-12 justify-between">
         {/* FIXME: Getting the user image, if the user has uploaded one to the db */}
+        <section className="flex items-center">
         <img src="/images/user.png" alt="user image" className="h-16 w-16" />
-        <h3 className="text-6xl font-extrabold pl-8">{userName}</h3>
+        <h3 className="text-5xl font-extrabold pl-8">{userName}</h3>
+        </section>
+        <button className="py-4 px-10 bg-red-400 text-white text-2xl rounded-xl" onClick={handleLogout}>Logout</button>
+
       </div>
-      <SearchBar />
+      <SearchBar onSearch={onSearch} />
       <section className="flex mt-16 flex-col">
         <h3>Favorite Yoga Sessions</h3>
         {/* Video Component for Yoga */}
         <div className="flex overflow-x-scroll gap-8 w-full whitespace-nowrap mt-4">
-          {Array.from({ length: 8 }).map((_, index) => (
-            <PreviewBox key={index} />
-          ))}
+          
         </div>
       </section>
 
@@ -92,9 +94,9 @@ const UserPage: React.FC<UserPageProps> = ({
         {/* TODO: Video Component for Meditation */}
       </section>
       {/* FIXME: Styling and adding update functionality also for the time */}
-      {/* <h2 className="text-4xl font-semibold mb-4">Update your selected days</h2>
+      <h2 className="text-4xl font-semibold mb-4">Update your selected days</h2>
       <DayPicker selectedDays={selectedDays} toggleDay={toggleDay} /> 
-      <Button text="SAVE" type="submit" onClick={onSave} />*/}
+      <Button text="SAVE" type="submit" onClick={onSave} />
       <Navbar userName={userName} />
     </div>
   );
