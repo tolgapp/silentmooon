@@ -77,7 +77,7 @@ const Home: React.FC<HomeProps> = ({ userName, onSearch }) => {
   return (
     <div className="flex flex-col items-center">
       <SilentMoonLogo />
-      <section className="pl-8 pr-8 w-full justify-start">
+      <section className="pl-10 pr-10 w-full justify-start">
         <h2 className="mt-44 text-4xl font-semibold">
           {greeting}, {userName}
         </h2>

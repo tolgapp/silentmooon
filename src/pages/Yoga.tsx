@@ -18,13 +18,13 @@ type DataItem = {
 type YogaProps = {
   userName: string | null;
   onSearch: (search: string) => void;
-  userId: string
 };
 
-const Yoga: React.FC<YogaProps> = ({ userName, onSearch, userId }) => {
+const Yoga: React.FC<YogaProps> = ({ userName, onSearch }) => {
   const [yogaVideos, setYogaVideos] = useState<DataItem[]>([]);
   const [filteredYogaVideos, setFilteredYogaVideos] = useState<DataItem[]>([]);
   const [activeIcon, setActiveIcon] = useState("All");
+  const backendURL = import.meta.env.VITE_API_URL
 
   const filterYogaVideos = () => {
     if (activeIcon === "All" || activeIcon === "") {
@@ -76,13 +76,11 @@ const Yoga: React.FC<YogaProps> = ({ userName, onSearch, userId }) => {
             <PreviewBox
               key={video.id}
               title={video.title}
-              image={import.meta.env.VITE_API_URL + video.image}
+              image={backendURL + video.image}
               level={video.level}
               time={video.time}
               description={video.description}
-              videoUrl={video.videoUrl}
-              userId={userId}
-
+              videoUrl={backendURL + video.videoUrl}
             />
           ))}
         </div>

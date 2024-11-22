@@ -42,9 +42,7 @@ const PreviewBox: React.FC<PreviewBoxProps> = ({
             time={time}
             description={description}
             videoUrl={videoUrl}
-            onClose={hideDetailPage}
-            userId={userId}
-      
+            onClose={hideDetailPage}      
           />
         )}
       </div>

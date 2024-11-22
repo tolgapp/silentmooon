@@ -35,20 +35,21 @@ const Login: React.FC<LoginProps> = ({ setIsLoggedIn, setUserId }) => {
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
-
+  
     try {
       const response = await axios.post(
         "http://localhost:5002/api/login",
         formData,
-        {
-          withCredentials: true,
-        }
+        { withCredentials: true }
       );
-
+  
       if (response.status === 200 && response.data.user) {
         const { user } = response.data;
+  
+        localStorage.setItem("userId", user.id);
+  
         setIsLoggedIn(true);
-        setUserId(user.id)
+  
         if (user.hasCompletedSettings) {
           navigate("/home");
         } else {
@@ -61,6 +62,7 @@ const Login: React.FC<LoginProps> = ({ setIsLoggedIn, setUserId }) => {
       setIsLoggedIn(false);
     }
   };
+  
 
   return (
     <div className="bg-[url('/images/motiveBg.jpg')] w-full bg-no-repeat bg-contain min-h-screen flex flex-col items-center justify-center bg-[#FEFCF8] gap-4">

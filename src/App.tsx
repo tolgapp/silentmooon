@@ -37,7 +37,6 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
   const [userName, setUserName] = useState<string | null>(null);
-  const [userId, setUserId] = useState("");
   const [selectedDays, setSelectedDays] = useState<number[]>([]);
 
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -167,7 +166,7 @@ function App() {
             isLoggedIn ? (
               <Navigate to="/welcome" replace />
             ) : (
-              <Login setIsLoggedIn={setIsLoggedIn} setUserId={setUserId} />
+              <Login setIsLoggedIn={setIsLoggedIn} />
             )
           }
         />
@@ -206,7 +205,6 @@ function App() {
                 data={filteredData}
                 onSearch={handleSearch}
                 userName={userName}
-                userId={userId}
               />
             }
           />

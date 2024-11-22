@@ -9,7 +9,6 @@ type DetailPageProps = {
   time: string;
   description: string;
   videoUrl?: string;
-  userId: string;
   onClose: () => void;
 };
 
@@ -20,7 +19,6 @@ const DetailPage: React.FC<DetailPageProps> = ({
   description,
   videoUrl,
   onClose,
-  userId,
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
@@ -43,7 +41,7 @@ const DetailPage: React.FC<DetailPageProps> = ({
       <SilentMoonLogo />
       <section className="flex justify-center">
         <BackButton onClose={handleClose} />
-        <Favorite userId={userId} contentId={videoUrl} />
+        <Favorite contentId={videoUrl} />
         {/* contentId={contentId} for Favorite */}
       </section>
       {videoUrl && (
