@@ -9,7 +9,8 @@ type PreviewBoxProps = {
   time: string;
   description: string;
   videoUrl?: string;
-  userId: string
+  userId: string | ""
+  onClick: (url: string) => void;
 };
 
 const PreviewBox: React.FC<PreviewBoxProps> = ({
@@ -42,7 +43,8 @@ const PreviewBox: React.FC<PreviewBoxProps> = ({
             time={time}
             description={description}
             videoUrl={videoUrl}
-            onClose={hideDetailPage}      
+            onClose={hideDetailPage}
+            key={userId}
           />
         )}
       </div>

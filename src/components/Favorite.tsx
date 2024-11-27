@@ -5,9 +5,8 @@ type FavoriteProps = {
   contentId?: string;
 };
 
-const Favorite: React.FC<FavoriteProps> = ({ contentId }) => {
+const Favorite: React.FC<FavoriteProps> = ({contentId}) => {
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(true);
   const userId = localStorage.getItem("userId");
 
   useEffect(() => {
@@ -15,7 +14,6 @@ const Favorite: React.FC<FavoriteProps> = ({ contentId }) => {
 
     const fetchFavoriteStatus = async () => {
       try {
-        setLoading(true);
         const response = await axios.get("/favoritevideos", {
           params: { userId, contentId },
         });
@@ -23,23 +21,20 @@ const Favorite: React.FC<FavoriteProps> = ({ contentId }) => {
         setIsFavorite(response.data.isFavorite);
       } catch (error) {
         console.error("Error fetching favorite status:", error);
-      } finally {
-        setLoading(false);
-      }
+      } 
     };
 
     fetchFavoriteStatus();
-  }, [userId, contentId]);
+  }, [userId, contentId, isFavorite]);
 
   const toggleFavorite = async () => {
     try {
       const endpoint = isFavorite
         ? "/favorites/video/remove"
         : "/favorites/video/add";
-
+  
       const response = await axios.post(endpoint, { userId, contentId });
-
-      if (response.status === 200) {
+      if (response.status === 200 || response.status === 204) {
         setIsFavorite((prev) => !prev);
       } else {
         console.error("Failed to toggle favorite:", response.data);
@@ -48,10 +43,8 @@ const Favorite: React.FC<FavoriteProps> = ({ contentId }) => {
       console.error("Error toggling favorite:", error);
     }
   };
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  
+ 
 
   return (
     <div

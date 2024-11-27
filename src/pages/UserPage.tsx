@@ -33,17 +33,17 @@ const UserPage: React.FC<UserPageCombined> = ({
   });
   const VITE_API_URL = import.meta.env.VITE_API_URL;
 
-  useEffect(() => {
-    const fetchSettings = async () => {
-      const response = await axios.get(`${VITE_API_URL}/api/settings`, {
-        withCredentials: true,
-      });
-      setUserValues(response.data.settings);
-      setValue(response.data.settings.time);
-    };
+  // useEffect(() => {
+  //   const fetchSettings = async () => {
+  //     const response = await axios.get(`${VITE_API_URL}/api/settings`, {
+  //       withCredentials: true,
+  //     });
+  //     setUserValues(response.data.settings);
+  //     setValue(response.data.settings.time);
+  //   };
 
-    fetchSettings();
-  }, []);
+  //   fetchSettings();
+  // }, []);
 
   // Save updated settings
 

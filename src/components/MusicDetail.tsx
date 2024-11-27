@@ -8,8 +8,6 @@ type MusicDetailProps = {
 
 const MusicDetail: React.FC<MusicDetailProps> = ({ tracks, playTrack, onClose }) => {
 
-  console.log(tracks)
-
   return (
     <div
       className="fixed bottom-0 left-0 w-full bg-white rounded-t-2xl shadow-lg overflow-y-auto z-50 transition-transform duration-300 pb-48 animate-slide-up"

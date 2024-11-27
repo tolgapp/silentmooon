@@ -69,18 +69,18 @@ function App() {
     checkAuthStatus();
   }, [isLoggedIn]);
 
-  const loadDaysFromDatabase = async () => {
-    try {
-      const response = await axios.get(`/settings`, {
-        withCredentials: true,
-      });
-      if (response.status === 200 && response.data.settings.days) {
-        setSelectedDays(response.data.settings.days);
-      }
-    } catch (error) {
-      console.error("Error loading days from database:", error);
-    }
-  };
+  // const loadDaysFromDatabase = async () => {
+  //   try {
+  //     const response = await axios.get(`/settings`, {
+  //       withCredentials: true,
+  //     });
+  //     if (response.status === 200 && response.data.settings.days) {
+  //       setSelectedDays(response.data.settings.days);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error loading days from database:", error);
+  //   }
+  // };
 
   const toggleDay = (dayId: number) => {
     setSelectedDays((prev) => {
@@ -91,9 +91,9 @@ function App() {
     });
   };
 
-  useEffect(() => {
-    loadDaysFromDatabase();
-  }, []);
+  // useEffect(() => {
+  //   loadDaysFromDatabase();
+  // }, []);
 
   useEffect(() => {
     if (!isLoggedIn) return;

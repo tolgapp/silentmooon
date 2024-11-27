@@ -24,18 +24,11 @@ const Yoga: React.FC<YogaProps> = ({ userName, onSearch }) => {
   const [yogaVideos, setYogaVideos] = useState<DataItem[]>([]);
   const [filteredYogaVideos, setFilteredYogaVideos] = useState<DataItem[]>([]);
   const [activeIcon, setActiveIcon] = useState("All");
-  const backendURL = import.meta.env.VITE_API_URL
+  const [contentId, setContentId] = useState<string | null>(null); 
+  const [isFavorite, setIsFavorite] = useState<boolean>(false)
 
-  const filterYogaVideos = () => {
-    if (activeIcon === "All" || activeIcon === "") {
-      setFilteredYogaVideos(yogaVideos);
-    } else {
-      const filtered = yogaVideos.filter((video) =>
-        video.types.includes(activeIcon)
-      );
-      setFilteredYogaVideos(filtered);
-    }
-  };
+  const backendURL = import.meta.env.VITE_API_URL;
+  const userId = localStorage.getItem("userId") || "";;
 
   const fetchYogaVideos = async () => {
     try {
@@ -46,10 +39,44 @@ const Yoga: React.FC<YogaProps> = ({ userName, onSearch }) => {
 
       if (response.status === 200 && response.data) {
         setYogaVideos(response.data);
-        setFilteredYogaVideos(response.data);
       }
     } catch (error) {
       console.error("Error fetching yoga videos:", error);
+    }
+  };
+
+  const fetchFavoriteStatus = async () => {
+    if (!userId || !contentId) return;
+
+    try {
+      const response = await axios.get("/favoritevideos", {
+        params: { userId, contentId },
+      });
+
+      setIsFavorite(response.data.isFavorite);
+    } catch (error) {
+      console.error("Error fetching favorite status:", error);
+    }
+  };
+
+  const filterYogaVideos = async () => {
+    if (activeIcon === "All" || activeIcon === "") {
+      setFilteredYogaVideos(yogaVideos);
+    } else if (activeIcon === "Favorites") {
+      try {
+        const response = await axios.get("/favorites", {
+          withCredentials: true,
+          headers: { "Content-Type": "application/json" },
+        });
+        setFilteredYogaVideos(response.data);
+      } catch (error) {
+        console.error("Error fetching favorites:", error);
+      }
+    } else {
+      const filtered = yogaVideos.filter((video) =>
+        video.types.includes(activeIcon)
+      );
+      setFilteredYogaVideos(filtered);
     }
   };
 
@@ -58,8 +85,14 @@ const Yoga: React.FC<YogaProps> = ({ userName, onSearch }) => {
   }, []);
 
   useEffect(() => {
+    fetchFavoriteStatus();
+  }, [contentId]); 
+
+
+  useEffect(() => {
     filterYogaVideos();
-  }, [activeIcon, yogaVideos]);
+  }, [activeIcon, yogaVideos, filteredYogaVideos]); 
+
 
   return (
     <div>
@@ -71,7 +104,7 @@ const Yoga: React.FC<YogaProps> = ({ userName, onSearch }) => {
         onSearch={onSearch}
       />
       <div className="pr-10 pl-10 w-full pb-48">
-        <div className="flex flex-wrap  items-center gap-8 mt-10 transition-all duration-900 ease-in">
+        <div className="flex flex-wrap items-center gap-8 mt-10 transition-all duration-900 ease-in">
           {filteredYogaVideos.map((video) => (
             <PreviewBox
               key={video.id}
@@ -81,6 +114,8 @@ const Yoga: React.FC<YogaProps> = ({ userName, onSearch }) => {
               time={video.time}
               description={video.description}
               videoUrl={backendURL + video.videoUrl}
+              userId={userId}
+              onClick={() => setContentId(video.videoUrl)}
             />
           ))}
         </div>

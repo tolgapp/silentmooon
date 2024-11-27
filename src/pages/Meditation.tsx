@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSpotify } from "../Context/SpotifyContext";
 import Navbar from "../components/Navbar";
 import Structure from "../components/Structure";
@@ -46,6 +46,7 @@ const Meditation: React.FC<CombinedMeditation> = ({ userName }) => {
         description="Audio-only meditation techniques to help you relax."
         activeIcon={activeIcon}
         setActiveIcon={setActiveIcon}
+        // onSearch={onSearch}
       />
       {isSpotifyConnected ? (
         <div className="mt-16 flex flex-col items-center w-full">
@@ -78,8 +79,8 @@ const Meditation: React.FC<CombinedMeditation> = ({ userName }) => {
           )}
         </div>
       ) : (
-        <div className="flex flex-col items-center mt-40 gap-10">
-          <h3 className="text-3xl text-balance font-semibold">
+        <div className="flex flex-col items-center mt-20 justify-center gap-10 rounded-xl bg-gray-400 h-96 ml-8 mr-8">
+          <h3 className="text-4xl text-white text-balance text-center font-semibold">
             Connect to Spotify to get audio guided playlists
           </h3>
           <img

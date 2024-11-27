@@ -4,13 +4,15 @@ import axios from "axios";
 type SpotifyContextType = {
   accessToken: string | null;
   isSpotifyConnected: boolean;
-  fetchPlaylists: () => Promise<any[]>;
-  fetchTracks: (playlistId: string) => Promise<any[]>;
+  fetchPlaylists: () => Promise<unknown[]>;
+  fetchTracks: (playlistId: string) => Promise<unknown[]>;
 };
 
 const SpotifyContext = createContext<SpotifyContextType | undefined>(undefined);
 
-export const SpotifyProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const SpotifyProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [isSpotifyConnected, setIsSpotifyConnected] = useState(false);
 
@@ -23,16 +25,21 @@ export const SpotifyProvider: React.FC<{ children: React.ReactNode }> = ({ child
     } else {
       const searchParams = new URLSearchParams(window.location.search);
       const code = searchParams.get("code");
+
       if (code) {
         handleSpotifyCallback(code);
       }
+
     }
   }, []);
 
   const handleSpotifyCallback = async (code: string) => {
     try {
-      const response = await axios.post("/spotifytoken", { code });
+      const pathname = window.location.pathname; 
+
+      const response = await axios.post("/spotifytoken", { code, pathname }); 
       const { access_token } = response.data;
+
       if (access_token) {
         localStorage.setItem("spotifyAccessToken", access_token);
         setAccessToken(access_token);
@@ -48,7 +55,7 @@ export const SpotifyProvider: React.FC<{ children: React.ReactNode }> = ({ child
     try {
       const response = await axios.get("/spotify/playlists", {
         headers: { Authorization: `Bearer ${accessToken}` },
-        params: { q },  
+        params: { q },
       });
       return response.data.playlists;
     } catch (error) {
@@ -56,14 +63,16 @@ export const SpotifyProvider: React.FC<{ children: React.ReactNode }> = ({ child
       return [];
     }
   };
-  
 
   const fetchTracks = async (playlistId: string) => {
     if (!accessToken) return [];
     try {
-      const response = await axios.get(`/spotify/playlists/${playlistId}/tracks`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
+      const response = await axios.get(
+        `/spotify/playlists/${playlistId}/tracks`,
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }
+      );
       return response.data.items;
     } catch (error) {
       console.error("Error fetching tracks:", error);
