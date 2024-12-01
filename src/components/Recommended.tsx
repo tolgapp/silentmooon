@@ -17,7 +17,7 @@ const Recommended: React.FC<DataItem> = ({
 
   return (
     <div
-      className="overflow-hidden w-72 pb-60 flex-shrink-0"
+      className="overflow-hidden w-72 pb-6 flex-shrink-0 h-fit"
       onClick={showDetailPage}
     >
       <img

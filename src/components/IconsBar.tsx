@@ -5,8 +5,7 @@ import kids from "/images/kids.png";
 import sleep from "/images/sleep.png";
 import { IconsBarProps } from "../helper/props";
 
-const IconsBar: React.FC<IconsBarProps> = ({activeIcon, setActiveIcon}) => {
-
+const IconsBar: React.FC<IconsBarProps> = ({ activeIcon, setActiveIcon }) => {
   const icons = [
     { name: "All", icon: all },
     { name: "Favorites", icon: favorites },
@@ -21,7 +20,7 @@ const IconsBar: React.FC<IconsBarProps> = ({activeIcon, setActiveIcon}) => {
         <div
           key={index}
           className="flex flex-col items-center justify-center flex-1"
-          onClick={() => setActiveIcon(item.name)}  
+          onClick={() => setActiveIcon(item.name)}
         >
           {item.icon && (
             <img
@@ -29,14 +28,10 @@ const IconsBar: React.FC<IconsBarProps> = ({activeIcon, setActiveIcon}) => {
               alt={item.name}
               className={`w-13 h-13 mb-4 p-6 rounded-[2rem] ${
                 activeIcon === item.name ? "bg-[#8E9775]" : "bg-[#A1A4B2]"
-              }`}  
+              }`}
             />
           )}
-          <span
-            className={`text-2xl text-[#A1A4B2]`}
-          >
-            {item.name}
-          </span>
+          <span className={`text-2xl text-[#A1A4B2]`}>{item.name}</span>
         </div>
       ))}
     </div>

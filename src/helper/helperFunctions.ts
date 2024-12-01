@@ -7,11 +7,13 @@ export const randomNum = (max: number): number => {
 
 // Spotify Login and variables
 export const SPOTIFY_CLIENT_ID = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
-export const SCOPES = "playlist-read-private playlist-read-collaborative";
+export const SCOPES = [
+  "playlist-read-private",
+  "playlist-read-collaborative"
+].join(" ");
 
-const MUSIC_REDIRECT_URI = import.meta.env.VITE_MUSIC_REDIRECT_URI;
-const MEDI_REDIRECT_URI = import.meta.env.VITE_MEDI_REDIRECT_URI;
-
+export const MUSIC = import.meta.env.VITE_MUSIC_REDIRECT_URI;
+export const MEDI = import.meta.env.VITE_MEDI_REDIRECT_URI;
 
 export const handleLogin = () => {
   const currentPath = window.location.pathname; 
@@ -19,17 +21,16 @@ export const handleLogin = () => {
   let redirectUri = ""; 
 
   if (currentPath.includes("/music")) {
-    redirectUri = MUSIC_REDIRECT_URI;  
+    redirectUri = MUSIC;  
   } else if (currentPath.includes("/meditation")) {
-    redirectUri = MEDI_REDIRECT_URI;  
+    redirectUri = MEDI;  
   }
 
   if (!redirectUri) {
-    console.error("Kein gültiger Redirect URI gefunden!"); 
+    console.error("No valid redirect uri found!"); 
     return;
   }
 
-  
   const authUrl = `https://accounts.spotify.com/authorize?client_id=${SPOTIFY_CLIENT_ID}&response_type=code&redirect_uri=${encodeURIComponent(
     redirectUri
   )}&scope=${encodeURIComponent(SCOPES)}`;

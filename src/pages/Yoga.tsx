@@ -91,7 +91,7 @@ const Yoga: React.FC<YogaProps> = ({ userName, onSearch }) => {
 
   useEffect(() => {
     filterYogaVideos();
-  }, [activeIcon, yogaVideos, filteredYogaVideos]); 
+  }, [activeIcon, yogaVideos]); 
 
 
   return (
