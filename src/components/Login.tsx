@@ -38,7 +38,7 @@ const Login: React.FC<LoginProps> = ({ setIsLoggedIn, setUserId }) => {
   
     try {
       const response = await axios.post(
-        "http://localhost:5002/api/login",
+        "/login",
         formData,
         { withCredentials: true }
       );

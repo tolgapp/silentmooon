@@ -4,8 +4,9 @@ import Structure from "../components/Structure";
 import useSpotifyAuth from "../helper/useSpotifyAuth";
 import { handleLogin, MEDI, MUSIC } from "../helper/helperFunctions";
 import { useLocation } from "react-router-dom";
+import { MeditationProps } from "../helper/props";
 
-const Meditation: React.FC<{ userName: string | null }> = ({ userName }) => {
+const Meditation: React.FC<MeditationProps> = ({ userName, onSearch }) => {
   const { pathname } = useLocation();
   const { isSpotifyConnected, fetchPlaylists } = useSpotifyAuth(
     pathname === "/meditation" ? MEDI : MUSIC
@@ -26,6 +27,7 @@ const Meditation: React.FC<{ userName: string | null }> = ({ userName }) => {
         description="Audio-only meditation techniques to help you relax."
         activeIcon={activeIcon}
         setActiveIcon={setActiveIcon}
+        onSearch={onSearch}
       />
       {isSpotifyConnected ? (
         <div className="mt-16 flex flex-col items-center w-full">

@@ -23,7 +23,6 @@ const SettingsPage: React.FC<SettingsPageProps> = ({selectedDays, toggleDay}) =>
     time: "",
     days: [],
   });
-  const VITE_API_URL = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
 
 
@@ -52,7 +51,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({selectedDays, toggleDay}) =>
       }
 
       const response = await axios.post(
-        `${VITE_API_URL}/api/settings`,
+        `/settings`,
         userValues, 
         {
           withCredentials: true, 
@@ -65,7 +64,6 @@ const SettingsPage: React.FC<SettingsPageProps> = ({selectedDays, toggleDay}) =>
     if (response.data.user.hasCompletedSettings) {
       navigate("/home")
     }
-
       if (response.status === 201) {
         navigate("/home");
       }

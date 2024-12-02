@@ -1,4 +1,4 @@
-import all from "/images/all.png";
+import all from "/images/all.svg";
 import anxious from "/images/anxious.png";
 import favorites from "/images/favorites.png";
 import kids from "/images/kids.png";

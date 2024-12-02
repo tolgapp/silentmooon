@@ -23,6 +23,7 @@ type Random = {
 const RandomYoga: React.FC<Random> = () => {
   const [yogaVideos, setYogaVideos] = useState<DataItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const backendUrl = "http://localhost:5002"
 
   const fetchYogaVideos = async () => {
     try {
@@ -70,8 +71,7 @@ const RandomYoga: React.FC<Random> = () => {
       <div
         className="h-80 w-64 bg-cover bg-center relative rounded-xl overflow-hidden"
         style={{
-          backgroundImage: `url(${
-            import.meta.env.VITE_API_URL + randomVideo1.image
+          backgroundImage: `url(${backendUrl+randomVideo1.image
           })`,
         }}
       >
@@ -88,8 +88,7 @@ const RandomYoga: React.FC<Random> = () => {
       <div
         className="h-80 w-64 bg-cover bg-center relative rounded-xl overflow-hidden"
         style={{
-          backgroundImage: `url(${
-            import.meta.env.VITE_API_URL + randomVideo2.image
+          backgroundImage: `url(${backendUrl+randomVideo2.image
           })`,
         }}
       >

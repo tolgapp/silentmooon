@@ -7,6 +7,7 @@ import SearchBar from "../components/SearchBar";
 import SilentMoonLogo from "../components/SilentMoonLogo";
 import { UserPageCombined } from "../helper/props";
 import Recommended from "../components/Recommended";
+import TimePicker from "react-ios-time-picker";
 
 type UserValues = {
   time: string;
@@ -25,9 +26,7 @@ const UserPage: React.FC<UserPageCombined> = ({
     time: "",
     days: [],
   });
-  const VITE_API_URL = import.meta.env.VITE_API_URL;
   const [favoriteVideos, setFavoriteVideos] = useState<DataItem>([]);
-  const [contentId, setContentId] = useState<string | null>(null);
   const userId = localStorage.getItem("userId") || "";
 
   const fetchFavoriteVideos = async () => {
@@ -52,30 +51,37 @@ const UserPage: React.FC<UserPageCombined> = ({
 
   useEffect(() => {
     const fetchSettings = async () => {
-      const response = await axios.get(`${VITE_API_URL}/api/settings`, {
-        withCredentials: true,
-      });
-      console.log(response.data)
-      setUserValues(response.data.days);
-      setValue(response.data.time);
+      try {
+        const response = await axios.get(`/settings`, {
+          withCredentials: true,
+        });
+        setUserValues({
+          time: response.data.time,
+          days: response.data.days,
+        });
+        setValue(response.data.time);
+      } catch (error) {
+        console.error("Error fetching settings:", error);
+      }
     };
-
     fetchSettings();
   }, []);
 
   // Save updated settings
-
   const onSave = async () => {
     try {
       const response = await axios.put(
         `/settings`,
-        { ...userValues, days: selectedDays },
+        { time: value, days: selectedDays },
         {
           withCredentials: true,
           headers: { "Content-Type": "application/json" },
         }
       );
-      setUserValues(response.data.days)
+      setUserValues({
+        time: response.data.time,
+        days: response.data.days,
+      });
     } catch (error: unknown) {
       console.error(
         "Error updating settings:",
@@ -83,14 +89,25 @@ const UserPage: React.FC<UserPageCombined> = ({
       );
     }
   };
+  
+  useEffect(() => {
+    if (userValues.days.length > 0) {
+      userValues.days.forEach((day) => {
+        toggleDay(day);
+      });
+    }
+  }, [userValues.days]);
 
   return (
     <div className="min-h-screen flex flex-col items-center">
       <SilentMoonLogo />
-      <div className="flex items-center w-full mt-36 px-12 justify-between">
-        {/* FIXME: Getting the user image, if the user has uploaded one to the db */}
+      <div className="flex items-center w-full mt-36 px-8 justify-between">
         <section className="flex items-center">
-          <img src="/images/user.png" alt="user image" className="h-16 w-16" />
+            <img
+              src="/images/user.png"
+              alt="user image"
+              className="h-16 w-16"
+            />
           <h3 className="text-5xl font-extrabold pl-8 text-[#4A503D]">
             {userName}
           </h3>
@@ -112,11 +129,11 @@ const UserPage: React.FC<UserPageCombined> = ({
             <Recommended
               key={video.id}
               title={video.title}
-              image={VITE_API_URL + video.image}
+              image={ video.image}
               level={video.level}
               time={video.time}
               description={video.description}
-              videoUrl={VITE_API_URL + video.videoUrl}
+              videoUrl={ + video.videoUrl}
               userId={userId}
               onClick={() => setContentId(video.videoUrl)}
             />
@@ -132,11 +149,11 @@ const UserPage: React.FC<UserPageCombined> = ({
             <Recommended
               key={video.id}
               title={video.title}
-              image={VITE_API_URL + video.image}
+              image={ video.image}
               level={video.level}
               time={video.time}
               description={video.description}
-              videoUrl={VITE_API_URL + video.videoUrl}
+              videoUrl={ video.videoUrl}
               userId={userId}
               onClick={() => setContentId(video.videoUrl)}
             />
@@ -145,9 +162,10 @@ const UserPage: React.FC<UserPageCombined> = ({
       </section>
       {/* FIXME: Styling and adding update functionality also for the time */}
       <section className="flex flex-col px-8 gap-6 pb-48">
-        <h2 className="text-4xl font-semibold mb-4 text-[#4A503D]">
-          Update your selected days
+        <h2 className="text-3xl font-semibold mb-4 text-[#4A503D]">
+          Update your selected days and time
         </h2>
+
         <DayPicker selectedDays={selectedDays} toggleDay={toggleDay} />
         <Button text="SAVE" type="submit" onClick={onSave} />
       </section>

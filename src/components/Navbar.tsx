@@ -2,7 +2,7 @@ import yogaIcon from "/images/yoga.png";
 import meditationIcon from "/images/meditation.png";
 import homeIcon from "/images/home.png";
 import musicIcon from "/images/music.png";
-import userIcon from "/images/user.png";
+import userIcon from "/images/profile.svg";
 import { Link } from "react-router-dom";
 
 type NavbarProps = {

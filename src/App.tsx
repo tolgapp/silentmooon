@@ -16,7 +16,7 @@ type ProtectedProps = {
   isLoggedIn: boolean;
 };
 
-axios.defaults.baseURL = "http://localhost:5002/api";
+axios.defaults.baseURL = import.meta.env.VITE_API_URL || "http://localhost:5002/";
 axios.defaults.withCredentials = true;
 
 const ProtectedRoute: React.FC<ProtectedProps> = ({ isLoggedIn }) => {
@@ -33,16 +33,13 @@ const fetchData = async (category: string) => {
 };
 
 function App() {
-  const VITE_API_URL = import.meta.env.VITE_API_URL;
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
   const [userName, setUserName] = useState<string | null>(null);
   const [selectedDays, setSelectedDays] = useState<number[]>([]);
+  const [time, setTime] = useState<string>("17:00");
 
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [data, setData] = useState<any[]>([]);
-  const [filteredData, setFilteredData] = useState<any[]>([]);
-  const [category, setCategory] = useState<string>("home");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -69,70 +66,29 @@ function App() {
     checkAuthStatus();
   }, [isLoggedIn]);
 
-  // const loadDaysFromDatabase = async () => {
-  //   try {
-  //     const response = await axios.get(`/settings`, {
-  //       withCredentials: true,
-  //     });
-  //     if (response.status === 200 && response.data.settings.days) {
-  //       setSelectedDays(response.data.settings.days);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error loading days from database:", error);
-  //   }
-  // };
 
-  const toggleDay = (dayId: number) => {
-    setSelectedDays((prev) => {
-      const updatedDays = prev.includes(dayId)
-        ? prev.filter((id) => id !== dayId)
-        : [...prev, dayId];
-      return updatedDays.sort((a, b) => a - b);
-    });
+  const toggleDay = (day: number) => {
+    setSelectedDays((prevSelectedDays) =>
+      prevSelectedDays.includes(day)
+        ? prevSelectedDays.filter((d) => d !== day)
+        : [...prevSelectedDays, day] 
+    );
   };
 
-  // useEffect(() => {
-  //   loadDaysFromDatabase();
-  // }, []);
-
-  useEffect(() => {
-    if (!isLoggedIn) return;
-
-    const getData = async () => {
-      try {
-        const dataFromDb = await fetchData(category);
-        setData(dataFromDb);
-        setFilteredData(dataFromDb);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    getData();
-  }, [category, isLoggedIn]);
-
+  
   const handleSearch = (query: string) => {
     setSearchQuery(query);
-
-
-    if (typeof data === "string") {
-      const lowerCaseData = data.toLowerCase();
-      const lowerCaseQuery = query.toLowerCase();
-
-      if (lowerCaseData.includes(lowerCaseQuery)) {
-        setFilteredData([data]);
-      } else {
-        setFilteredData([]);
-      }
-    } else {
-      console.error("Data is not a string:", data);
-    }
+    console.log(searchQuery)
   };
+  
+  useEffect(() => {
+    console.log("Neuer searchQuery:", searchQuery);
+  }, [searchQuery]);
 
   const handleLogout = async () => {
     try {
       await axios.post(
-        `${VITE_API_URL}/api/logout`,
+        `/logout`,
         {},
         { withCredentials: true }
       );
@@ -140,7 +96,7 @@ function App() {
       setIsLoggedIn(false);
       setUserName(null);
 
-      localStorage.clear();
+      localStorage.clear()
       sessionStorage.clear();
 
       navigate("/");
@@ -151,6 +107,36 @@ function App() {
       );
     }
   };
+
+
+  const fetchSettings = async () => {
+    try {
+      const response = await axios.get("/settings", { withCredentials: true });
+      setSelectedDays(response.data.days);
+      setTime(response.data.time);
+    } catch (error) {
+      console.error("Error fetching settings:", error);
+    }
+  };
+
+  const saveSettings = async (days: number[], time: string) => {
+    try {
+      await axios.post(
+        "/api/settings",
+        { days, time },
+        { withCredentials: true, headers: { "Content-Type": "application/json" } }
+      );
+      setSelectedDays(days);
+      setTime(time);
+    } catch (error) {
+      console.error("Error saving settings:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchSettings();
+  }, []);
+
 
   if (loading) {
     return <div>Loading...</div>;
@@ -180,7 +166,17 @@ function App() {
           <Route
             path="/settings"
             element={
-              <SettingsPage toggleDay={toggleDay} selectedDays={selectedDays} />
+              <SettingsPage
+            selectedDays={selectedDays}
+            toggleDay={(day) =>
+              setSelectedDays((prev) =>
+                prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]
+              )
+            }
+            time={time}
+            setTime={setTime}
+            saveSettings={saveSettings}
+          />
             }
           />
           <Route
@@ -195,6 +191,7 @@ function App() {
                 toggleDay={toggleDay}
                 userName={userName}
                 handleLogout={handleLogout}
+                onSearch={handleSearch}
               />
             }
           />
@@ -202,7 +199,6 @@ function App() {
             path="/yoga"
             element={
               <Yoga
-                data={filteredData}
                 onSearch={handleSearch}
                 userName={userName}
               />
@@ -212,7 +208,6 @@ function App() {
             path="/meditation"
             element={
               <Meditation
-                data={filteredData}
                 onSearch={handleSearch}
                 userName={userName}
               />
@@ -222,7 +217,6 @@ function App() {
             path="/music"
             element={
               <Music
-                data={filteredData}
                 onSearch={handleSearch}
                 userName={userName}
               />

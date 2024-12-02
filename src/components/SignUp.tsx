@@ -36,7 +36,7 @@ const SignUp: React.FC = () => {
 
     try {
       const response = await axios.post(
-        `${VITE_API_URL}/api/signup`,
+        `/signup`,
         {
           name: formData.name,
           surname: formData.surname,

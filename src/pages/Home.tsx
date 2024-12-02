@@ -95,11 +95,11 @@ const Home: React.FC<HomeProps> = ({ userName, onSearch }) => {
               id={video.id}
               key={video.id}
               title={video.title}
-              image={import.meta.env.VITE_API_URL + video.image}
+              image={video.image}
               level={video.level}
               time={video.time}
               description={video.description}
-              videoUrl={import.meta.env.VITE_API_URL + video.url}
+              videoUrl={video.url}
               type={video.type}
               category={video.category}
             />

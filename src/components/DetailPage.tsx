@@ -48,7 +48,7 @@ const DetailPage: React.FC<DetailPageProps> = ({
         <div className="relative mt-48 w-full max-h-80 rounded-lg overflow-hidden">
           <video
             ref={videoRef}
-            src={videoUrl}
+            src={"http://localhost:5002"+videoUrl}
             controls={isPlaying}
             className="w-full max-h-full"
             onPlay={() => setIsPlaying(true)}

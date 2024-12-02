@@ -13,11 +13,12 @@ export type DataItem = {
   description: string;
 };
 
-export type Meditation = {
+export type MeditationProps = {
   userName: string,
+  onSearch: (query: string) => string;
 }
 
-export type CombinedMeditation = Meditation & IconsBarProps;
+export type CombinedMeditation = MeditationProps & IconsBarProps;
 
 export type StructureProps = {
   title: string;

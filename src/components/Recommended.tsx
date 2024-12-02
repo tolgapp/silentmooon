@@ -21,7 +21,7 @@ const Recommended: React.FC<DataItem> = ({
       onClick={showDetailPage}
     >
       <img
-        src={image}
+        src={"http://localhost:5002" + image}
         alt={title}
         className="w-72 object-cover h-48 rounded-2xl"
       />
@@ -38,7 +38,8 @@ const Recommended: React.FC<DataItem> = ({
           level={level}
           time={time}
           description={description}
-          videoUrl={videoUrl}
+          videoUrl={
+            videoUrl}
           onClose={hideDetailPage}
         />
       )}
