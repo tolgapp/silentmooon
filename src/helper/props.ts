@@ -1,5 +1,7 @@
 export type DataItem = {
-  map(arg0: (video: any) => import("react/jsx-runtime").JSX.Element): import("react").ReactNode;
+  map(
+    arg0: (video: any) => import("react/jsx-runtime").JSX.Element
+  ): import("react").ReactNode;
   id: string;
   name?: string;
   type: "video" | "audio";
@@ -14,9 +16,9 @@ export type DataItem = {
 };
 
 export type MeditationProps = {
-  userName: string,
+  userName: string;
   onSearch: (query: string) => string;
-}
+};
 
 export type CombinedMeditation = MeditationProps & IconsBarProps;
 
@@ -27,12 +29,11 @@ export type StructureProps = {
 };
 
 export type IconsBarProps = {
-  activeIcon: string;
+  activeIcon: string | null;
   setActiveIcon: (item: string) => void;
 };
 
 export type CombinedStructure = StructureProps & IconsBarProps;
-
 
 export type UserPageProps = {
   selectedDays: number[];

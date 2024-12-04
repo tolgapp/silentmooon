@@ -16,7 +16,8 @@ type ProtectedProps = {
   isLoggedIn: boolean;
 };
 
-axios.defaults.baseURL = import.meta.env.VITE_API_URL || "http://localhost:5002/";
+axios.defaults.baseURL =
+  import.meta.env.VITE_API_URL || "http://localhost:5002/";
 axios.defaults.withCredentials = true;
 
 const ProtectedRoute: React.FC<ProtectedProps> = ({ isLoggedIn }) => {
@@ -66,37 +67,31 @@ function App() {
     checkAuthStatus();
   }, [isLoggedIn]);
 
-
   const toggleDay = (day: number) => {
     setSelectedDays((prevSelectedDays) =>
       prevSelectedDays.includes(day)
         ? prevSelectedDays.filter((d) => d !== day)
-        : [...prevSelectedDays, day] 
+        : [...prevSelectedDays, day]
     );
   };
 
-  
   const handleSearch = (query: string) => {
     setSearchQuery(query);
-    console.log(searchQuery)
+    console.log(searchQuery);
   };
-  
+
   useEffect(() => {
     console.log("Neuer searchQuery:", searchQuery);
   }, [searchQuery]);
 
   const handleLogout = async () => {
     try {
-      await axios.post(
-        `/logout`,
-        {},
-        { withCredentials: true }
-      );
+      await axios.post(`/logout`, {}, { withCredentials: true });
 
       setIsLoggedIn(false);
       setUserName(null);
 
-      localStorage.clear()
+      localStorage.clear();
       sessionStorage.clear();
 
       navigate("/");
@@ -107,7 +102,6 @@ function App() {
       );
     }
   };
-
 
   const fetchSettings = async () => {
     try {
@@ -124,7 +118,10 @@ function App() {
       await axios.post(
         "/api/settings",
         { days, time },
-        { withCredentials: true, headers: { "Content-Type": "application/json" } }
+        {
+          withCredentials: true,
+          headers: { "Content-Type": "application/json" },
+        }
       );
       setSelectedDays(days);
       setTime(time);
@@ -136,7 +133,6 @@ function App() {
   useEffect(() => {
     fetchSettings();
   }, []);
-
 
   if (loading) {
     return <div>Loading...</div>;
@@ -167,16 +163,18 @@ function App() {
             path="/settings"
             element={
               <SettingsPage
-            selectedDays={selectedDays}
-            toggleDay={(day) =>
-              setSelectedDays((prev) =>
-                prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]
-              )
-            }
-            time={time}
-            setTime={setTime}
-            saveSettings={saveSettings}
-          />
+                selectedDays={selectedDays}
+                toggleDay={(day) =>
+                  setSelectedDays((prev) =>
+                    prev.includes(day)
+                      ? prev.filter((d) => d !== day)
+                      : [...prev, day]
+                  )
+                }
+                time={time}
+                setTime={setTime}
+                saveSettings={saveSettings}
+              />
             }
           />
           <Route
@@ -197,30 +195,15 @@ function App() {
           />
           <Route
             path="/yoga"
-            element={
-              <Yoga
-                onSearch={handleSearch}
-                userName={userName}
-              />
-            }
+            element={<Yoga onSearch={handleSearch} userName={userName} searchQuery={searchQuery}/>}
           />
           <Route
             path="/meditation"
-            element={
-              <Meditation
-                onSearch={handleSearch}
-                userName={userName}
-              />
-            }
+            element={<Meditation onSearch={handleSearch} userName={userName} />}
           />
           <Route
             path="/music"
-            element={
-              <Music
-                onSearch={handleSearch}
-                userName={userName}
-              />
-            }
+            element={<Music onSearch={handleSearch} userName={userName} />}
           />
         </Route>
       </Routes>

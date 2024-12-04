@@ -29,6 +29,8 @@ const UserPage: React.FC<UserPageCombined> = ({
   const [favoriteVideos, setFavoriteVideos] = useState<DataItem>([]);
   const userId = localStorage.getItem("userId") || "";
 
+  
+
   const fetchFavoriteVideos = async () => {
     if (!userId) {
       console.warn("User ID is missing");
@@ -97,6 +99,8 @@ const UserPage: React.FC<UserPageCombined> = ({
       });
     }
   }, [userValues.days]);
+
+  
 
   return (
     <div className="min-h-screen flex flex-col items-center">

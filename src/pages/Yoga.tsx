@@ -18,9 +18,10 @@ type DataItem = {
 type YogaProps = {
   userName: string | null;
   onSearch: (search: string) => void;
+  searchQuery: string;
 };
 
-const Yoga: React.FC<YogaProps> = ({ userName, onSearch }) => {
+const Yoga: React.FC<YogaProps> = ({ userName, onSearch, searchQuery }) => {
   const [yogaVideos, setYogaVideos] = useState<DataItem[]>([]);
   const [filteredYogaVideos, setFilteredYogaVideos] = useState<DataItem[]>([]);
   const [activeIcon, setActiveIcon] = useState("All");
@@ -77,6 +78,18 @@ const Yoga: React.FC<YogaProps> = ({ userName, onSearch }) => {
       setFilteredYogaVideos(filtered);
     }
   };
+
+  useEffect(() => {
+    let filtered = yogaVideos;
+
+    if (searchQuery) {
+      filtered = filtered.filter((video) =>
+        video.title.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    setFilteredYogaVideos(filtered);
+  }, [searchQuery, activeIcon, yogaVideos]);
 
   useEffect(() => {
     fetchYogaVideos();
