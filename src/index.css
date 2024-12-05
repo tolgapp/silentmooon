@@ -42,3 +42,97 @@
   animation: slide-down 0.7s ease-out forwards;
 }
 
+
+/* SPOTIFY Player Styling */
+._ControlsButtonsRSWP.__1mg82rk {
+  height: 20vh;
+  position: relative;
+}
+.rswp__devices {
+  visibility: hidden;
+}
+.__1g7paua {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-left: 0px;
+  margin-top: 2rem;
+}
+.__1g7paua a img {
+  height: 29rem;
+  width: 29rem;
+  border-radius: 1rem;
+}
+.slider__range {
+  height: 3rem;
+}
+.rswp__active._InfoRSWP.__1jmym9x {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 2rem;
+  width: 3rem;
+  height: 7rem;
+}
+.rswp__active._InfoRSWP.__1jmym9x img {
+  height: 16rem;
+  width: 16rem;
+  border-radius: 1rem;
+  margin: 1.2rem;
+}
+.rswp__active._InfoRSWP.__1jmym9x a {
+  text-align: center;
+  font-size: 1.30rem;
+  margin-top: -1vh;
+}
+._ContentWrapperRSWP.__1c53jt9 {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 12vh;
+}
+[aria-label="Volume"] svg {
+  width: 2rem;
+  height: 2rem;
+  color: white;
+}
+._ContentWrapperRSWP.__1c53jt9  {
+
+}
+.rswp__toggle._ControlsButtonRSWP.__3hmsj {
+  width: 10rem;
+  height: 4rem;
+  display: flex;
+  width: 100vw;
+}
+.rswp__toggle._ControlsButtonRSWP.__3hmsj svg {
+  width: 10rem;
+  height: 5rem;
+  background-size: cover;
+  color: white;
+}
+.ButtonRSWP._ControlsButtonRSWP.__3hmsj svg {
+  height: 3rem;
+  width: 3rem;
+  color: white;
+} 
+._ControlsButtonRSWP.__3hmsj {
+  background-size: cover;
+  margin: 7px;
+}
+._WrapperRSWP.__1g3et1y {
+  background-image: url('../assets/img/popup-background.svg');
+  background-size: cover;
+ 
+}
+._SliderRSWP.__q14q70 {
+  margin-top: 2rem;
+}
+.rswp__active._InfoRSWP.__1g7paua {
+  border-bottom: none;
+}

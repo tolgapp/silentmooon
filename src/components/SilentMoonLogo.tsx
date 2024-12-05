@@ -2,7 +2,7 @@ import { useLocation } from "react-router-dom";
 
 const SilentMoonLogo = () => {
   const {pathname} = useLocation();
-  const isRightLocation = pathname === "/welcome";
+  const isRightLocation = pathname === "/welcome" || pathname === "/music";
 
   return (
     <h1
