@@ -1,9 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const useSpotifyAuth = (redirectUri: string) => {
   const [isSpotifyConnected, setIsSpotifyConnected] = useState(false);
   const [spotifyToken, setSpotifyToken] = useState<string | null>(null);
+  const [selectedUri, setSelectedUri] = useState(() => {
+    return localStorage.getItem("spotifyUri") || "";
+  });
 
   useEffect(() => {
     const storedToken = localStorage.getItem("spotify_token");
@@ -35,7 +39,6 @@ const useSpotifyAuth = (redirectUri: string) => {
       if (!response.data.access_token) {
         throw new Error("Access token not found in response.");
       }
-      console.log(response.data.access_token)
       return response.data.access_token;
     } catch (error: any) {
       console.error("Error fetching Spotify token:", {
@@ -50,11 +53,12 @@ const useSpotifyAuth = (redirectUri: string) => {
 
   const fetchPlaylists = useCallback(
     async (q = "meditation") => {
-      if (!spotifyToken) {
-        console.warn("No Spotify token found.");
-        return [];
-      }
-  
+      setTimeout(() => {
+        if (!spotifyToken) {
+          console.warn("No Spotify token found.");
+          return [];
+        }
+      }, 2000)
       try {
         console.log("Fetching playlists with query:", q);
         const response = await axios.get("/spotify/playlists", {
@@ -68,9 +72,9 @@ const useSpotifyAuth = (redirectUri: string) => {
   
         const validPlaylists = response.data.playlists.filter(
           (playlist: any) =>
-            playlist?.images?.length > 0 && // Mindestens ein Bild vorhanden
-            playlist?.name &&              // Name darf nicht null/undefined sein
-            playlist?.owner?.id            // Eigentümer-ID muss existieren
+            playlist?.images?.length > 0 &&
+            playlist?.name &&
+            playlist?.owner?.id
         );
   
         return validPlaylists;
@@ -84,14 +88,43 @@ const useSpotifyAuth = (redirectUri: string) => {
         } else {
           console.error("Unexpected error:", error);
         }
-  
         return [];
       }
     },
     [spotifyToken]
   );
-  
 
+
+
+  const fetchTracks = async (playlistId: string) => {
+    if (!spotifyToken) return [];
+    try {
+      const response = await axios.get(
+        `/spotify/playlists/${playlistId}/tracks`,
+        {
+          headers: { Authorization: `Bearer ${spotifyToken}` },
+        }
+      );
+      return response.data.items;
+    } catch (error) {
+      console.error("Error fetching tracks:", error);
+      return [];
+    }
+  };
+
+  const {pathname} = useLocation()
+  const navigate = useNavigate()
+
+  const handleTrackUri = useCallback((uri: string) => {
+    console.log("Selected URI ->:", uri);
+    localStorage.setItem("spotifyUri", uri);
+    setSelectedUri(uri);
+
+    if (selectedUri && pathname === "/meditation") {
+      navigate("/music")
+    }
+  }, []);
+  
   const handleLogout = () => {
     localStorage.removeItem("spotify_token");
     setSpotifyToken(null);
@@ -103,6 +136,9 @@ const useSpotifyAuth = (redirectUri: string) => {
     spotifyToken,
     handleLogout,
     fetchPlaylists,
+    fetchTracks,
+    handleTrackUri,
+    selectedUri
   };
 };
 

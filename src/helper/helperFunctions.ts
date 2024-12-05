@@ -8,8 +8,12 @@ export const randomNum = (max: number): number => {
 // Spotify Login and variables
 export const SPOTIFY_CLIENT_ID = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
 export const SCOPES = [
+  "streaming",
+  "user-read-email",
+  "user-read-private",
   "playlist-read-private",
-  "playlist-read-collaborative"
+  "user-modify-playback-state",
+  "user-read-playback-state"
 ].join(" ");
 
 export const MUSIC = import.meta.env.VITE_MUSIC_REDIRECT_URI;

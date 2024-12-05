@@ -137,7 +137,7 @@ const UserPage: React.FC<UserPageCombined> = ({
               level={video.level}
               time={video.time}
               description={video.description}
-              videoUrl={ + video.videoUrl}
+              videoUrl={ video.videoUrl}
               userId={userId}
               onClick={() => setContentId(video.videoUrl)}
             />

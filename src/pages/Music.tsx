@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Navbar from "../components/Navbar";
 import SilentMoonLogo from "../components/SilentMoonLogo";
 import { containerClass } from "../helper/classNames";
 import useSpotifyAuth from "../helper/useSpotifyAuth";
 import { handleLogin, MEDI, MUSIC } from "../helper/helperFunctions";
 import { useLocation } from "react-router-dom";
+import SpotifyPlayer from "react-spotify-web-playback";
 
 type MusicProps = {
   userName: string | null;
@@ -12,9 +13,10 @@ type MusicProps = {
 
 const Music: React.FC<MusicProps> = ({ userName }) => {
   const { pathname } = useLocation();
-  const { isSpotifyConnected, handleLogout } = useSpotifyAuth(
+  const { isSpotifyConnected, handleLogout, spotifyToken, selectedUri } = useSpotifyAuth(
     pathname === "/music" ? MUSIC : MEDI
   );
+
 
   return (
     <div className={containerClass}>
@@ -24,6 +26,22 @@ const Music: React.FC<MusicProps> = ({ userName }) => {
           <h3 className="text-3xl font-semibold text-gray-600">
             Welcome! Your Spotify is connected.
           </h3>
+          <SpotifyPlayer
+            token={spotifyToken} 
+            uris={[selectedUri]} 
+            autoPlayplay={true}
+            play={true}
+            showSaveIcon={false}
+            spotifyIcon={false}
+            styles={{
+              bgColor: "transparent",
+              color: "#4A503D",
+              loaderColor: "#4A503D",
+              sliderColor: "#E28F83",
+              trackArtistColor: "#4A503D",
+              trackNameColor: "#4A503D"
+            }}
+          />
           <button
             className="mt-4 px-4 py-2 bg-red-500 text-white rounded"
             onClick={handleLogout}

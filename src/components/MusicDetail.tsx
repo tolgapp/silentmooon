@@ -2,12 +2,16 @@ import React from "react";
 
 type MusicDetailProps = {
   tracks: any[];
-  playTrack: (previewUrl: string) => void;
-  onClose: () => void; 
+  handleTrackUri: (uri: string) => void; // Funktion nimmt URI und hat keinen Rückgabewert
+  onClose: () => void;
 };
 
-const MusicDetail: React.FC<MusicDetailProps> = ({ tracks, playTrack, onClose }) => {
-
+const MusicDetail: React.FC<MusicDetailProps> = ({
+  tracks,
+  handleTrackUri,
+  onClose,
+}) => {
+  
   return (
     <div
       className="fixed bottom-0 left-0 w-full bg-white rounded-t-2xl shadow-lg overflow-y-auto z-50 transition-transform duration-300 pb-48 animate-slide-up"
@@ -25,20 +29,26 @@ const MusicDetail: React.FC<MusicDetailProps> = ({ tracks, playTrack, onClose })
       <div className="p-4">
         {tracks.length > 0 ? (
           <div className="space-y-4">
-            {tracks.map((track: any) => (
+            {tracks.map((track: any, index) => (
               <div
-                key={track.track.id}
+                key={index}
                 className="flex items-center justify-between bg-gray-100 p-4 rounded-lg shadow-md"
               >
                 <section className="flex items-center gap-4">
-                <img src={track.track.album.images[0].url} alt="" className="h-20"/>
-                <p className="text-gray-700 text-xl font-semibold">{track.track.name}</p>
+                  <img
+                    src={track.track.album.images[0].url}
+                    alt=""
+                    className="h-20"
+                  />
+                  <p className="text-gray-700 text-xl font-semibold">
+                    {track.track.name}
+                  </p>
                 </section>
                 <button
-                  onClick={() => playTrack(track.track.preview_url)}
-                  className="py-4 px-8 bg-green-500 text-white rounded-lg text-lg hover:bg-green-600"
+                  onClick={() => handleTrackUri(track.track.uri)} 
+                  className={`py-4 px-8 bg-green-500 hover:bg-green-600 text-white rounded-lg text-lg`}
                 >
-                  Play 
+                  Play
                 </button>
               </div>
             ))}
