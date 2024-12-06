@@ -16,8 +16,9 @@ export type DataItem = {
 };
 
 export type MeditationProps = {
-  userName: string;
-  onSearch: (query: string) => string;
+  userName: string | null;
+  onSearch: (search: string) => void;
+  searchQuery: string;
 };
 
 export type CombinedMeditation = MeditationProps & IconsBarProps;

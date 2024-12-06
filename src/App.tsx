@@ -78,13 +78,9 @@ function App() {
   };
 
   const handleSearch = (query: string) => {
+    console.log("handleSearch", query)
     setSearchQuery(query);
-    console.log(searchQuery);
   };
-
-  useEffect(() => {
-    console.log("Neuer searchQuery:", searchQuery);
-  }, [searchQuery]);
 
   const handleLogout = async () => {
     try {
@@ -202,7 +198,7 @@ function App() {
           />
           <Route
             path="/meditation"
-            element={<Meditation onSearch={handleSearch} userName={userName} />}
+            element={<Meditation onSearch={handleSearch} userName={userName} searchQuery={searchQuery}/>}
           />
           <Route
             path="/music"

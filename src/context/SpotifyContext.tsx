@@ -37,7 +37,6 @@ export const SpotifyProvider: React.FC<{
       if (code) {
         fetchSpotifyToken(code, `${pathname === "/meditation" ? MEDI : MUSIC}`) // Passe die Redirect-URI an
           .then((token) => {
-            console.log(token)
             setSpotifyToken(token);
             localStorage.setItem("spotify_token", token);
             setIsSpotifyConnected(true);

@@ -1,57 +1,74 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Structure from "../components/Structure";
-import { handleLogin, MEDI, MUSIC } from "../helper/helperFunctions";
+import { handleLogin } from "../helper/helperFunctions";
 import { MeditationProps } from "../helper/props";
 import axios from "axios";
 import MusicDetail from "../components/MusicDetail";
-import { useSpotify } from "../context/spotifyContext";
-// import useSpotifyAuth from "../helper/useSpotifyAuth";
-// import { useLocation } from "react-router-dom";
+import { useSpotify } from "../context/SpotifyContext";
 
-const Meditation: React.FC<MeditationProps> = ({ userName, onSearch }) => {
-  // const { pathname } = useLocation();
-  // const { isSpotifyConnected, fetchPlaylists, fetchTracks, handleTrackUri } =
-  //   useSpotifyAuth(pathname === "/meditation" ? MEDI : MUSIC);
+const Meditation: React.FC<MeditationProps> = ({
+  userName,
+  onSearch,
+  searchQuery,
+}) => {
   const { isSpotifyConnected, fetchPlaylists, fetchTracks, handleTrackUri } =
     useSpotify();
   const [activeIcon, setActiveIcon] = useState<string | null>(null);
-  const [playlists, setPlaylists] = useState<unknown[]>([]);
+  const [playlists, setPlaylists] = useState<any[]>([]);
+  const [filteredPlaylists, setFilteredPlaylists] = useState<any[]>([]);
   const [selectedPlaylistUri, setSelectedPlaylistUri] = useState<string | null>(
     null
   );
   const [selectedTracks, setSelectedTracks] = useState<any[]>([]);
   const spotifyToken = localStorage.getItem("spotify_token");
+  const userId = localStorage.getItem("userId") || "";
 
   useEffect(() => {
     const loadPlaylists = async () => {
       try {
+        let fetchedPlaylists: any[] = [];
+
         if (!activeIcon) {
-          const fetchedPlaylists = await fetchPlaylists("meditate");
-          setPlaylists(fetchedPlaylists);
+          fetchedPlaylists = await fetchPlaylists("meditate");
         } else if (activeIcon.toLowerCase() === "favorites") {
-          const response = await axios.get("/spotify/playlist/favorites", {
+          const response = await axios.get("/user/spotify-favorites", {
             headers: { Authorization: `Bearer ${spotifyToken}` },
+            params: { userId },
           });
-          setPlaylists(response.data.favorites || []);
+          fetchedPlaylists = response.data || [];
         } else if (activeIcon.toLowerCase() === "all") {
-          const queries = ["anxious", "sleep", "kids", "yoga", "meditation"];
+          const queries = ["anxious", "sleep", "kids", "yoga", "meditate"];
           const allPlaylists = await Promise.all(
             queries.map((query) => fetchPlaylists(query))
           );
-          setPlaylists(allPlaylists.flat());
+          fetchedPlaylists = allPlaylists.flat();
         } else {
           const searchTerm = activeIcon.toLowerCase();
-          const fetchedPlaylists = await fetchPlaylists(searchTerm);
-          setPlaylists(fetchedPlaylists);
+          fetchedPlaylists = await fetchPlaylists(searchTerm);
         }
+
+        setPlaylists(fetchedPlaylists);
+
+        if (searchQuery) {
+          const lowercasedQuery = searchQuery.toLowerCase();
+          setFilteredPlaylists(
+            fetchedPlaylists.filter((playlist: any) =>
+              playlist.name?.toLowerCase().includes(lowercasedQuery)
+            )
+          );
+        } else {
+          setFilteredPlaylists(fetchedPlaylists);
+        }
+
+        console.log("Fetched Playlists:", fetchedPlaylists);
       } catch (error) {
         console.error("Error loading playlists:", error);
       }
     };
 
     loadPlaylists();
-  }, [activeIcon, fetchPlaylists, spotifyToken]);
+  }, [activeIcon, fetchPlaylists, spotifyToken, searchQuery]);
 
   const handleViewTracks = (playlistId: string, playlistUri: string) => {
     setSelectedPlaylistUri(playlistUri);
@@ -70,7 +87,7 @@ const Meditation: React.FC<MeditationProps> = ({ userName, onSearch }) => {
       {isSpotifyConnected ? (
         <div className="mt-16 flex flex-col items-center w-full">
           <div className="flex flex-wrap gap-8 items-start w-full px-10 pb-60">
-            {playlists
+            {filteredPlaylists
               .filter((playlist: any) => playlist && playlist.id)
               .map((playlist: any, index) => (
                 <div
@@ -94,11 +111,12 @@ const Meditation: React.FC<MeditationProps> = ({ userName, onSearch }) => {
           {selectedTracks.length > 0 && (
             <MusicDetail
               tracks={selectedTracks}
-              playlistUri={selectedPlaylistUri || ""} // Playlist-URI übergeben
+              playlistUri={selectedPlaylistUri || ""} 
               handleTrackUri={handleTrackUri}
+              userId={userId}
               onClose={() => {
                 setSelectedTracks([]);
-                setSelectedPlaylistUri(null); // Playlist-URI zurücksetzen
+                setSelectedPlaylistUri(null); 
               }}
             />
           )}
