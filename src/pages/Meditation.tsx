@@ -1,19 +1,25 @@
 import { useEffect, useRef, useState } from "react";
 import Navbar from "../components/Navbar";
 import Structure from "../components/Structure";
-import useSpotifyAuth from "../helper/useSpotifyAuth";
 import { handleLogin, MEDI, MUSIC } from "../helper/helperFunctions";
-import { useLocation } from "react-router-dom";
 import { MeditationProps } from "../helper/props";
 import axios from "axios";
 import MusicDetail from "../components/MusicDetail";
+import { useSpotify } from "../context/spotifyContext";
+// import useSpotifyAuth from "../helper/useSpotifyAuth";
+// import { useLocation } from "react-router-dom";
 
 const Meditation: React.FC<MeditationProps> = ({ userName, onSearch }) => {
-  const { pathname } = useLocation();
+  // const { pathname } = useLocation();
+  // const { isSpotifyConnected, fetchPlaylists, fetchTracks, handleTrackUri } =
+  //   useSpotifyAuth(pathname === "/meditation" ? MEDI : MUSIC);
   const { isSpotifyConnected, fetchPlaylists, fetchTracks, handleTrackUri } =
-    useSpotifyAuth(pathname === "/meditation" ? MEDI : MUSIC);
+    useSpotify();
   const [activeIcon, setActiveIcon] = useState<string | null>(null);
   const [playlists, setPlaylists] = useState<unknown[]>([]);
+  const [selectedPlaylistUri, setSelectedPlaylistUri] = useState<string | null>(
+    null
+  );
   const [selectedTracks, setSelectedTracks] = useState<any[]>([]);
   const spotifyToken = localStorage.getItem("spotify_token");
 
@@ -47,7 +53,8 @@ const Meditation: React.FC<MeditationProps> = ({ userName, onSearch }) => {
     loadPlaylists();
   }, [activeIcon, fetchPlaylists, spotifyToken]);
 
-  const handleViewTracks = (playlistId: string) => {
+  const handleViewTracks = (playlistId: string, playlistUri: string) => {
+    setSelectedPlaylistUri(playlistUri);
     fetchTracks(playlistId).then(setSelectedTracks);
   };
 
@@ -77,7 +84,7 @@ const Meditation: React.FC<MeditationProps> = ({ userName, onSearch }) => {
                   />
                   <button
                     className="w-full p-4 bg-[#8E9775] text-white rounded-b-lg text-2xl font-semibold hover:bg-[#8E9775]"
-                    onClick={() => handleViewTracks(playlist.id)}
+                    onClick={() => handleViewTracks(playlist.id, playlist.uri)} // Playlist-URI übergeben
                   >
                     View Tracks
                   </button>
@@ -87,8 +94,12 @@ const Meditation: React.FC<MeditationProps> = ({ userName, onSearch }) => {
           {selectedTracks.length > 0 && (
             <MusicDetail
               tracks={selectedTracks}
+              playlistUri={selectedPlaylistUri || ""} // Playlist-URI übergeben
               handleTrackUri={handleTrackUri}
-              onClose={() => setSelectedTracks([])}
+              onClose={() => {
+                setSelectedTracks([]);
+                setSelectedPlaylistUri(null); // Playlist-URI zurücksetzen
+              }}
             />
           )}
         </div>

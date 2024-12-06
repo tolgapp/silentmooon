@@ -1,10 +1,11 @@
 import Navbar from "../components/Navbar";
 import SilentMoonLogo from "../components/SilentMoonLogo";
 import { containerClassMusic } from "../helper/classNames";
-import useSpotifyAuth from "../helper/useSpotifyAuth";
+// import useSpotifyAuth from "../helper/useSpotifyAuth";
 import { handleLogin, MEDI, MUSIC } from "../helper/helperFunctions";
 import { useLocation } from "react-router-dom";
 import SpotifyPlayer from "react-spotify-web-playback";
+import { useSpotify } from "../context/spotifyContext";
 
 type MusicProps = {
   userName: string | null;
@@ -12,10 +13,11 @@ type MusicProps = {
 
 const Music: React.FC<MusicProps> = ({ userName }) => {
   const { pathname } = useLocation();
-  const { isSpotifyConnected, spotifyToken, selectedUri } = useSpotifyAuth(
-    pathname === "/music" ? MUSIC : MEDI
-  );
+  // const { isSpotifyConnected, spotifyToken, selectedUri } = useSpotifyAuth(
+  //   pathname === "/music" ? MUSIC : MEDI
+  // );
 
+  const { isSpotifyConnected, selectedUri, spotifyToken } = useSpotify();
 
   return (
     <div className={containerClassMusic}>

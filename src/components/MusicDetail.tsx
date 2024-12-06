@@ -2,28 +2,35 @@ import React from "react";
 
 type MusicDetailProps = {
   tracks: any[];
-  handleTrackUri: (uri: string) => void; // Funktion nimmt URI und hat keinen Rückgabewert
+  playlistUri: string;
+  handleTrackUri: (uri: string) => void;
   onClose: () => void;
 };
 
 const MusicDetail: React.FC<MusicDetailProps> = ({
   tracks,
+  playlistUri,
   handleTrackUri,
   onClose,
 }) => {
-  
   return (
     <div
-      className="fixed bottom-0 left-0 w-full bg-white rounded-t-2xl shadow-lg overflow-y-auto z-50 transition-transform duration-300 pb-48 animate-slide-up"
+      className="fixed bottom-0 left-0 w-full bg-white rounded-t-2xl shadow-lg overflow-y-auto z-50 transition-transform duration-300 pb-48 animate-slide-up border-t-8"
       style={{ height: "98%" }}
     >
-      <div className="flex sticky bg-white top-0 z-30 justify-between items-center px-4 py-2 border-b">
-        <h3 className="text-4xl font-semibold">Tracks</h3>
+      <button
+        onClick={onClose}
+        className="w-full text-right border-2 border-gray-700 rounded-full p-6 text-5xl hover:text-red-500 focus:outline-none"
+      >
+        &times;
+      </button>
+      <div className="flex sticky bg-white top-0 z-30 justify-between items-center px-4 py-8 border-b ">
+        <h3 className="text-4xl font-semibold">Play the full Playlist</h3>
         <button
-          onClick={onClose}
-          className="text-gray-500 text-5xl hover:text-red-500 focus:outline-none"
+          onClick={() => handleTrackUri(playlistUri)}
+          className={`py-4 px-8 bg-green-500 hover:bg-green-600 text-white rounded-lg text-lg`}
         >
-          &times;
+          Play Playlist
         </button>
       </div>
       <div className="p-4">
@@ -41,14 +48,14 @@ const MusicDetail: React.FC<MusicDetailProps> = ({
                     className="h-20"
                   />
                   <p className="text-gray-700 text-xl font-semibold">
-                    {track.track.name}
+                    {track.track.name.slice(0, 24)}
                   </p>
                 </section>
                 <button
-                  onClick={() => handleTrackUri(track.track.uri)} 
+                  onClick={() => handleTrackUri(track.track.uri)}
                   className={`py-4 px-8 bg-green-500 hover:bg-green-600 text-white rounded-lg text-lg`}
                 >
-                  Play
+                  Play Track
                 </button>
               </div>
             ))}

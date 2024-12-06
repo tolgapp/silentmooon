@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { MEDI, MUSIC, randomNum } from "../helper/helperFunctions";
-import useSpotifyAuth from "../helper/useSpotifyAuth";
-import { useLocation } from "react-router-dom";
+// import useSpotifyAuth from "../helper/useSpotifyAuth";
+// import { useLocation } from "react-router-dom";
 
 type DataItem = {
   id: string;
@@ -23,10 +23,10 @@ type Random = {
 };
 
 const RandomYoga: React.FC<Random> = () => {
-  const {pathname} = useLocation()
-  const { isSpotifyConnected, fetchPlaylists, fetchTracks } = useSpotifyAuth(
-    pathname === "/meditation" ? MEDI : MUSIC
-  );
+  // const {pathname} = useLocation()
+  // const { isSpotifyConnected, fetchPlaylists, fetchTracks } = useSpotifyAuth(
+  //   pathname === "/meditation" ? MEDI : MUSIC
+  // );
   const [yogaVideos, setYogaVideos] = useState<DataItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const backendUrl = "http://localhost:5002"

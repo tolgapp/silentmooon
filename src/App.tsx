@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Route, Routes, Navigate, Outlet, useNavigate } from "react-router-dom";
+import { Route, Routes, Navigate, Outlet, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import Home from "./pages/Home";
 import Login from "./components/Login";
@@ -11,6 +11,7 @@ import LandingPage from "./pages/LandingPage";
 import Yoga from "./pages/Yoga";
 import Meditation from "./pages/Meditation";
 import Music from "./pages/Music";
+import { SpotifyProvider } from "./context/spotifyContext";
 
 type ProtectedProps = {
   isLoggedIn: boolean;
@@ -28,10 +29,10 @@ const ProtectedRoute: React.FC<ProtectedProps> = ({ isLoggedIn }) => {
 };
 
 // Funktion zum Abrufen der Daten von der API, abhängig von der Kategorie
-const fetchData = async (category: string) => {
-  const response = await axios.get(`/${category}`);
-  return response.data;
-};
+// const fetchData = async (category: string) => {
+//   const response = await axios.get(`/${category}`);
+//   return response.data;
+// };
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -41,6 +42,7 @@ function App() {
   const [time, setTime] = useState<string>("17:00");
 
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -140,6 +142,7 @@ function App() {
 
   return (
     <>
+      <SpotifyProvider navigate={path => (window.location.href = path)} pathname={window.location.pathname}>
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route
@@ -207,6 +210,7 @@ function App() {
           />
         </Route>
       </Routes>
+      </SpotifyProvider>
     </>
   );
 }

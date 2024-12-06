@@ -51,12 +51,14 @@
 .rswp__devices {
   visibility: hidden;
 }
+.rswp__active._InfoRSWP.__1g7paua {
+  padding-left: 0px;
+}
 .__1g7paua {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding-left: 0px;
   margin-top: 2rem;
 }
 .__1g7paua a img {
@@ -89,7 +91,6 @@
   margin-top: -1vh;
 }
 ._ContentWrapperRSWP.__1c53jt9 {
-  text-align: center;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -101,21 +102,29 @@
   height: 2rem;
   color: white;
 }
-._ContentWrapperRSWP.__1c53jt9  {
-
+._ContentRSWP.__rxinlq {
+  width: 100%;
+  height: 7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+[data-type="title-artist-wrapper"] {
+  text-align: center;
+}
+[data-type="title-artist-wrapper"] > div > p:first-of-type > span > a {
+  font-size: 3.4rem;
+}
+[data-type="title-artist-wrapper"] > div > p:last-of-type > span > a {
+  font-size: 2rem;
 }
 .rswp__toggle._ControlsButtonRSWP.__3hmsj {
-  width: 10rem;
-  height: 4rem;
-  display: flex;
-  width: 100vw;
+  width: 40vw;
 }
-.rswp__toggle._ControlsButtonRSWP.__3hmsj svg {
-  width: 10rem;
-  height: 5rem;
-  background-size: cover;
-  color: white;
-}
+.ButtonRSWP._ControlsButtonRSWP.__3hmsj {
+ display: flex;
+ height: 20rem;
+} 
 .ButtonRSWP._ControlsButtonRSWP.__3hmsj svg {
   height: 3rem;
   width: 3rem;
