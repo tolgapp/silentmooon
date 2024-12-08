@@ -17,15 +17,25 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
     } else if (e.key === "Escape") {
       setValue(""); 
       onSearch(""); 
+    } 
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value;
+    setValue(inputValue);
+
+    if (inputValue === "") {
+      onSearch("");
     }
   };
+
 
   return (
     <div className="mt-12 flex justify-between bg-slate-100 w-[90%] rounded-2xl">
       <input
         type="text"
         value={value}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={handleChange}
         onKeyDown={handleKeyDown}
         className="border rounded-xl bg-slate-100 h-14 ml-6 text-2xl"
         placeholder="e.g Stretch or Focus"

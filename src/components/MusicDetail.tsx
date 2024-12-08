@@ -16,14 +16,23 @@ const MusicDetail: React.FC<MusicDetailProps> = ({
   onClose,
   userId
 }) => {
+
   const addToFavorites = async () => {
     try {
-      const contentId = playlistUri; 
-      await axios.post("/user/spotify-favorites", { userId, contentId });
+      const contentId = playlistUri.split(":").pop() || playlistUri; 
+      const playlistName = tracks[0]?.track?.album?.name || "Unknown Playlist";
+  
+      await axios.post("/user/spotify-favorites/add", {
+        userId,
+        contentId, 
+        playlistName,
+      });
     } catch (error) {
       console.error("Error adding to favorites:", error);
     }
   };
+  
+  
 
   return (
     <div

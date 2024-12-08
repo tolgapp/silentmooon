@@ -1,7 +1,4 @@
 export type DataItem = {
-  map(
-    arg0: (video: any) => import("react/jsx-runtime").JSX.Element
-  ): import("react").ReactNode;
   id: string;
   name?: string;
   type: "video" | "audio";

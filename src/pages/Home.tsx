@@ -15,6 +15,7 @@ type HomeProps = {
 const Home: React.FC<HomeProps> = ({ userName, onSearch }) => {
   const [greeting, setGreeting] = useState("");
   const [dayMessage, setDayMessage] = useState("");
+  const [yogaVideos, setYogaVideos] = useState<DataItem[]>([]);
 
   const updateGreetingAndMessage = () => {
     const hour = new Date().getHours();
@@ -37,8 +38,6 @@ const Home: React.FC<HomeProps> = ({ userName, onSearch }) => {
 
     return () => clearInterval(intervalId);
   }, []);
-
-  const [yogaVideos, setYogaVideos] = useState<DataItem[]>([]);
 
   const fetchYogaVideos = async () => {
     try {

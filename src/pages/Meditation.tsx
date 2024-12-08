@@ -6,6 +6,7 @@ import { MeditationProps } from "../helper/props";
 import axios from "axios";
 import MusicDetail from "../components/MusicDetail";
 import { useSpotify } from "../context/SpotifyContext";
+import placeholder from "/images/placeholder.jpg"
 
 const Meditation: React.FC<MeditationProps> = ({
   userName,
@@ -32,13 +33,17 @@ const Meditation: React.FC<MeditationProps> = ({
         if (!activeIcon) {
           fetchedPlaylists = await fetchPlaylists("meditate");
         } else if (activeIcon.toLowerCase() === "favorites") {
-          const response = await axios.get("/user/spotify-favorites", {
+          const response = await axios.get("/user/spotify-favorites/details", {
             headers: { Authorization: `Bearer ${spotifyToken}` },
             params: { userId },
           });
-          fetchedPlaylists = response.data || [];
+          if (response) {
+            fetchedPlaylists = response.data || [];
+          } else {
+            return []
+          }
         } else if (activeIcon.toLowerCase() === "all") {
-          const queries = ["anxious", "sleep", "kids", "yoga", "meditate"];
+          const queries = ["anxious", "sleep", "child", "yoga", "meditate"];
           const allPlaylists = await Promise.all(
             queries.map((query) => fetchPlaylists(query))
           );
@@ -60,8 +65,6 @@ const Meditation: React.FC<MeditationProps> = ({
         } else {
           setFilteredPlaylists(fetchedPlaylists);
         }
-
-        console.log("Fetched Playlists:", fetchedPlaylists);
       } catch (error) {
         console.error("Error loading playlists:", error);
       }
@@ -94,14 +97,18 @@ const Meditation: React.FC<MeditationProps> = ({
                   className="flex flex-col w-64 rounded-2xl shadow-lg"
                   key={`${playlist.id}-${index}`}
                 >
-                  <img
-                    src={playlist.images[0]?.url || ""}
+                  {playlist.image ? <img
+                    src={playlist.image || placeholder}
                     alt={playlist.name || "Unknown Playlist"}
                     className="w-full h-64 rounded-t-xl"
-                  />
+                  /> : <img
+                    src={playlist.images[0]?.url || placeholder}
+                    alt={playlist.name || "Unknown Playlist"}
+                    className="w-full h-64 rounded-t-xl"
+                  />}
                   <button
                     className="w-full p-4 bg-[#8E9775] text-white rounded-b-lg text-2xl font-semibold hover:bg-[#8E9775]"
-                    onClick={() => handleViewTracks(playlist.id, playlist.uri)} // Playlist-URI übergeben
+                    onClick={() => handleViewTracks(playlist.id, playlist.uri)} 
                   >
                     View Tracks
                   </button>
@@ -111,12 +118,12 @@ const Meditation: React.FC<MeditationProps> = ({
           {selectedTracks.length > 0 && (
             <MusicDetail
               tracks={selectedTracks}
-              playlistUri={selectedPlaylistUri || ""} 
+              playlistUri={selectedPlaylistUri || ""}
               handleTrackUri={handleTrackUri}
               userId={userId}
               onClose={() => {
                 setSelectedTracks([]);
-                setSelectedPlaylistUri(null); 
+                setSelectedPlaylistUri(null);
               }}
             />
           )}
