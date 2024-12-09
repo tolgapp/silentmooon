@@ -109,7 +109,7 @@ export const SpotifyProvider: React.FC<{
       localStorage.setItem("spotifyUri", uri);
       setSelectedUri(uri);
   
-      if (pathname === "/meditation" || pathname === "/home") {
+      if (pathname === "/meditation" || pathname === "/home" || pathname === "/userpage") {
         navigate("/music");
       }
       console.log(uri, pathname);

@@ -42,7 +42,6 @@ const DetailPage: React.FC<DetailPageProps> = ({
       <section className="flex justify-center">
         <BackButton onClose={handleClose} />
         <Favorite contentId={videoUrl} />
-        {/* contentId={contentId} for Favorite */}
       </section>
       {videoUrl && (
         <div className="relative mt-48 w-full max-h-80 rounded-lg overflow-hidden">

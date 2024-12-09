@@ -21,7 +21,7 @@ const Recommended: React.FC<DataItem> = ({
       onClick={showDetailPage}
     >
       <img
-        src={"http://localhost:5002" + image}
+        src={image}
         alt={title}
         className="w-72 object-cover h-48 rounded-2xl"
       />

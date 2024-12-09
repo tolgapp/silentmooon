@@ -13,7 +13,7 @@ const LandingPage = () => {
           className="w-full h-full object-cover"
         />
       </div>
-      <div className="flex-auto bg-white p-6 flex flex-col">
+      <div className="flex-auto bg-white p-6 flex flex-col gap-8">
         <div className="space-y-4 flex items-center flex-col">
           <h2 className="text-5xl font-medium">We are what we do</h2>
           <p className="max-w-[30rem] text-center break-words text-2xl">

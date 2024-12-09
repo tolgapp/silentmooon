@@ -11,7 +11,7 @@ type MusicProps = {
 };
 
 const Music: React.FC<MusicProps> = ({ userName }) => {
-  const { isSpotifyConnected, selectedUri, spotifyToken, handleLogout } =
+  const { isSpotifyConnected, selectedUri, spotifyToken } =
     useSpotify();
 
   return (
@@ -35,7 +35,6 @@ const Music: React.FC<MusicProps> = ({ userName }) => {
               trackNameColor: "#fff",
             }}
           />
-          <button className="mt-8 w-full bg-red-500 hover:bg-red-600 text-white text-center text-3xl py-4" onClick={handleLogout}>Disconnect Spotify</button>
         </div>
       ) : (
         <div className="min-h-screen flex flex-col items-center justify-center">

@@ -10,12 +10,15 @@ import { DataItem } from "../helper/props";
 type HomeProps = {
   userName: string | null;
   onSearch: (query: string) => void;
+  searchQuery: string;
 };
 
-const Home: React.FC<HomeProps> = ({ userName, onSearch }) => {
+const Home: React.FC<HomeProps> = ({ userName, onSearch, searchQuery }) => {
   const [greeting, setGreeting] = useState("");
   const [dayMessage, setDayMessage] = useState("");
   const [yogaVideos, setYogaVideos] = useState<DataItem[]>([]);
+  const [filteredVideos, setFilteredVideos] = useState<DataItem[]>([]);
+  const backendURL = "http://localhost:5002";
 
   const updateGreetingAndMessage = () => {
     const hour = new Date().getHours();
@@ -64,6 +67,18 @@ const Home: React.FC<HomeProps> = ({ userName, onSearch }) => {
     fetchYogaVideos();
   }, []);
 
+  // Filterlogik für die Suchanfrage
+  useEffect(()  => {
+    if (searchQuery) {
+      const filtered = yogaVideos.filter((video) =>
+        video.title.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredVideos(filtered);
+    } else {
+      setFilteredVideos([]);
+    }
+  }, [searchQuery, yogaVideos]);
+
   const getRandomVideos = (videos: DataItem[], count: number): DataItem[] => {
     if (videos.length <= count) return videos;
 
@@ -71,10 +86,13 @@ const Home: React.FC<HomeProps> = ({ userName, onSearch }) => {
     return shuffled.slice(0, count);
   };
 
-  const randomRecommendedVideos = getRandomVideos(yogaVideos, 4);
+  const recommendedVideos = searchQuery
+    ? filteredVideos 
+    : getRandomVideos(yogaVideos, 4); 
 
+ 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center pb-48">
       <SilentMoonLogo />
       <section className="pl-10 pr-10 w-full justify-start">
         <h2 className="mt-44 text-4xl font-semibold">
@@ -86,23 +104,27 @@ const Home: React.FC<HomeProps> = ({ userName, onSearch }) => {
       <SearchBar onSearch={onSearch} />
       <section className="w-full mt-10">
         <h3 className="text-3xl font-semibold mb-10 mt-4 px-8">
-          Recommended yoga for you
+          {searchQuery ? `Results for "${searchQuery}"` : "Recommended yoga for you"}
         </h3>
         <div className="flex overflow-x-auto gap-9 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 px-8">
-          {randomRecommendedVideos.map((video) => (
-            <Recommended
-              id={video.id}
-              key={video.id}
-              title={video.title}
-              image={video.image}
-              level={video.level}
-              time={video.time}
-              description={video.description}
-              videoUrl={video.url}
-              type={video.type}
-              category={video.category}
-            />
-          ))}
+          {recommendedVideos.length > 0 ? (
+            recommendedVideos.map((video) => (
+              <Recommended
+                id={video.id}
+                key={video.id}
+                title={video.title}
+                image={backendURL + video.image}
+                level={video.level}
+                time={video.time}
+                description={video.description}
+                videoUrl={video.url}
+                type={video.type}
+                category={video.category}
+              />
+            ))
+          ) : (
+            <p className="text-gray-500 text-xl px-8">No videos found.</p>
+          )}
         </div>
       </section>
       <Navbar userName={userName} />

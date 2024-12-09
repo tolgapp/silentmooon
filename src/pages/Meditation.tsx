@@ -6,7 +6,8 @@ import { MeditationProps } from "../helper/props";
 import axios from "axios";
 import MusicDetail from "../components/MusicDetail";
 import { useSpotify } from "../context/SpotifyContext";
-import placeholder from "/images/placeholder.jpg"
+import placeholder from "/images/placeholder.jpg";
+import PlaylistCard from "../components/PlaylistCard"; // Importiere die neue Komponente
 
 const Meditation: React.FC<MeditationProps> = ({
   userName,
@@ -40,7 +41,7 @@ const Meditation: React.FC<MeditationProps> = ({
           if (response) {
             fetchedPlaylists = response.data || [];
           } else {
-            return []
+            return [];
           }
         } else if (activeIcon.toLowerCase() === "all") {
           const queries = ["anxious", "sleep", "child", "yoga", "meditate"];
@@ -93,26 +94,13 @@ const Meditation: React.FC<MeditationProps> = ({
             {filteredPlaylists
               .filter((playlist: any) => playlist && playlist.id)
               .map((playlist: any, index) => (
-                <div
-                  className="flex flex-col w-64 rounded-2xl shadow-lg"
+                <PlaylistCard
                   key={`${playlist.id}-${index}`}
-                >
-                  {playlist.image ? <img
-                    src={playlist.image || placeholder}
-                    alt={playlist.name || "Unknown Playlist"}
-                    className="w-full h-64 rounded-t-xl"
-                  /> : <img
-                    src={playlist.images[0]?.url || placeholder}
-                    alt={playlist.name || "Unknown Playlist"}
-                    className="w-full h-64 rounded-t-xl"
-                  />}
-                  <button
-                    className="w-full p-4 bg-[#8E9775] text-white rounded-b-lg text-2xl font-semibold hover:bg-[#8E9775]"
-                    onClick={() => handleViewTracks(playlist.id, playlist.uri)} 
-                  >
-                    View Tracks
-                  </button>
-                </div>
+                  playlist={playlist}
+                  placeholder={placeholder}
+                  handleViewTracks={handleViewTracks}
+                  index={index}
+                />
               ))}
           </div>
           {selectedTracks.length > 0 && (

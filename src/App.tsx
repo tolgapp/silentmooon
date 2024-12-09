@@ -78,7 +78,6 @@ function App() {
   };
 
   const handleSearch = (query: string) => {
-    console.log("handleSearch", query)
     setSearchQuery(query);
   };
 
@@ -178,7 +177,7 @@ function App() {
           />
           <Route
             path="/home"
-            element={<Home userName={userName} onSearch={handleSearch} />}
+            element={<Home userName={userName} onSearch={handleSearch} searchQuery={searchQuery}/>}
           />
           <Route
             path="/userpage"
@@ -189,6 +188,7 @@ function App() {
                 userName={userName}
                 handleLogout={handleLogout}
                 onSearch={handleSearch}
+                searchQuery={searchQuery}
               />
             }
           />

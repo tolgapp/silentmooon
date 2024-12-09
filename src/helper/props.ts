@@ -39,6 +39,7 @@ export type UserPageProps = {
   handleLogout: () => Promise<void>;
   onSearch: (search: string) => void;
   userName: string | null;
+  searchQuery: string
 };
 
 export type UserPageCombined = DataItem & UserPageProps;

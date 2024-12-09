@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { randomNum } from "../helper/helperFunctions";
 import { useSpotify } from "../context/SpotifyContext";
+import DetailPage from "./DetailPage"; // Importiere DetailPage
 
 type DataItem = {
   id: string;
@@ -27,10 +28,8 @@ type SimplifiedMeditationData = {
   image: string;
 };
 
-
 const RandomYoga: React.FC<Random> = () => {
-  const { handleTrackUri } =
-  useSpotify();
+  const { handleTrackUri } = useSpotify();
 
   const [yogaVideos, setYogaVideos] = useState<DataItem[]>([]);
   const [meditateData, setMeditateData] = useState<SimplifiedMeditationData[]>([]);
@@ -38,6 +37,13 @@ const RandomYoga: React.FC<Random> = () => {
     playlist: { name: string; uri: string };
     track: { name: string; uri: string };
   } | null>(null);
+
+  const [randomIndex1, setRandomIndex1] = useState<number | null>(null);
+  const [randomMeditateIndex, setRandomMeditateIndex] = useState<number | null>(null);
+
+  const [showDetail, setShowDetail] = useState(false);
+  const [selectedVideo, setSelectedVideo] = useState<DataItem | null>(null);
+
   const backendUrl = "http://localhost:5002";
   const accessToken = localStorage.getItem("spotify_token");
 
@@ -49,17 +55,19 @@ const RandomYoga: React.FC<Random> = () => {
       });
 
       if (response.status === 200 && response.data) {
+        console.log("VID", response);
         setYogaVideos(
           response.data.map((video: any) => ({
             ...video,
             url: `${video.videoUrl}`,
             image: `${video.image}`,
+            video: `${video.videoUrl}`,
           }))
         );
       }
     } catch (error) {
       console.error("Error fetching yoga videos:", error);
-    } 
+    }
   };
 
   const fetchMeditateData = async () => {
@@ -68,9 +76,7 @@ const RandomYoga: React.FC<Random> = () => {
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
       });
-  
-      console.log(response);
-  
+
       if (response.status === 200 && response.data) {
         const transformedData: SimplifiedMeditationData[] = response.data.map(
           (item: any) => ({
@@ -79,14 +85,13 @@ const RandomYoga: React.FC<Random> = () => {
             image: item.image,
           })
         );
-  
-        setMeditateData(() => transformedData);
+
+        setMeditateData(transformedData);
       }
     } catch (error) {
       console.error("Error fetching meditation data:", error);
     }
   };
-  
 
   const fetchRandomMeditationAudio = async (): Promise<void> => {
     try {
@@ -95,7 +100,6 @@ const RandomYoga: React.FC<Random> = () => {
       });
 
       const data = response.data;
-      console.log("Random Meditation Audio:", data);
       setRandomMeditationAudio(data);
     } catch (error) {
       console.error("Error fetching random meditation audio:", error);
@@ -108,34 +112,58 @@ const RandomYoga: React.FC<Random> = () => {
     fetchRandomMeditationAudio();
   }, []);
 
-  const randomIndex1 = yogaVideos.length > 0 ? randomNum(yogaVideos.length) : 0;
-  const randomVideo1 = yogaVideos[randomIndex1] || {
-    image: "",
-    title: "Loading...",
-    time: "",
+  // Zufallswerte werden gesetzt, nachdem die Daten geladen sind
+  useEffect(() => {
+    if (yogaVideos.length > 0 && randomIndex1 === null) {
+      setRandomIndex1(randomNum(yogaVideos.length));
+    }
+  }, [yogaVideos, randomIndex1]);
+
+  useEffect(() => {
+    if (meditateData.length > 0 && randomMeditateIndex === null) {
+      setRandomMeditateIndex(randomNum(meditateData.length));
+    }
+  }, [meditateData, randomMeditateIndex]);
+
+  const randomVideo1 =
+    randomIndex1 !== null && yogaVideos[randomIndex1]
+      ? yogaVideos[randomIndex1]
+      : { image: "", title: "Loading...", time: "", video: "" };
+
+  const randomMeditateImage =
+    randomMeditateIndex !== null && meditateData[randomMeditateIndex]
+      ? meditateData[randomMeditateIndex]
+      : { image: "", title: "Loading...", time: "" };
+
+  // Funktion um die DetailPage zu zeigen
+  const showDetailPage = (video: DataItem) => {
+    setSelectedVideo(video);
+    setShowDetail(true);
   };
-  
-  const randomMeditateIndex = meditateData.length > 0 ? randomNum(meditateData.length) : 0;
-  const randomMeditateImage = meditateData[randomMeditateIndex] || {
-    image: "",
-    title: "Loading...",
-    time: "",
+
+  // Funktion um die DetailPage zu schließen
+  const hideDetailPage = () => {
+    setShowDetail(false);
+    setSelectedVideo(null);
   };
-  
+
   return (
     <div className="flex gap-10 mt-9 w-full items-center justify-center">
       <div
         className="h-80 w-64 bg-cover bg-center relative rounded-xl overflow-hidden"
         style={{
-          backgroundImage: `url(${backendUrl + randomVideo1.image})`,
+          backgroundImage: randomVideo1.image
+            ? `url(${backendUrl + randomVideo1.image})`
+            : "url('/path/to/placeholder.jpg')",
         }}
+        onClick={() => showDetailPage(randomVideo1)} 
       >
         <h3 className="absolute bottom-32 left-5 text-3xl text-white font-semibold text-balance w-1/2">
           {randomVideo1.title}
         </h3>
         <div className="bottom-3 absolute w-full flex items-center justify-between pr-4 pl-4">
           <p className="text-white text-xl">{randomVideo1.time}</p>
-          <button className="flex justify-center items-center py-4 px-8 bg-red-400 text-white rounded-xl ">
+          <button className="flex justify-center items-center py-4 px-8 bg-red-400 text-white rounded-xl">
             Start
           </button>
         </div>
@@ -143,7 +171,9 @@ const RandomYoga: React.FC<Random> = () => {
       <div
         className="h-80 w-64 bg-cover bg-center relative rounded-xl overflow-hidden"
         style={{
-          backgroundImage: `url(${backendUrl + randomMeditateImage.image})`,
+          backgroundImage: randomMeditateImage.image
+            ? `url(${backendUrl + randomMeditateImage.image})`
+            : "url('/path/to/placeholder.jpg')",
         }}
       >
         <h3 className="absolute bottom-32 left-5 text-3xl text-white font-semibold text-balance w-1/2">
@@ -165,6 +195,16 @@ const RandomYoga: React.FC<Random> = () => {
           </button>
         </div>
       </div>
+      {showDetail && selectedVideo && (
+        <DetailPage
+          title={selectedVideo.title}
+          level={selectedVideo.level}
+          time={selectedVideo.time}
+          description={selectedVideo.description}
+          videoUrl={selectedVideo.url}
+          onClose={hideDetailPage}
+        />
+      )}
     </div>
   );
 };
