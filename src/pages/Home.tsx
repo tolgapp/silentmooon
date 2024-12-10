@@ -67,7 +67,6 @@ const Home: React.FC<HomeProps> = ({ userName, onSearch, searchQuery }) => {
     fetchYogaVideos();
   }, []);
 
-  // Filterlogik für die Suchanfrage
   useEffect(()  => {
     if (searchQuery) {
       const filtered = yogaVideos.filter((video) =>

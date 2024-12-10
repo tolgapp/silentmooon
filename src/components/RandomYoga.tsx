@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { randomNum } from "../helper/helperFunctions";
 import { useSpotify } from "../context/SpotifyContext";
-import DetailPage from "./DetailPage"; // Importiere DetailPage
+import DetailPage from "./DetailPage"; 
 
 type DataItem = {
   id: string;
@@ -29,7 +29,7 @@ type SimplifiedMeditationData = {
 };
 
 const RandomYoga: React.FC<Random> = () => {
-  const { handleTrackUri } = useSpotify();
+  const { handleTrackUri, isSpotifyConnected } = useSpotify();
 
   const [yogaVideos, setYogaVideos] = useState<DataItem[]>([]);
   const [meditateData, setMeditateData] = useState<SimplifiedMeditationData[]>([]);
@@ -55,7 +55,6 @@ const RandomYoga: React.FC<Random> = () => {
       });
 
       if (response.status === 200 && response.data) {
-        console.log("VID", response);
         setYogaVideos(
           response.data.map((video: any) => ({
             ...video,
@@ -85,7 +84,6 @@ const RandomYoga: React.FC<Random> = () => {
             image: item.image,
           })
         );
-
         setMeditateData(transformedData);
       }
     } catch (error) {
@@ -94,16 +92,21 @@ const RandomYoga: React.FC<Random> = () => {
   };
 
   const fetchRandomMeditationAudio = async (): Promise<void> => {
+   if (isSpotifyConnected) {
     try {
       const response = await axios.get("/playlists/meditation/random-audio", {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
 
       const data = response.data;
+      console.log(data)
       setRandomMeditationAudio(data);
     } catch (error) {
       console.error("Error fetching random meditation audio:", error);
     }
+   } else {
+    return;
+   }
   };
 
   useEffect(() => {
@@ -112,7 +115,6 @@ const RandomYoga: React.FC<Random> = () => {
     fetchRandomMeditationAudio();
   }, []);
 
-  // Zufallswerte werden gesetzt, nachdem die Daten geladen sind
   useEffect(() => {
     if (yogaVideos.length > 0 && randomIndex1 === null) {
       setRandomIndex1(randomNum(yogaVideos.length));
@@ -135,13 +137,11 @@ const RandomYoga: React.FC<Random> = () => {
       ? meditateData[randomMeditateIndex]
       : { image: "", title: "Loading...", time: "" };
 
-  // Funktion um die DetailPage zu zeigen
   const showDetailPage = (video: DataItem) => {
     setSelectedVideo(video);
     setShowDetail(true);
   };
 
-  // Funktion um die DetailPage zu schließen
   const hideDetailPage = () => {
     setShowDetail(false);
     setSelectedVideo(null);

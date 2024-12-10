@@ -7,7 +7,7 @@ import axios from "axios";
 import MusicDetail from "../components/MusicDetail";
 import { useSpotify } from "../context/SpotifyContext";
 import placeholder from "/images/placeholder.jpg";
-import PlaylistCard from "../components/PlaylistCard"; // Importiere die neue Komponente
+import PlaylistCard from "../components/PlaylistCard"; 
 
 const Meditation: React.FC<MeditationProps> = ({
   userName,

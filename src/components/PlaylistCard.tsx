@@ -1,4 +1,5 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
 
 type Playlist = {
   id: string;
@@ -24,6 +25,8 @@ const PlaylistCard: React.FC<PlaylistCardProps> = ({
   const imageSrc =
     playlist.image || playlist.images?.[0]?.url || placeholder;
 
+    const {pathname} = useLocation()
+
   return (
     <div
       className="flex flex-col w-64 rounded-2xl shadow-lg"
@@ -38,7 +41,7 @@ const PlaylistCard: React.FC<PlaylistCardProps> = ({
         className="w-full p-4 bg-[#8E9775] text-white rounded-b-lg text-2xl font-semibold hover:bg-[#8E9775]"
         onClick={() => handleViewTracks(playlist.id, playlist.uri)}
       >
-        View Tracks
+        {pathname === "/userpage" ? "Play Playlist" : "View Tracks"}
       </button>
     </div>
   );

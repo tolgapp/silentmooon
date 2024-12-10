@@ -1,6 +1,6 @@
 import Navbar from "../components/Navbar";
 import SilentMoonLogo from "../components/SilentMoonLogo";
-import { containerClassMusic } from "../helper/classNames";
+import { containerClass, containerClassMusic } from "../helper/classNames";
 import { handleLogin } from "../helper/helperFunctions";
 import SpotifyPlayer from "react-spotify-web-playback";
 import { useSpotify } from "../context/SpotifyContext";
@@ -15,7 +15,7 @@ const Music: React.FC<MusicProps> = ({ userName }) => {
     useSpotify();
 
   return (
-    <div className={containerClassMusic}>
+    <div className={`${isSpotifyConnected ? containerClassMusic : containerClass}`}>
       <SilentMoonLogo />
       {isSpotifyConnected ? (
         <div className="mt-20 flex-col items-center w-full">
@@ -38,8 +38,8 @@ const Music: React.FC<MusicProps> = ({ userName }) => {
         </div>
       ) : (
         <div className="min-h-screen flex flex-col items-center justify-center">
-          <h3 className="text-3xl font-semibold text-gray-100 text-center mb-8 w-[85%]">
-            Get the full potential by connecting to Spotify for your playlists.
+<h3 className="text-3xl font-semibold bg-gradient-to-r from-white to-black text-transparent bg-clip-text text-center mb-8 w-[84%]">
+Get the full potential by connecting to Spotify for your playlists.
           </h3>
           <img
             src="/images/spotify-login.png"

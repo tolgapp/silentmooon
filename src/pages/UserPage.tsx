@@ -23,7 +23,11 @@ const UserPage: React.FC<UserPageCombined> = ({
   onSearch,
   searchQuery,
 }) => {
-  const { handleTrackUri } = useSpotify();
+  const {
+    handleTrackUri,
+    isSpotifyConnected,
+    handleLogout: disconnectSpotify,
+  } = useSpotify();
   const [value, setValue] = useState<string>("12:00");
   const [userValues, setUserValues] = useState<UserValues>({
     time: "",
@@ -65,7 +69,6 @@ const UserPage: React.FC<UserPageCombined> = ({
     }
   };
 
-  // Filter Videos and Audio Guides by searchQuery
   useEffect(() => {
     if (searchQuery) {
       const lowercasedQuery = searchQuery.toLowerCase();
@@ -183,8 +186,12 @@ const UserPage: React.FC<UserPageCombined> = ({
                 />
               </div>
             ))
+          ) : isSpotifyConnected ? (
+            <p className="text-gray-500 text-2xl">No audio guides found.</p>
           ) : (
-            <p className="text-gray-500 text-xl">No audio guides found.</p>
+            <p className="text-gray-500 text-2xl">
+              Connect with Spotify to see your favorites
+            </p>
           )}
         </div>
       </section>
