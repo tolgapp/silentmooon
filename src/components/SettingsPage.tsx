@@ -14,17 +14,19 @@ type UserValues = {
 
 type SettingsPageProps = {
   toggleDay: (dayId: number) => void;
+  setTime: React.Dispatch<React.SetStateAction<string>>; 
+  saveSettings: (days: number[], time: string) => Promise<void>
   selectedDays: number[];
+  time: string;
 };
 
-const SettingsPage: React.FC<SettingsPageProps> = ({selectedDays, toggleDay}) => {
-  const [value, setValue] = useState<string>("17:00");
+const SettingsPage: React.FC<SettingsPageProps> = ({ selectedDays, toggleDay, time }) => {
+  const [value, setValue] = useState<string>(time);
   const [userValues, setUserValues] = useState<UserValues>({
-    time: "",
+    time: time,
     days: [],
   });
   const navigate = useNavigate();
-
 
   const onChange = (timeValue: string) => {
     setValue(timeValue);
@@ -35,36 +37,30 @@ const SettingsPage: React.FC<SettingsPageProps> = ({selectedDays, toggleDay}) =>
   };
 
   useEffect(() => {
-
     setUserValues((prev) => ({
       ...prev,
       days: selectedDays,
     }));
   }, [selectedDays]);
 
-
   const onSave = async () => {
-
     try {
       if (selectedDays.length === 0) {
         throw new Error("Please select at least one day");
       }
 
       const response = await axios.post(
-        `/settings`,
-        userValues, 
+        "/settings",
+        userValues,
         {
-          withCredentials: true, 
+          withCredentials: true,
           headers: {
             "Content-Type": "application/json",
           },
         }
       );
 
-    if (response.data.user.hasCompletedSettings) {
-      navigate("/home")
-    }
-      if (response.status === 201) {
+      if (response.data.user?.hasCompletedSettings || response.status === 201) {
         navigate("/home");
       }
     } catch (error: unknown) {
@@ -105,7 +101,9 @@ const SettingsPage: React.FC<SettingsPageProps> = ({selectedDays, toggleDay}) =>
       <DayPicker toggleDay={toggleDay} selectedDays={selectedDays} />
       <div className="button-container w-full text-center mt-24">
         <Button text="SAVE" type="submit" onClick={onSave} />
-       <Link to={"/home"}> <button className="text-red-400 pt-8 text-2xl">NO THANKS</button></Link>
+        <Link to="/home">
+          <button className="text-red-400 pt-8 text-2xl">NO THANKS</button>
+        </Link>
       </div>
     </div>
   );

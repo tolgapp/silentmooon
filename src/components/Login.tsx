@@ -11,11 +11,10 @@ type LoginFormData = {
 };
 
 type LoginProps = {
-  setUserId: (value: string) => void;
   setIsLoggedIn: (value: boolean) => void;
 };
 
-const Login: React.FC<LoginProps> = ({ setIsLoggedIn, setUserId }) => {
+const Login: React.FC<LoginProps> = ({ setIsLoggedIn }) => {
   const [formData, setFormData] = useState<LoginFormData>({
     email: "",
     password: "",
@@ -47,7 +46,6 @@ const Login: React.FC<LoginProps> = ({ setIsLoggedIn, setUserId }) => {
         const { user } = response.data;
   
         localStorage.setItem("userId", user.id);
-  
         setIsLoggedIn(true);
   
         if (user.hasCompletedSettings) {

@@ -70,7 +70,7 @@ const Home: React.FC<HomeProps> = ({ userName, onSearch, searchQuery }) => {
   useEffect(()  => {
     if (searchQuery) {
       const filtered = yogaVideos.filter((video) =>
-        video.title.toLowerCase().includes(searchQuery.toLowerCase())
+        video.title?.toLowerCase().includes(searchQuery.toLowerCase())
       );
       setFilteredVideos(filtered);
     } else {

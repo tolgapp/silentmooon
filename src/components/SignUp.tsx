@@ -13,7 +13,7 @@ type FormData = {
 };
 
 const SignUp: React.FC = () => {
-  const VITE_API_URL = import.meta.env.VITE_API_URL;
+  // const VITE_API_URL = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
   const [formData, setFormData] = useState<FormData>({
     name: "",

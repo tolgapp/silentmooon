@@ -3,20 +3,7 @@ import axios from "axios";
 import { randomNum } from "../helper/helperFunctions";
 import { useSpotify } from "../context/SpotifyContext";
 import DetailPage from "./DetailPage"; 
-
-type DataItem = {
-  id: string;
-  name?: string;
-  type: "video" | "audio";
-  url?: string;
-  videoUrl?: string;
-  category: "yoga" | "meditation" | "music";
-  image: string;
-  title: string;
-  level: string;
-  time: string;
-  description: string;
-};
+import { DataItem } from "../helper/props";
 
 type Random = {
   data?: DataItem[];
@@ -40,7 +27,6 @@ const RandomYoga: React.FC<Random> = () => {
 
   const [randomIndex1, setRandomIndex1] = useState<number | null>(null);
   const [randomMeditateIndex, setRandomMeditateIndex] = useState<number | null>(null);
-
   const [showDetail, setShowDetail] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState<DataItem | null>(null);
 

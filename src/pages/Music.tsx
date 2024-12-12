@@ -22,10 +22,9 @@ const Music: React.FC<MusicProps> = ({ userName }) => {
           <SpotifyPlayer
             token={spotifyToken}
             uris={[selectedUri]}
-            autoPlayplay={true}
+            autoPlay={true}
             play={true}
             showSaveIcon={false}
-            spotifyIcon={false}
             styles={{
               bgColor: "transparent",
               color: "#4A503D",

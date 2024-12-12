@@ -17,7 +17,6 @@ const Meditation: React.FC<MeditationProps> = ({
   const { isSpotifyConnected, fetchPlaylists, fetchTracks, handleTrackUri } =
     useSpotify();
   const [activeIcon, setActiveIcon] = useState<string | null>(null);
-  const [playlists, setPlaylists] = useState<any[]>([]);
   const [filteredPlaylists, setFilteredPlaylists] = useState<any[]>([]);
   const [selectedPlaylistUri, setSelectedPlaylistUri] = useState<string | null>(
     null
@@ -53,8 +52,6 @@ const Meditation: React.FC<MeditationProps> = ({
           const searchTerm = activeIcon.toLowerCase();
           fetchedPlaylists = await fetchPlaylists(searchTerm);
         }
-
-        setPlaylists(fetchedPlaylists);
 
         if (searchQuery) {
           const lowercasedQuery = searchQuery.toLowerCase();

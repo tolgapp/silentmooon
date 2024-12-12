@@ -5,7 +5,7 @@ import axios from "axios";
 import Navbar from "../components/Navbar";
 import SearchBar from "../components/SearchBar";
 import SilentMoonLogo from "../components/SilentMoonLogo";
-import { UserPageCombined } from "../helper/props";
+import { DataItem, UserPageCombined } from "../helper/props";
 import Recommended from "../components/Recommended";
 import PlaylistCard from "../components/PlaylistCard";
 import { useSpotify } from "../context/SpotifyContext";
@@ -26,11 +26,9 @@ const UserPage: React.FC<UserPageCombined> = ({
   const {
     handleTrackUri,
     isSpotifyConnected,
-    handleLogout: disconnectSpotify,
   } = useSpotify();
-  const [value, setValue] = useState<string>("12:00");
   const [userValues, setUserValues] = useState<UserValues>({
-    time: "",
+    time: "18:30",
     days: [],
   });
   const [favoriteVideos, setFavoriteVideos] = useState<DataItem[]>([]);
@@ -43,7 +41,7 @@ const UserPage: React.FC<UserPageCombined> = ({
   );
   const spotifyToken = localStorage.getItem("spotify_token");
   const userId = localStorage.getItem("userId") || "";
-  const backenURL = import.meta.env.VITE_BACKEND_URL;
+  const backendURL = import.meta.env.VITE_BACKEND_URL;
 
   const fetchFavoriteVideos = async () => {
     try {
@@ -74,12 +72,12 @@ const UserPage: React.FC<UserPageCombined> = ({
       const lowercasedQuery = searchQuery.toLowerCase();
       setFilteredVideos(
         favoriteVideos.filter((video) =>
-          video.title.toLowerCase().includes(lowercasedQuery)
+          video.title?.toLowerCase().includes(lowercasedQuery)
         )
       );
       setFilteredAudioGuides(
         favoriteAudioGuides.filter((audio) =>
-          audio.name.toLowerCase().includes(lowercasedQuery)
+          audio.name?.toLowerCase().includes(lowercasedQuery)
         )
       );
     } else {
@@ -97,7 +95,7 @@ const UserPage: React.FC<UserPageCombined> = ({
     try {
       const response = await axios.put(
         `/settings`,
-        { time: value, days: selectedDays },
+        { time: userValues.time, days: selectedDays },
         {
           withCredentials: true,
           headers: { "Content-Type": "application/json" },
@@ -107,6 +105,7 @@ const UserPage: React.FC<UserPageCombined> = ({
         time: response.data.time,
         days: response.data.days,
       });
+      console.log(userValues)
     } catch (error: unknown) {
       console.error(
         "Error updating settings:",
@@ -147,13 +146,12 @@ const UserPage: React.FC<UserPageCombined> = ({
               <Recommended
                 key={video.id}
                 title={video.title}
-                image={backenURL + video.image}
+                image={backendURL + video.image}
                 level={video.level}
                 time={video.time}
                 description={video.description}
                 videoUrl={video.videoUrl}
                 userId={userId}
-                onClick={() => setContentId(video.videoUrl)}
               />
             ))
           ) : (
@@ -181,7 +179,7 @@ const UserPage: React.FC<UserPageCombined> = ({
                 <PlaylistCard
                   playlist={audio}
                   placeholder="/images/placeholder.jpg"
-                  handleViewTracks={(id, uri) => handleTrackUri(uri)}
+                  handleViewTracks={(uri) => handleTrackUri(uri)}
                   index={index}
                 />
               </div>

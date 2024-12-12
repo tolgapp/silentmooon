@@ -4,10 +4,10 @@ import BackButton from "./BackButton";
 import Favorite from "./Favorite";
 
 type DetailPageProps = {
-  title: string;
-  level: string;
-  time: string;
-  description: string;
+  title?: string | undefined;
+  level?: string | undefined;
+  time?: string | undefined;
+  description?: string | undefined;
   videoUrl?: string;
   onClose: () => void;
 };

@@ -4,7 +4,7 @@ import { MEDI, MUSIC } from "../helper/helperFunctions";
 
 type SpotifyContextType = {
   isSpotifyConnected: boolean;
-  spotifyToken: string | null;
+  spotifyToken: string;
   handleLogout: () => void;
   fetchPlaylists: (q?: string) => Promise<any[]>;
   fetchTracks: (playlistId: string) => Promise<any[]>;
@@ -20,7 +20,7 @@ export const SpotifyProvider: React.FC<{
   pathname: string;
 }> = ({ children, navigate, pathname }) => {
   const [isSpotifyConnected, setIsSpotifyConnected] = useState(false);
-  const [spotifyToken, setSpotifyToken] = useState<string | null>(null);
+  const [spotifyToken, setSpotifyToken] = useState<string>("");
   const [selectedUri, setSelectedUri] = useState(() => {
     return localStorage.getItem("spotifyUri") || "";
   });
@@ -33,12 +33,12 @@ export const SpotifyProvider: React.FC<{
     } else {
       const params = new URLSearchParams(window.location.search);
       const code = params.get("code");
-
+  
       if (code) {
-        fetchSpotifyToken(code, `${pathname === "/meditation" ? MEDI : MUSIC}`) 
+        fetchSpotifyToken(code, `${pathname === "/meditation" ? MEDI : MUSIC}`)
           .then((token) => {
-            setSpotifyToken(token);
-            localStorage.setItem("spotify_token", token);
+            setSpotifyToken(token || ""); 
+            localStorage.setItem("spotify_token", token || "");
             setIsSpotifyConnected(true);
           })
           .catch((error) => {
@@ -47,6 +47,7 @@ export const SpotifyProvider: React.FC<{
       }
     }
   }, []);
+  
 
   const fetchSpotifyToken = async (code: string, redirectUri: string): Promise<string> => {
     try {
@@ -119,7 +120,7 @@ export const SpotifyProvider: React.FC<{
 
   const handleLogout = () => {
     localStorage.removeItem("spotify_token");
-    setSpotifyToken(null);
+    setSpotifyToken("");
     setIsSpotifyConnected(false);
   };
 

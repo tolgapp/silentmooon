@@ -1,6 +1,10 @@
 import { useLocation, useNavigate } from "react-router-dom";
 
-const BackButton = ({onClose}) => {
+type BackButtonProps = {
+  onClose?: () => void;
+}
+
+const BackButton: React.FC<BackButtonProps> = ({onClose}) => {
   const navigate = useNavigate();
   const {pathname} = useLocation()
 
@@ -13,7 +17,6 @@ const BackButton = ({onClose}) => {
       />
     );
   }
-
 
   return (
     <img

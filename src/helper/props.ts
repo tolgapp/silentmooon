@@ -1,15 +1,16 @@
 export type DataItem = {
-  id: string;
-  name?: string;
-  type: "video" | "audio";
-  url?: string;
-  videoUrl?: string;
-  category: "yoga" | "meditation" | "music";
-  image: string;
-  title: string;
-  level: string;
-  time: string;
-  description: string;
+  id?: string | undefined;
+  name?: string | undefined;
+  type?: "video" | "audio" | undefined;
+  url?: string | undefined;
+  videoUrl?: string | undefined;
+  category?: "yoga" | "meditation" | "music" | undefined;
+  image?: string | undefined;
+  title?: string;
+  level?: string | undefined;
+  time?: string;
+  description?: string | undefined;
+  userId?: string | undefined;
 };
 
 export type MeditationProps = {
@@ -39,7 +40,7 @@ export type UserPageProps = {
   handleLogout: () => Promise<void>;
   onSearch: (search: string) => void;
   userName: string | null;
-  searchQuery: string
+  searchQuery: string;
 };
 
 export type UserPageCombined = DataItem & UserPageProps;
