@@ -20,6 +20,7 @@ const DetailPage: React.FC<DetailPageProps> = ({
   videoUrl,
   onClose,
 }) => {
+  const backendURL = import.meta.env.VITE_API_URL
   const [isPlaying, setIsPlaying] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -47,7 +48,7 @@ const DetailPage: React.FC<DetailPageProps> = ({
         <div className="relative mt-48 w-full max-h-80 rounded-lg overflow-hidden">
           <video
             ref={videoRef}
-            src={"http://localhost:5002"+videoUrl}
+            src={backendURL+videoUrl}
             controls={isPlaying}
             className="w-full max-h-full"
             onPlay={() => setIsPlaying(true)}

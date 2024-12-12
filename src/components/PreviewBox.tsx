@@ -22,6 +22,7 @@ const PreviewBox: React.FC<PreviewBoxProps> = ({
   videoUrl,
   userId
 }) => {
+  const backendURL = import.meta.env.VITE_BACKEND_URL;
   const { pathname } = useLocation();
   const [showDetail, setShowDetail] = useState(false);
 
@@ -32,7 +33,7 @@ const PreviewBox: React.FC<PreviewBoxProps> = ({
     return (
       <div
         className="h-48  w-64 bg-cover bg-center relative rounded-xl overflow-hidden"
-        style={{ backgroundImage: `url(${"http://localhost:5002" + image})` }}
+        style={{ backgroundImage: `url(${backendURL + image})` }}
         onClick={showDetailPage}
       >
         <p className="absolute bottom-3 left-2 text-xl font-semibold z-30 text-white px-2 py-1 rounded">{title}</p>

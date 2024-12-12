@@ -18,7 +18,7 @@ const Home: React.FC<HomeProps> = ({ userName, onSearch, searchQuery }) => {
   const [dayMessage, setDayMessage] = useState("");
   const [yogaVideos, setYogaVideos] = useState<DataItem[]>([]);
   const [filteredVideos, setFilteredVideos] = useState<DataItem[]>([]);
-  const backendURL = "http://localhost:5002";
+  const backendURL = import.meta.env.VITE_BACKEND_URL;
 
   const updateGreetingAndMessage = () => {
     const hour = new Date().getHours();

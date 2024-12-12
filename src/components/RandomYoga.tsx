@@ -29,8 +29,7 @@ const RandomYoga: React.FC<Random> = () => {
   const [randomMeditateIndex, setRandomMeditateIndex] = useState<number | null>(null);
   const [showDetail, setShowDetail] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState<DataItem | null>(null);
-
-  const backendUrl = "http://localhost:5002";
+  const backendURL = import.meta.env.VITE_BACKEND_URL;
   const accessToken = localStorage.getItem("spotify_token");
 
   const fetchYogaVideos = async () => {
@@ -139,7 +138,7 @@ const RandomYoga: React.FC<Random> = () => {
         className="h-80 w-64 bg-cover bg-center relative rounded-xl overflow-hidden"
         style={{
           backgroundImage: randomVideo1.image
-            ? `url(${backendUrl + randomVideo1.image})`
+            ? `url(${backendURL + randomVideo1.image})`
             : "url('/path/to/placeholder.jpg')",
         }}
         onClick={() => showDetailPage(randomVideo1)} 
@@ -158,7 +157,7 @@ const RandomYoga: React.FC<Random> = () => {
         className="h-80 w-64 bg-cover bg-center relative rounded-xl overflow-hidden"
         style={{
           backgroundImage: randomMeditateImage.image
-            ? `url(${backendUrl + randomMeditateImage.image})`
+            ? `url(${backendURL + randomMeditateImage.image})`
             : "url('/path/to/placeholder.jpg')",
         }}
       >
