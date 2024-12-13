@@ -43,6 +43,7 @@ function App() {
       try {
         const response = await axios.get("/protected");
         if (response.status === 200) {
+          console.log(isLoggedIn);
           setIsLoggedIn(true);
           const userName = response.data.userName;
           const capitalizedUserName =
@@ -125,79 +126,104 @@ function App() {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center w-full">
+        <h2 className="text-2xl">Loading...</h2>
+      </div>
+    );
   }
 
   return (
     <>
-      <SpotifyProvider navigate={path => (window.location.href = path)} pathname={window.location.pathname}>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route
-          path="/login"
-          element={
-            isLoggedIn ? (
-              <Navigate to="/welcome" replace />
-            ) : (
-              <Login setIsLoggedIn={setIsLoggedIn} />
-            )
-          }
-        />
-        <Route path="/signup" element={<SignUp />} />
-        <Route element={<ProtectedRoute isLoggedIn={isLoggedIn} />}>
+      <SpotifyProvider
+        navigate={(path) => (window.location.href = path)}
+        pathname={window.location.pathname}
+      >
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
           <Route
-            path="/welcome"
-            element={<WelcomePage userName={userName} />}
-          />
-          <Route
-            path="/settings"
+            path="/login"
             element={
-              <SettingsPage
-                selectedDays={selectedDays}
-                toggleDay={(day) =>
-                  setSelectedDays((prev) =>
-                    prev.includes(day)
-                      ? prev.filter((d) => d !== day)
-                      : [...prev, day]
-                  )
-                }
-                time={time}
-                setTime={setTime}
-                saveSettings={saveSettings}
-              />
+              isLoggedIn ? (
+                <Navigate to="/welcome" replace />
+              ) : (
+                <Login setIsLoggedIn={setIsLoggedIn} />
+              )
             }
           />
-          <Route
-            path="/home"
-            element={<Home userName={userName} onSearch={handleSearch} searchQuery={searchQuery}/>}
-          />
-          <Route
-            path="/userpage"
-            element={
-              <UserPage
-                selectedDays={selectedDays}
-                toggleDay={toggleDay}
-                userName={userName}
-                handleLogout={handleLogout}
-                onSearch={handleSearch}
-                searchQuery={searchQuery}
-              />
-            }
-          />
-          <Route
-            path="/yoga"
-            element={<Yoga onSearch={handleSearch} userName={userName} searchQuery={searchQuery}/>}
-          />
-          <Route
-            path="/meditation"
-            element={<Meditation onSearch={handleSearch} userName={userName} searchQuery={searchQuery}/>}
-          />
-          <Route
-            path="/music"
-            element={<Music onSearch={handleSearch} userName={userName} />}
-          />
-        </Route>
-      </Routes>
+          <Route path="/signup" element={<SignUp />} />
+          <Route element={<ProtectedRoute isLoggedIn={isLoggedIn} />}>
+            <Route
+              path="/welcome"
+              element={<WelcomePage userName={userName} />}
+            />
+            <Route
+              path="/settings"
+              element={
+                <SettingsPage
+                  selectedDays={selectedDays}
+                  toggleDay={(day) =>
+                    setSelectedDays((prev) =>
+                      prev.includes(day)
+                        ? prev.filter((d) => d !== day)
+                        : [...prev, day]
+                    )
+                  }
+                  time={time}
+                  setTime={setTime}
+                  saveSettings={saveSettings}
+                />
+              }
+            />
+            <Route
+              path="/home"
+              element={
+                <Home
+                  userName={userName}
+                  onSearch={handleSearch}
+                  searchQuery={searchQuery}
+                />
+              }
+            />
+            <Route
+              path="/userpage"
+              element={
+                <UserPage
+                  selectedDays={selectedDays}
+                  toggleDay={toggleDay}
+                  userName={userName}
+                  handleLogout={handleLogout}
+                  onSearch={handleSearch}
+                  searchQuery={searchQuery}
+                />
+              }
+            />
+            <Route
+              path="/yoga"
+              element={
+                <Yoga
+                  onSearch={handleSearch}
+                  userName={userName}
+                  searchQuery={searchQuery}
+                />
+              }
+            />
+            <Route
+              path="/meditation"
+              element={
+                <Meditation
+                  onSearch={handleSearch}
+                  userName={userName}
+                  searchQuery={searchQuery}
+                />
+              }
+            />
+            <Route
+              path="/music"
+              element={<Music onSearch={handleSearch} userName={userName} />}
+            />
+          </Route>
+        </Routes>
       </SpotifyProvider>
     </>
   );
