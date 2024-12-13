@@ -12,6 +12,7 @@ import Yoga from "./pages/Yoga";
 import Meditation from "./pages/Meditation";
 import Music from "./pages/Music";
 import { SpotifyProvider } from "./context/SpotifyContext";
+import SilentMoonLogo from "./components/SilentMoonLogo";
 
 type ProtectedProps = {
   isLoggedIn: boolean;
@@ -33,8 +34,8 @@ function App() {
   const [userName, setUserName] = useState<string | null>(null);
   const [selectedDays, setSelectedDays] = useState<number[]>([]);
   const [time, setTime] = useState<string>("17:00");
-
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -42,7 +43,6 @@ function App() {
       try {
         const response = await axios.get("/protected");
         if (response.status === 200) {
-          console.log(isLoggedIn);
           setIsLoggedIn(true);
           const userName = response.data.userName;
           const capitalizedUserName =
@@ -54,7 +54,9 @@ function App() {
       } catch (error) {
         setIsLoggedIn(false);
         console.error("Authentication check failed:", error);
-      } 
+      } finally {
+        setLoading(false);
+      }
     };
 
     checkAuthStatus();
@@ -122,6 +124,14 @@ function App() {
     fetchSettings();
   }, []);
 
+  if (loading) {
+    return (
+      <div className="flex max-h-screen items-center justify-center w-full">
+        <SilentMoonLogo />
+        <h2 className="text-2xl">Loading...</h2>
+      </div>
+    );
+  }
 
   return (
     <>
