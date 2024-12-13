@@ -18,7 +18,7 @@ type ProtectedProps = {
 };
 
 axios.defaults.baseURL =
-  import.meta.env.VITE_API_URL || "http://localhost:5002/";
+  import.meta.env.VITE_API_URL || "http://localhost:10000/";
 axios.defaults.withCredentials = true;
 
 const ProtectedRoute: React.FC<ProtectedProps> = ({ isLoggedIn }) => {
@@ -30,7 +30,6 @@ const ProtectedRoute: React.FC<ProtectedProps> = ({ isLoggedIn }) => {
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [userName, setUserName] = useState<string | null>(null);
   const [selectedDays, setSelectedDays] = useState<number[]>([]);
   const [time, setTime] = useState<string>("17:00");
@@ -55,9 +54,7 @@ function App() {
       } catch (error) {
         setIsLoggedIn(false);
         console.error("Authentication check failed:", error);
-      } finally {
-        setLoading(false);
-      }
+      } 
     };
 
     checkAuthStatus();
@@ -125,13 +122,6 @@ function App() {
     fetchSettings();
   }, []);
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center w-full">
-        <h2 className="text-2xl">Loading...</h2>
-      </div>
-    );
-  }
 
   return (
     <>

@@ -28,6 +28,8 @@ const Yoga: React.FC<YogaProps> = ({ userName, onSearch, searchQuery }) => {
   const [contentId, setContentId] = useState<string | null>(null); 
   const [isFavorite, setIsFavorite] = useState<boolean>(false)
   const userId = localStorage.getItem("userId") || "";;
+  const backendURL = import.meta.env.VITE_API_URL
+
 
   const fetchYogaVideos = async () => {
     try {
@@ -124,7 +126,7 @@ const Yoga: React.FC<YogaProps> = ({ userName, onSearch, searchQuery }) => {
               level={video.level}
               time={video.time}
               description={video.description}
-              videoUrl={video.videoUrl}
+              videoUrl={backendURL + video.videoUrl}
               userId={userId}
               onClick={() => setContentId(video.videoUrl)}
             />

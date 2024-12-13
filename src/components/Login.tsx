@@ -44,7 +44,7 @@ const Login: React.FC<LoginProps> = ({ setIsLoggedIn }) => {
   
       if (response.status === 200 && response.data.user) {
         const { user } = response.data;
-        console.log(user, "Logged In!")
+        
         localStorage.setItem("userId", user.id);
         setIsLoggedIn(true);
   

@@ -23,11 +23,12 @@ const CheckFormat: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   if (!isCorrectFormat) {
     return (
-      <div className="flex justify-center items-center h-screen bg-black text-white text-center">
+      <div className="flex flex-col justify-center items-center h-screen bg-black text-white text-center gap-8">
         <h2 className="text-3xl w-[65%] ">
           Unsupported device dimensions. Please use a device with width of 
           <span className="text-3xl text-red-500"> 390PX</span> like the iPhone 12, 13 PRO.
         </h2>
+        <h3 className="text-2xl">Search for "Mobile Simulator" in the Chrome Store.</h3>
       </div>
     );
   }
