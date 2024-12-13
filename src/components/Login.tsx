@@ -54,11 +54,17 @@ const Login: React.FC<LoginProps> = ({ setIsLoggedIn }) => {
           navigate("/settings");
         }
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error("Login error:", error);
-      setError(error.response?.data || "Login failed. Please try again.");
+    
+      if (axios.isAxiosError(error)) {
+        setError(error.response?.data?.message || "Login failed. Please try again.");
+      } else {
+        setError("An unexpected error occurred. Please try again.");
+      }
       setIsLoggedIn(false);
     }
+    
   };
   
 

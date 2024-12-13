@@ -1,8 +1,12 @@
 {
-    "rewrites": [
-      {
-        "source": "/:match*",
-        "destination": "/index.html"
-      }
-    ]
-  }
+  "rewrites": [
+    {
+      "source": "/api/:path*", 
+      "destination": "https://silentmoon-backend.onrender.com/api/:path*"
+    },
+    {
+      "source": "/:match*",
+      "destination": "/index.html"
+    }
+  ]
+}
