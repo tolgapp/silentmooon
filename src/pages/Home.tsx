@@ -18,6 +18,7 @@ const Home: React.FC<HomeProps> = ({ userName, onSearch, searchQuery }) => {
   const [dayMessage, setDayMessage] = useState("");
   const [yogaVideos, setYogaVideos] = useState<DataItem[]>([]);
   const [filteredVideos, setFilteredVideos] = useState<DataItem[]>([]);
+  const [recommendedVideos, setRecommendedVideos] = useState<DataItem[]>([]);
   const backendURL = import.meta.env.VITE_BACKEND_URL;
 
   const updateGreetingAndMessage = () => {
@@ -50,13 +51,15 @@ const Home: React.FC<HomeProps> = ({ userName, onSearch, searchQuery }) => {
       });
 
       if (response.status === 200 && response.data) {
-        setYogaVideos(
-          response.data.map((video: DataItem) => ({
-            ...video,
-            url: `${video.videoUrl}`,
-            image: `${video.image}`,
-          }))
-        );
+        const fetchedVideos = response.data.map((video: DataItem) => ({
+          ...video,
+          url: `${video.videoUrl}`,
+          image: `${video.image}`,
+        }));
+        setYogaVideos(fetchedVideos);
+
+        const shuffled = [...fetchedVideos].sort(() => 0.5 - Math.random());
+        setRecommendedVideos(shuffled.slice(0, 4));
       }
     } catch (error) {
       console.error("Error fetching yoga videos:", error);
@@ -67,7 +70,7 @@ const Home: React.FC<HomeProps> = ({ userName, onSearch, searchQuery }) => {
     fetchYogaVideos();
   }, []);
 
-  useEffect(()  => {
+  useEffect(() => {
     if (searchQuery) {
       const filtered = yogaVideos.filter((video) =>
         video.title?.toLowerCase().includes(searchQuery.toLowerCase())
@@ -78,18 +81,8 @@ const Home: React.FC<HomeProps> = ({ userName, onSearch, searchQuery }) => {
     }
   }, [searchQuery, yogaVideos]);
 
-  const getRandomVideos = (videos: DataItem[], count: number): DataItem[] => {
-    if (videos.length <= count) return videos;
+  const displayedVideos = searchQuery ? filteredVideos : recommendedVideos;
 
-    const shuffled = [...videos].sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, count);
-  };
-
-  const recommendedVideos = searchQuery
-    ? filteredVideos 
-    : getRandomVideos(yogaVideos, 4); 
-
- 
   return (
     <div className="flex flex-col items-center pb-48">
       <SilentMoonLogo />
@@ -106,8 +99,8 @@ const Home: React.FC<HomeProps> = ({ userName, onSearch, searchQuery }) => {
           {searchQuery ? `Results for "${searchQuery}"` : "Recommended yoga for you"}
         </h3>
         <div className="flex overflow-x-auto gap-9 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 px-8">
-          {recommendedVideos.length > 0 ? (
-            recommendedVideos.map((video) => (
+          {displayedVideos.length > 0 ? (
+            displayedVideos.map((video) => (
               <Recommended
                 id={video.id}
                 key={video.id}

@@ -13,6 +13,7 @@ import Meditation from "./pages/Meditation";
 import Music from "./pages/Music";
 import { SpotifyProvider } from "./context/SpotifyContext";
 import SilentMoonLogo from "./components/SilentMoonLogo";
+import NotFound from "./components/NotFound";
 
 type ProtectedProps = {
   isLoggedIn: boolean;
@@ -257,6 +258,7 @@ function App() {
               element={<Music onSearch={handleSearch} userName={userName} />}
             />
           </Route>
+          <Route path='*' element={<NotFound />} />
         </Routes>
       </SpotifyProvider>
     </>
