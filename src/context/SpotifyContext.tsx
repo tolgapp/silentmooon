@@ -108,8 +108,9 @@ export const SpotifyProvider: React.FC<{
   const handleTrackUri = useCallback(
     (uri: string) => {
       localStorage.setItem("spotifyUri", uri);
+      console.log(uri)
       setSelectedUri(uri);
-  
+      
       if (pathname === "/meditation" || pathname === "/home" || pathname === "/userpage") {
         navigate("/music");
       }

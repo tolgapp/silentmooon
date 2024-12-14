@@ -55,7 +55,7 @@ function App() {
         setIsLoggedIn(false);
         console.error("Authentication check failed:", error);
       } finally {
-        setLoading(false);
+        setLoading(true);
       }
     };
 
@@ -126,9 +126,14 @@ function App() {
 
   if (loading) {
     return (
-      <div className="flex max-h-screen items-center justify-center w-full">
+      <div className="flex flex-col max-h-screen items-center justify-center w-full">
         <SilentMoonLogo />
-        <h2 className="text-2xl">Loading...</h2>
+        <h2 className="text-3xl mt-48 text-red-500">Loading...</h2>
+        <h3 className="text-balance text-2xl text-center mt-20">
+          Backend deployed on render and their free tier spins down after 15 min
+          inactivity
+        </h3>
+        <img className="w-[95%] mt-8 rounded-lg" src="/screenshots/render.png" alt="render.com free tier info" />
       </div>
     );
   }

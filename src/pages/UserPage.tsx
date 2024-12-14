@@ -61,7 +61,9 @@ const UserPage: React.FC<UserPageCombined> = ({
         headers: { Authorization: `Bearer ${spotifyToken}` },
         params: { userId },
       });
+      console.log(response.data)
       setFavoriteAudioGuides(response.data || []);
+      console.log(favoriteAudioGuides)
     } catch (error) {
       console.error("Error fetching favorite audio guides:", error);
     }
@@ -179,7 +181,7 @@ const UserPage: React.FC<UserPageCombined> = ({
                 <PlaylistCard
                   playlist={audio}
                   placeholder="/images/placeholder.jpg"
-                  handleViewTracks={(uri) => handleTrackUri(uri)}
+                  handleViewTracks={() => handleTrackUri(audio.uri)}
                   index={index}
                 />
               </div>
