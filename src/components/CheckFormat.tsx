@@ -6,7 +6,7 @@ const CheckFormat: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const checkFormat = () => {
     const width = window.innerWidth;
 
-    if (width === 390 || width === 375) {
+    if (width === 390) {
       setIsCorrectFormat(true);
     } else {
       setIsCorrectFormat(false);
@@ -28,7 +28,7 @@ const CheckFormat: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           Unsupported device dimensions. Please use a device with width of 
           <span className="text-3xl text-red-500"> 390PX</span> like the iPhone 12, 13 PRO.
         </h2>
-        <h3 className="text-2xl">Search for "Mobile Simulator" in the Chrome Store.</h3>
+        <h3 className="text-2xl">Search for "Mobile Simulator" on the Chrome Web Store.</h3>
       </div>
     );
   }
