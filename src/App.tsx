@@ -132,9 +132,9 @@ function App() {
   useEffect(() => {
     const interval = setInterval(() => {
       setIsMedium((prev) => !prev);
-    }, 1500); // Wechsel alle 1 Sekunde
+    }, 1500); 
 
-    return () => clearInterval(interval); // Cleanup beim Unmount
+    return () => clearInterval(interval); 
   }, []);
 
   if (loading) {
@@ -142,8 +142,8 @@ function App() {
       <div className="flex flex-col max-h-screen items-center justify-center w-full">
         <SilentMoonLogo />
         <h2
-          className={`text-3xl ${
-            isMedium ? "" : "text-red-800"
+          className={`text-5xl ${
+            isMedium ? "" : "text-black"
           } mt-60 text-red-500 transition-all duration-500`}
         >
           Loading...
