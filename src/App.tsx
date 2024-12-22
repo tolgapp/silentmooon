@@ -14,6 +14,7 @@ import Music from "./pages/Music";
 import { SpotifyProvider } from "./context/SpotifyContext";
 import NotFound from "./components/NotFound";
 import LoadingScreen from "./components/LoadingScreen";
+import { Analytics } from "@vercel/analytics/react";
 
 type ProtectedProps = {
   isLoggedIn: boolean;
@@ -139,6 +140,8 @@ function App() {
         navigate={(path) => (window.location.href = path)}
         pathname={window.location.pathname}
       >
+                <Analytics />
+
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route
