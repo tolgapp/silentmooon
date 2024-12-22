@@ -57,7 +57,7 @@ function App() {
         setIsLoggedIn(false);
         console.error("Authentication check failed:", error);
       } finally {
-        setLoading(true);
+        setLoading(false);
       }
     };
 

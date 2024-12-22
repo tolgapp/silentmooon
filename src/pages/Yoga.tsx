@@ -116,7 +116,7 @@ const Yoga: React.FC<YogaProps> = ({ userName, onSearch, searchQuery }) => {
         onSearch={onSearch}
       />
       <div className="pr-10 pl-10 w-full pb-48">
-        <div className="flex flex-wrap items-center gap-8 mt-10 transition-all duration-900 ease-in">
+        <div className="flex flex-wrap items-center gap-8 mt-10 transition-all duration-900 ease-in"> 
           {filteredYogaVideos.map((video) => (
             <PreviewBox
               key={video.id}
