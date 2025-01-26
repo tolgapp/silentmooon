@@ -17,21 +17,31 @@ import { Analytics } from "@vercel/analytics/react";
 
 type ProtectedProps = {
   isLoggedIn: boolean;
+  isLoading: boolean;
 };
 
 axios.defaults.baseURL =
   import.meta.env.VITE_API_URL || "http://localhost:10000/";
 axios.defaults.withCredentials = true;
 
-const ProtectedRoute: React.FC<ProtectedProps> = ({ isLoggedIn }) => {
+const ProtectedRoute: React.FC<ProtectedProps> = ({
+  isLoggedIn,
+  isLoading,
+}) => {
+  if (isLoading) {
+    return null; // oder einen Loading-Indikator
+  }
+
   if (!isLoggedIn) {
     return <Navigate to="/login" replace />;
   }
+
   return <Outlet />;
 };
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [userName, setUserName] = useState<string | null>(null);
   const [selectedDays, setSelectedDays] = useState<number[]>([]);
   const [time, setTime] = useState<string>("17:00");
@@ -40,6 +50,7 @@ function App() {
 
   useEffect(() => {
     const checkAuthStatus = async () => {
+      setIsLoading(true);
       try {
         const response = await axios.get("/protected");
         if (response.status === 200) {
@@ -54,7 +65,9 @@ function App() {
       } catch (error) {
         setIsLoggedIn(false);
         console.error("Authentication check failed:", error);
-      } 
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     checkAuthStatus();
@@ -122,8 +135,6 @@ function App() {
     fetchSettings();
   }, []);
 
-
-
   return (
     <>
       <SpotifyProvider
@@ -144,7 +155,12 @@ function App() {
             }
           />
           <Route path="/signup" element={<SignUp />} />
-          <Route element={<ProtectedRoute isLoggedIn={isLoggedIn} />}>
+          <Route
+            element={
+              <ProtectedRoute isLoggedIn={isLoggedIn} isLoading={isLoading} />
+            }
+          >
+            {" "}
             <Route
               path="/welcome"
               element={<WelcomePage userName={userName} />}
