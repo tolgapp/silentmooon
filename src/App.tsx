@@ -13,7 +13,6 @@ import Meditation from "./pages/Meditation";
 import Music from "./pages/Music";
 import { SpotifyProvider } from "./context/SpotifyContext";
 import NotFound from "./components/NotFound";
-import LoadingScreen from "./components/LoadingScreen";
 import { Analytics } from "@vercel/analytics/react";
 
 type ProtectedProps = {
@@ -37,7 +36,6 @@ function App() {
   const [selectedDays, setSelectedDays] = useState<number[]>([]);
   const [time, setTime] = useState<string>("17:00");
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -56,9 +54,7 @@ function App() {
       } catch (error) {
         setIsLoggedIn(false);
         console.error("Authentication check failed:", error);
-      } finally {
-        setLoading(false);
-      }
+      } 
     };
 
     checkAuthStatus();
@@ -126,9 +122,7 @@ function App() {
     fetchSettings();
   }, []);
 
-  if (loading) {
-    return <LoadingScreen />;
-  }
+
 
   return (
     <>
