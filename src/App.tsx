@@ -40,7 +40,6 @@ function App() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
@@ -127,21 +126,17 @@ function App() {
     fetchSettings();
   }, []);
 
-
   if (loading) {
-    return (
-     <LoadingScreen />
-    );
+    return <LoadingScreen />;
   }
-  
+
   return (
     <>
       <SpotifyProvider
         navigate={(path) => (window.location.href = path)}
         pathname={window.location.pathname}
       >
-                <Analytics />
-
+        <Analytics />
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route
@@ -226,7 +221,7 @@ function App() {
               element={<Music onSearch={handleSearch} userName={userName} />}
             />
           </Route>
-          <Route path='*' element={<NotFound />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </SpotifyProvider>
     </>
