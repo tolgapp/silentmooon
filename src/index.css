@@ -1,0 +1,135 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  @font-face {
+    font-family: 'SourceSans';
+    src: url(/src/font/SourceSans3-VariableFont_wght.ttf) format('SourceSans');
+  }
+}
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-size: 10px;
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-down {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.6s ease-out forwards;
+
+}
+
+.animate-slide-down {
+  animation: slide-down 0.7s ease-out forwards;
+}
+
+
+/* SPOTIFY Player Styling */
+._ControlsButtonsRSWP.__1mg82rk {
+  height: 20vh;
+  position: relative;
+}
+.rswp__devices {
+  visibility: hidden;
+}
+.rswp__active._InfoRSWP.__1g7paua {
+  padding-left: 0px;
+}
+.__1g7paua {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+}
+.__1g7paua a img {
+  height: 29rem;
+  width: 29rem;
+  border-radius: 1rem;
+}
+.slider__range {
+  height: 3rem;
+}
+._ContentWrapperRSWP.__1c53jt9 {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 12vh;
+}
+._ContentWrapperRSWP.__1c53jt9 a svg {
+  height: auto;
+  width: 5rem;
+}
+._ContentRSWP.__rxinlq {
+  width: 100%;
+  height: 7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+[data-type="title-artist-wrapper"] {
+  text-align: center;
+}
+[data-type="title-artist-wrapper"] > div > p:first-of-type > span > a {
+  font-size: 3.4rem;
+}
+[data-type="title-artist-wrapper"] > div > p:last-of-type > span > a {
+  font-size: 2rem;
+}
+._VolumeRSWP.__12f71n3 {
+  display: none;
+}
+.rswp__toggle._ControlsButtonRSWP.__3hmsj {
+  width: 40vw;
+}
+.ButtonRSWP.rswp__toggle._ControlsButtonRSWP.__3hmsj svg{
+  width: 6rem;
+  height: 6rem;
+}
+.ButtonRSWP._ControlsButtonRSWP.__3hmsj {
+ display: flex;
+ height: 20rem;
+} 
+.ButtonRSWP._ControlsButtonRSWP.__3hmsj svg {
+  height: 2rem;
+  width: 3rem;
+  color: white;
+} 
+._ControlsButtonRSWP.__3hmsj {
+  background-size: cover;
+  margin: 7px;
+}
+._WrapperRSWP.__1g3et1y {
+  background-image: url('../assets/img/popup-background.svg');
+  background-size: cover;
+ 
+}
+._SliderRSWP.__q14q70 {
+  margin-top: 2rem;
+}
+.rswp__active._InfoRSWP.__1g7paua {
+  border-bottom: none;
+}
+.rswp__active._InfoRSWP.__1g7paua img{
+  margin-bottom: 1rem;
+}
