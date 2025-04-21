@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import Structure from '../components/Structure';
@@ -17,6 +18,34 @@ const Meditation: React.FC<MeditationProps> = ({ userName, onSearch, searchQuery
   const [selectedTracks, setSelectedTracks] = useState<any[]>([]);
   const spotifyToken = localStorage.getItem('spotify_token');
   const userId = localStorage.getItem('userId') || '';
+=======
+import { useEffect, useState } from "react";
+import Navbar from "../components/Navbar";
+import Structure from "../components/Structure";
+import { handleLogin } from "../helper/helperFunctions";
+import { MeditationProps } from "../helper/props";
+import axios from "axios";
+import MusicDetail from "../components/MusicDetail";
+import { useSpotify } from "../context/SpotifyContext";
+import placeholder from "/images/placeholder.jpg";
+import PlaylistCard from "../components/PlaylistCard"; 
+
+const Meditation: React.FC<MeditationProps> = ({
+  userName,
+  onSearch,
+  searchQuery,
+}) => {
+  const { isSpotifyConnected, fetchPlaylists, fetchTracks, handleTrackUri } =
+    useSpotify();
+  const [activeIcon, setActiveIcon] = useState<string | null>(null);
+  const [filteredPlaylists, setFilteredPlaylists] = useState<any[]>([]);
+  const [selectedPlaylistUri, setSelectedPlaylistUri] = useState<string | null>(
+    null
+  );
+  const [selectedTracks, setSelectedTracks] = useState<any[]>([]);
+  const spotifyToken = localStorage.getItem("spotify_token");
+  const userId = localStorage.getItem("userId") || "";
+>>>>>>> 0edfafec2f1f058100147697f41db7ac3431e60c
 
   useEffect(() => {
     const loadPlaylists = async () => {
@@ -24,9 +53,15 @@ const Meditation: React.FC<MeditationProps> = ({ userName, onSearch, searchQuery
         let fetchedPlaylists: any[] = [];
 
         if (!activeIcon) {
+<<<<<<< HEAD
           fetchedPlaylists = await fetchPlaylists('meditate');
         } else if (activeIcon.toLowerCase() === 'favorites') {
           const response = await axios.get('/user/spotify-favorites/details', {
+=======
+          fetchedPlaylists = await fetchPlaylists("meditate");
+        } else if (activeIcon.toLowerCase() === "favorites") {
+          const response = await axios.get("/user/spotify-favorites/details", {
+>>>>>>> 0edfafec2f1f058100147697f41db7ac3431e60c
             headers: { Authorization: `Bearer ${spotifyToken}` },
             params: { userId },
           });
@@ -35,9 +70,17 @@ const Meditation: React.FC<MeditationProps> = ({ userName, onSearch, searchQuery
           } else {
             return [];
           }
+<<<<<<< HEAD
         } else if (activeIcon.toLowerCase() === 'all') {
           const queries = ['anxious', 'sleep', 'child', 'yoga', 'meditate'];
           const allPlaylists = await Promise.all(queries.map(query => fetchPlaylists(query)));
+=======
+        } else if (activeIcon.toLowerCase() === "all") {
+          const queries = ["anxious", "sleep", "child", "yoga", "meditate"];
+          const allPlaylists = await Promise.all(
+            queries.map((query) => fetchPlaylists(query))
+          );
+>>>>>>> 0edfafec2f1f058100147697f41db7ac3431e60c
           fetchedPlaylists = allPlaylists.flat();
         } else {
           const searchTerm = activeIcon.toLowerCase();
@@ -55,7 +98,11 @@ const Meditation: React.FC<MeditationProps> = ({ userName, onSearch, searchQuery
           setFilteredPlaylists(fetchedPlaylists);
         }
       } catch (error) {
+<<<<<<< HEAD
         console.error('Error loading playlists:', error);
+=======
+        console.error("Error loading playlists:", error);
+>>>>>>> 0edfafec2f1f058100147697f41db7ac3431e60c
       }
     };
 
@@ -94,7 +141,11 @@ const Meditation: React.FC<MeditationProps> = ({ userName, onSearch, searchQuery
           {selectedTracks.length > 0 && (
             <MusicDetail
               tracks={selectedTracks}
+<<<<<<< HEAD
               playlistUri={selectedPlaylistUri || ''}
+=======
+              playlistUri={selectedPlaylistUri || ""}
+>>>>>>> 0edfafec2f1f058100147697f41db7ac3431e60c
               handleTrackUri={handleTrackUri}
               userId={userId}
               onClose={() => {

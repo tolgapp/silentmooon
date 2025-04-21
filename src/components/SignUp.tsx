@@ -13,6 +13,10 @@ type FormData = {
 };
 
 const SignUp: React.FC = () => {
+<<<<<<< HEAD
+=======
+  // const VITE_API_URL = import.meta.env.VITE_API_URL;
+>>>>>>> 0edfafec2f1f058100147697f41db7ac3431e60c
   const navigate = useNavigate();
   const [formData, setFormData] = useState<FormData>({
     name: "",
@@ -23,6 +27,10 @@ const SignUp: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 0edfafec2f1f058100147697f41db7ac3431e60c
     setFormData({
       ...formData,
       [name]: value,
@@ -35,7 +43,16 @@ const SignUp: React.FC = () => {
     try {
       const response = await axios.post(
         `/signup`,
+<<<<<<< HEAD
         formData,
+=======
+        {
+          name: formData.name,
+          surname: formData.surname,
+          email: formData.email,
+          password: formData.password,
+        },
+>>>>>>> 0edfafec2f1f058100147697f41db7ac3431e60c
         {
           headers: {
             "Content-Type": "application/json",
@@ -43,6 +60,11 @@ const SignUp: React.FC = () => {
         }
       );
 
+<<<<<<< HEAD
+=======
+
+      // On success redirect to login page
+>>>>>>> 0edfafec2f1f058100147697f41db7ac3431e60c
       if (response.status === 200 || response.status === 201) {
         navigate("/login", {
           state: { message: "Registration successful! Please login." },
@@ -80,31 +102,46 @@ const SignUp: React.FC = () => {
           placeholderName="NAME"
           inputType="text"
           name="name"
+<<<<<<< HEAD
           value={formData.name}
+=======
+>>>>>>> 0edfafec2f1f058100147697f41db7ac3431e60c
           onChange={handleChange}
         />
         <Input
           placeholderName="SURNAME"
           inputType="text"
           name="surname"
+<<<<<<< HEAD
           value={formData.surname}
+=======
+>>>>>>> 0edfafec2f1f058100147697f41db7ac3431e60c
           onChange={handleChange}
         />
         <Input
           placeholderName="EMAIL"
           inputType="email"
           name="email"
+<<<<<<< HEAD
           value={formData.email}
+=======
+>>>>>>> 0edfafec2f1f058100147697f41db7ac3431e60c
           onChange={handleChange}
         />
         <Input
           placeholderName="PASSWORD"
           inputType="password"
           name="password"
+<<<<<<< HEAD
           value={formData.password}
           onChange={handleChange}
         />
         <Button text="REGISTER" type="submit" />
+=======
+          onChange={handleChange}
+        />
+        <Button text="REGISTER" type={"submit"} />
+>>>>>>> 0edfafec2f1f058100147697f41db7ac3431e60c
       </form>
     </div>
   );

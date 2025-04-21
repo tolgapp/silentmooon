@@ -26,6 +26,7 @@ export const SpotifyProvider: React.FC<{
   });
 
   useEffect(() => {
+<<<<<<< HEAD
     const storedToken = localStorage.getItem('spotify_token');
     if (storedToken && storedToken !== spotifyToken) {
       setSpotifyToken(storedToken);
@@ -34,6 +35,8 @@ export const SpotifyProvider: React.FC<{
   }, [spotifyToken]);
 
   useEffect(() => {
+=======
+>>>>>>> 0edfafec2f1f058100147697f41db7ac3431e60c
     const storedToken = localStorage.getItem("spotify_token");
     if (storedToken) {
       setSpotifyToken(storedToken);
@@ -116,11 +119,19 @@ export const SpotifyProvider: React.FC<{
   const handleTrackUri = useCallback(
     (uri: string) => {
       localStorage.setItem("spotifyUri", uri);
+<<<<<<< HEAD
+=======
+      console.log(uri)
+>>>>>>> 0edfafec2f1f058100147697f41db7ac3431e60c
       setSelectedUri(uri);
       
       if (pathname === "/meditation" || pathname === "/home" || pathname === "/userpage") {
         navigate("/music");
       }
+<<<<<<< HEAD
+=======
+      console.log(uri, pathname);
+>>>>>>> 0edfafec2f1f058100147697f41db7ac3431e60c
     },
     [pathname, navigate]
   );
