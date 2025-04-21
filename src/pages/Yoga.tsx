@@ -52,10 +52,6 @@ const Yoga: React.FC<YogaProps> = ({ userName, onSearch, searchQuery }) => {
       const response = await axios.get("/favoritevideos", {
         params: { userId, contentId },
       });
-<<<<<<< HEAD
-=======
-      console.log(isFavorite)
->>>>>>> 0edfafec2f1f058100147697f41db7ac3431e60c
       setIsFavorite(response.data.isFavorite);
     } catch (error) {
       console.error("Error fetching favorite status:", error);

@@ -26,15 +26,8 @@ export const handleLogin = () => {
 
   if (currentPath.includes("/music")) {
     redirectUri = MUSIC;  
-<<<<<<< HEAD
   } else if (currentPath.includes("/meditation")) {
     redirectUri = MEDI;  
-=======
-    console.log(redirectUri)
-  } else if (currentPath.includes("/meditation")) {
-    redirectUri = MEDI;  
-    console.log(redirectUri)
->>>>>>> 0edfafec2f1f058100147697f41db7ac3431e60c
 
   }
 

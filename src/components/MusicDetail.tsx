@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { useSpotify } from "../context/SpotifyContext";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useSpotify } from '../context/SpotifyContext';
 
 type MusicDetailProps = {
   tracks: unknown[];
@@ -17,20 +17,20 @@ const MusicDetail: React.FC<MusicDetailProps> = ({
   onClose,
   userId,
 }) => {
-  const {spotifyToken} = useSpotify()
+  const { spotifyToken } = useSpotify();
   const [isFavorite, setIsFavorite] = useState(false);
-  const contentId = playlistUri.split(":").pop() || playlistUri; 
+  const contentId = playlistUri.split(':').pop() || playlistUri;
 
   useEffect(() => {
     const fetchFavoriteStatus = async () => {
       try {
         const response = await axios.get(`/user/spotify-favorites/status`, {
           params: { userId, contentId },
-          headers: {Authorization: `Bearer ${spotifyToken}`}
+          headers: { Authorization: `Bearer ${spotifyToken}` },
         });
         setIsFavorite(response.data.isFavorite);
       } catch (error) {
-        console.error("Error checking favorite status:", error);
+        console.error('Error checking favorite status:', error);
       }
     };
 
@@ -55,21 +55,21 @@ const MusicDetail: React.FC<MusicDetailProps> = ({
         );
         setIsFavorite(false);
       } else {
-        const playlistName = tracks[0]?.track?.album?.name || "Unknown Playlist";
+        const playlistName = tracks[0]?.track?.album?.name || 'Unknown Playlist';
         if (!playlistName || playlistName.trim() === '') {
           console.warn('Invalid playlist name:', playlistName);
         }
-       if (!isFavorite) {
-         await axios.post('/user/spotify-favorites/add', {
-           userId,
-           contentId,
-           playlistName,
-         });
-       }
+        if (!isFavorite) {
+          await axios.post('/user/spotify-favorites/add', {
+            userId,
+            contentId,
+            playlistName,
+          });
+        }
         setIsFavorite(true);
       }
     } catch (error) {
-      console.error("Error toggling favorites:", error);
+      console.error('Error toggling favorites:', error);
     }
   };
 
@@ -88,7 +88,7 @@ const MusicDetail: React.FC<MusicDetailProps> = ({
             viewBox="0 0 24 24"
             width="30"
             height="30"
-            className={isFavorite ? "fill-red-500" : "fill-gray-500"}
+            className={isFavorite ? 'fill-red-500' : 'fill-gray-500'}
           >
             <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
           </svg>
