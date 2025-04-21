@@ -1,9 +1,9 @@
-import Navbar from "../components/Navbar";
-import SilentMoonLogo from "../components/SilentMoonLogo";
-import { containerClass, containerClassMusic } from "../helper/classNames";
-import { handleLogin } from "../helper/helperFunctions";
-import SpotifyPlayer from "react-spotify-web-playback";
-import { useSpotify } from "../context/SpotifyContext";
+import Navbar from '../components/Navbar';
+import SilentMoonLogo from '../components/SilentMoonLogo';
+import { containerClass, containerClassMusic } from '../helper/classNames';
+import { handleLogin } from '../helper/helperFunctions';
+import SpotifyPlayer from 'react-spotify-web-playback';
+import { useSpotify } from '../context/SpotifyContext';
 
 type MusicProps = {
   userName: string | null;
@@ -11,8 +11,7 @@ type MusicProps = {
 };
 
 const Music: React.FC<MusicProps> = ({ userName }) => {
-  const { isSpotifyConnected, selectedUri, spotifyToken } =
-    useSpotify();
+  const { isSpotifyConnected, selectedUri, spotifyToken } = useSpotify();
 
   return (
     <div className={`${isSpotifyConnected ? containerClassMusic : containerClass}`}>
@@ -26,19 +25,19 @@ const Music: React.FC<MusicProps> = ({ userName }) => {
             play={true}
             showSaveIcon={false}
             styles={{
-              bgColor: "transparent",
-              color: "#4A503D",
-              loaderColor: "#4A503D",
-              sliderColor: "#4A503D",
-              trackArtistColor: "#fff",
-              trackNameColor: "#fff",
+              bgColor: 'transparent',
+              color: '#4A503D',
+              loaderColor: '#4A503D',
+              sliderColor: '#4A503D',
+              trackArtistColor: '#fff',
+              trackNameColor: '#fff',
             }}
           />
         </div>
       ) : (
         <div className="min-h-screen flex flex-col items-center justify-center">
-<h3 className="text-3xl font-semibold bg-gradient-to-r from-white to-black text-transparent bg-clip-text text-center mb-8 w-[84%]">
-Get the full potential by connecting to Spotify for your playlists.
+          <h3 className="text-3xl font-semibold bg-gradient-to-r from-white to-black text-transparent bg-clip-text text-center mb-8 w-[84%]">
+            Get the full potential by connecting to Spotify for your playlists.
           </h3>
           <img
             src="/images/spotify-login.png"

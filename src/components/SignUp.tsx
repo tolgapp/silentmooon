@@ -13,7 +13,6 @@ type FormData = {
 };
 
 const SignUp: React.FC = () => {
-  // const VITE_API_URL = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
   const [formData, setFormData] = useState<FormData>({
     name: "",
@@ -24,7 +23,6 @@ const SignUp: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-
     setFormData({
       ...formData,
       [name]: value,
@@ -37,12 +35,7 @@ const SignUp: React.FC = () => {
     try {
       const response = await axios.post(
         `/signup`,
-        {
-          name: formData.name,
-          surname: formData.surname,
-          email: formData.email,
-          password: formData.password,
-        },
+        formData,
         {
           headers: {
             "Content-Type": "application/json",
@@ -50,8 +43,6 @@ const SignUp: React.FC = () => {
         }
       );
 
-
-      // On success redirect to login page
       if (response.status === 200 || response.status === 201) {
         navigate("/login", {
           state: { message: "Registration successful! Please login." },
@@ -89,27 +80,31 @@ const SignUp: React.FC = () => {
           placeholderName="NAME"
           inputType="text"
           name="name"
+          value={formData.name}
           onChange={handleChange}
         />
         <Input
           placeholderName="SURNAME"
           inputType="text"
           name="surname"
+          value={formData.surname}
           onChange={handleChange}
         />
         <Input
           placeholderName="EMAIL"
           inputType="email"
           name="email"
+          value={formData.email}
           onChange={handleChange}
         />
         <Input
           placeholderName="PASSWORD"
           inputType="password"
           name="password"
+          value={formData.password}
           onChange={handleChange}
         />
-        <Button text="REGISTER" type={"submit"} />
+        <Button text="REGISTER" type="submit" />
       </form>
     </div>
   );

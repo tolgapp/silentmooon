@@ -84,7 +84,6 @@ const RandomYoga: React.FC<Random> = () => {
       });
 
       const data = response.data;
-      console.log(data)
       setRandomMeditationAudio(data);
     } catch (error) {
       console.error("Error fetching random meditation audio:", error);

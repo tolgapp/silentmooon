@@ -1,29 +1,22 @@
-import { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
-import Structure from "../components/Structure";
-import { handleLogin } from "../helper/helperFunctions";
-import { MeditationProps } from "../helper/props";
-import axios from "axios";
-import MusicDetail from "../components/MusicDetail";
-import { useSpotify } from "../context/SpotifyContext";
-import placeholder from "/images/placeholder.jpg";
-import PlaylistCard from "../components/PlaylistCard"; 
+import { useEffect, useState } from 'react';
+import Navbar from '../components/Navbar';
+import Structure from '../components/Structure';
+import { handleLogin } from '../helper/helperFunctions';
+import { MeditationProps } from '../helper/props';
+import axios from 'axios';
+import MusicDetail from '../components/MusicDetail';
+import { useSpotify } from '../context/SpotifyContext';
+import placeholder from '/images/placeholder.jpg';
+import PlaylistCard from '../components/PlaylistCard';
 
-const Meditation: React.FC<MeditationProps> = ({
-  userName,
-  onSearch,
-  searchQuery,
-}) => {
-  const { isSpotifyConnected, fetchPlaylists, fetchTracks, handleTrackUri } =
-    useSpotify();
+const Meditation: React.FC<MeditationProps> = ({ userName, onSearch, searchQuery }) => {
+  const { isSpotifyConnected, fetchPlaylists, fetchTracks, handleTrackUri } = useSpotify();
   const [activeIcon, setActiveIcon] = useState<string | null>(null);
   const [filteredPlaylists, setFilteredPlaylists] = useState<any[]>([]);
-  const [selectedPlaylistUri, setSelectedPlaylistUri] = useState<string | null>(
-    null
-  );
+  const [selectedPlaylistUri, setSelectedPlaylistUri] = useState<string | null>(null);
   const [selectedTracks, setSelectedTracks] = useState<any[]>([]);
-  const spotifyToken = localStorage.getItem("spotify_token");
-  const userId = localStorage.getItem("userId") || "";
+  const spotifyToken = localStorage.getItem('spotify_token');
+  const userId = localStorage.getItem('userId') || '';
 
   useEffect(() => {
     const loadPlaylists = async () => {
@@ -31,9 +24,9 @@ const Meditation: React.FC<MeditationProps> = ({
         let fetchedPlaylists: any[] = [];
 
         if (!activeIcon) {
-          fetchedPlaylists = await fetchPlaylists("meditate");
-        } else if (activeIcon.toLowerCase() === "favorites") {
-          const response = await axios.get("/user/spotify-favorites/details", {
+          fetchedPlaylists = await fetchPlaylists('meditate');
+        } else if (activeIcon.toLowerCase() === 'favorites') {
+          const response = await axios.get('/user/spotify-favorites/details', {
             headers: { Authorization: `Bearer ${spotifyToken}` },
             params: { userId },
           });
@@ -42,11 +35,9 @@ const Meditation: React.FC<MeditationProps> = ({
           } else {
             return [];
           }
-        } else if (activeIcon.toLowerCase() === "all") {
-          const queries = ["anxious", "sleep", "child", "yoga", "meditate"];
-          const allPlaylists = await Promise.all(
-            queries.map((query) => fetchPlaylists(query))
-          );
+        } else if (activeIcon.toLowerCase() === 'all') {
+          const queries = ['anxious', 'sleep', 'child', 'yoga', 'meditate'];
+          const allPlaylists = await Promise.all(queries.map(query => fetchPlaylists(query)));
           fetchedPlaylists = allPlaylists.flat();
         } else {
           const searchTerm = activeIcon.toLowerCase();
@@ -64,7 +55,7 @@ const Meditation: React.FC<MeditationProps> = ({
           setFilteredPlaylists(fetchedPlaylists);
         }
       } catch (error) {
-        console.error("Error loading playlists:", error);
+        console.error('Error loading playlists:', error);
       }
     };
 
@@ -103,7 +94,7 @@ const Meditation: React.FC<MeditationProps> = ({
           {selectedTracks.length > 0 && (
             <MusicDetail
               tracks={selectedTracks}
-              playlistUri={selectedPlaylistUri || ""}
+              playlistUri={selectedPlaylistUri || ''}
               handleTrackUri={handleTrackUri}
               userId={userId}
               onClose={() => {

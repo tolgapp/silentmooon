@@ -61,9 +61,7 @@ const UserPage: React.FC<UserPageCombined> = ({
         headers: { Authorization: `Bearer ${spotifyToken}` },
         params: { userId },
       });
-      console.log(response.data)
       setFavoriteAudioGuides(response.data || []);
-      console.log(favoriteAudioGuides)
     } catch (error) {
       console.error("Error fetching favorite audio guides:", error);
     }
@@ -107,7 +105,6 @@ const UserPage: React.FC<UserPageCombined> = ({
         time: response.data.time,
         days: response.data.days,
       });
-      console.log(userValues)
     } catch (error: unknown) {
       console.error(
         "Error updating settings:",

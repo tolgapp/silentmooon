@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useSpotify } from "../context/SpotifyContext";
 
 type MusicDetailProps = {
-  tracks: any[];
+  tracks: unknown[];
   playlistUri: string;
   handleTrackUri: (uri: string) => void;
   onClose: () => void;
@@ -16,8 +17,8 @@ const MusicDetail: React.FC<MusicDetailProps> = ({
   onClose,
   userId,
 }) => {
+  const {spotifyToken} = useSpotify()
   const [isFavorite, setIsFavorite] = useState(false);
-
   const contentId = playlistUri.split(":").pop() || playlistUri; 
 
   useEffect(() => {
@@ -25,6 +26,7 @@ const MusicDetail: React.FC<MusicDetailProps> = ({
       try {
         const response = await axios.get(`/user/spotify-favorites/status`, {
           params: { userId, contentId },
+          headers: {Authorization: `Bearer ${spotifyToken}`}
         });
         setIsFavorite(response.data.isFavorite);
       } catch (error) {
@@ -38,18 +40,32 @@ const MusicDetail: React.FC<MusicDetailProps> = ({
   const toggleFavorites = async () => {
     try {
       if (isFavorite) {
-        await axios.post("/user/spotify-favorites/remove", {
-          userId,
-          contentId,
-        });
+        await axios.post(
+          '/user/spotify-favorites/remove',
+          {
+            userId,
+            contentId,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${spotifyToken}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        );
         setIsFavorite(false);
       } else {
         const playlistName = tracks[0]?.track?.album?.name || "Unknown Playlist";
-        await axios.post("/user/spotify-favorites/add", {
-          userId,
-          contentId,
-          playlistName,
-        });
+        if (!playlistName || playlistName.trim() === '') {
+          console.warn('Invalid playlist name:', playlistName);
+        }
+       if (!isFavorite) {
+         await axios.post('/user/spotify-favorites/add', {
+           userId,
+           contentId,
+           playlistName,
+         });
+       }
         setIsFavorite(true);
       }
     } catch (error) {
