@@ -6,8 +6,8 @@ type SpotifyContextType = {
   isSpotifyConnected: boolean;
   spotifyToken: string;
   handleLogout: () => void;
-  fetchPlaylists: (q?: string) => Promise<unknown[]>;
-  fetchTracks: (playlistId: string) => Promise<unknown[]>;
+  fetchPlaylists: (q?: string) => Promise<any[]>;
+  fetchTracks: (playlistId: string) => Promise<any[]>;
   handleTrackUri: (uri: string) => void;
   selectedUri: string;
 };

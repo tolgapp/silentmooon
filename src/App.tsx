@@ -57,9 +57,13 @@ function App() {
         } else {
           setIsLoggedIn(false);
         }
-      } catch (error) {
-        setIsLoggedIn(false);
-        console.error('Authentication check failed:', error);
+      } catch (error: any) {
+        if (axios.isAxiosError(error) && error.response?.status === 401) {
+          console.log('User not authenticated (401).');
+          setIsLoggedIn(false);
+        } else {
+          console.error('Unexpected error during auth check:', error);
+        }
       } finally {
         setIsLoading(false);
       }
@@ -124,8 +128,10 @@ function App() {
   };
 
   useEffect(() => {
-    fetchSettings();
-  }, []);
+    if (isLoggedIn) {
+      fetchSettings();
+    }
+  }, [isLoggedIn]);
 
   return (
     <>
