@@ -130,11 +130,7 @@ function App() {
   return (
     <>
       <SpotifyProvider
-<<<<<<< HEAD
         navigate={path => (window.location.href = path)}
-=======
-        navigate={(path) => (window.location.href = path)}
->>>>>>> 0edfafec2f1f058100147697f41db7ac3431e60c
         pathname={window.location.pathname}
       >
         <Analytics />

@@ -6,8 +6,8 @@ type SpotifyContextType = {
   isSpotifyConnected: boolean;
   spotifyToken: string;
   handleLogout: () => void;
-  fetchPlaylists: (q?: string) => Promise<any[]>;
-  fetchTracks: (playlistId: string) => Promise<any[]>;
+  fetchPlaylists: (q?: string) => Promise<unknown[]>;
+  fetchTracks: (playlistId: string) => Promise<unknown[]>;
   handleTrackUri: (uri: string) => void;
   selectedUri: string;
 };
@@ -59,14 +59,14 @@ export const SpotifyProvider: React.FC<{
 
   const fetchSpotifyToken = async (code: string, redirectUri: string): Promise<string> => {
     try {
-      const response = await axios.post("/spotify/token", { code, redirectUri });
+      const response = await axios.post('/spotify/token', { code, redirectUri });
       if (!response.data.access_token) {
-        throw new Error("Access token not found in response.");
+        throw new Error('Access token not found in response.');
       }
       return response.data.access_token;
-    } catch (error: any) {
-      console.error("Error fetching Spotify token:", error);
-      throw new Error("Failed to fetch Spotify token.");
+    } catch (error: unknown) {
+      console.error('Error fetching Spotify token:', error);
+      throw new Error('Failed to fetch Spotify token.');
     }
   };
 
