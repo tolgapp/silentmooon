@@ -44,9 +44,7 @@ function App() {
     if (isLoggedIn && !isLoading && !settingsLoading) {
       if (!hasCompletedSettings) {
         navigate('/settings');
-      } else {
-        navigate('/home');
-      }
+      } 
     }
   }, [isLoggedIn, isLoading, settingsLoading, hasCompletedSettings]);
 

@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useSpotify } from '../context/SpotifyContext';
 
 type MusicDetailProps = {
-  tracks: unknown[];
+  tracks: any;
   playlistUri: string;
   handleTrackUri: (uri: string) => void;
   onClose: () => void;
@@ -56,6 +56,7 @@ const MusicDetail: React.FC<MusicDetailProps> = ({
         setIsFavorite(false);
       } else {
         const playlistName = tracks[0]?.track?.album?.name || 'Unknown Playlist';
+
         if (!playlistName || playlistName.trim() === '') {
           console.warn('Invalid playlist name:', playlistName);
         }
