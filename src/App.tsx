@@ -24,52 +24,78 @@ axios.defaults.baseURL = import.meta.env.VITE_API_URL || 'http://localhost:10000
 axios.defaults.withCredentials = true;
 
 const ProtectedRoute: React.FC<ProtectedProps> = ({ isLoggedIn, isLoading }) => {
-  if (isLoading) {
-    return null;
-  }
-
-  if (!isLoggedIn) {
-    return <Navigate to="/login" replace />;
-  }
-
+  if (isLoading) return null;
+  if (!isLoggedIn) return <Navigate to="/login" replace />;
   return <Outlet />;
 };
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [settingsLoading, setSettingsLoading] = useState(true);
   const [userName, setUserName] = useState<string | null>(null);
+  const [hasCompletedSettings, setHasCompletedSettings] = useState<boolean>(false);
   const [selectedDays, setSelectedDays] = useState<number[]>([]);
   const [time, setTime] = useState<string>('17:00');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const navigate = useNavigate();
 
   useEffect(() => {
-    const checkAuthStatus = async () => {
-      setIsLoading(true);
+    if (isLoggedIn && !isLoading && !settingsLoading) {
+      if (!hasCompletedSettings) {
+        navigate('/settings');
+      } else {
+        navigate('/home');
+      }
+    }
+  }, [isLoggedIn, isLoading, settingsLoading, hasCompletedSettings]);
+
+   useEffect(() => {
+     const checkAuthStatus = async () => {
+       setIsLoading(true);
+       try {
+         const response = await axios.get('/protected');
+         if (response.status === 200) {
+           setIsLoggedIn(true);
+           const userName = response.data.userName;
+           const capitalizedUserName = userName.charAt(0).toUpperCase() + userName.slice(1);
+           setUserName(capitalizedUserName);
+         } else {
+           setIsLoggedIn(false);
+         }
+       } catch (error: any) {
+         if (axios.isAxiosError(error) && error.response?.status === 401) {
+           console.log('User not authenticated (401).');
+           setIsLoggedIn(false);
+         } else {
+           console.error('Unexpected error during auth check:', error);
+         }
+       } finally {
+         setIsLoading(false);
+       }
+     };
+
+     checkAuthStatus();
+   }, [isLoggedIn]);
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      setSettingsLoading(true);
       try {
-        const response = await axios.get('/protected');
-        if (response.status === 200) {
-          setIsLoggedIn(true);
-          const userName = response.data.userName;
-          const capitalizedUserName = userName.charAt(0).toUpperCase() + userName.slice(1);
-          setUserName(capitalizedUserName);
-        } else {
-          setIsLoggedIn(false);
-        }
-      } catch (error: any) {
-        if (axios.isAxiosError(error) && error.response?.status === 401) {
-          console.log('User not authenticated (401).');
-          setIsLoggedIn(false);
-        } else {
-          console.error('Unexpected error during auth check:', error);
-        }
+        const response = await axios.get('/settings', { withCredentials: true });
+        setSelectedDays(response.data.days || []);
+        setTime(response.data.time || '17:00');
+        setHasCompletedSettings(response.data.hasCompletedSettings || false);
+      } catch (error) {
+        console.error('Error fetching settings:', error);
       } finally {
-        setIsLoading(false);
+        setSettingsLoading(false);
       }
     };
 
-    checkAuthStatus();
+    if (isLoggedIn) {
+      fetchSettings();
+    }
   }, [isLoggedIn]);
 
   const toggleDay = (day: number) => {
@@ -87,26 +113,13 @@ function App() {
   const handleLogout = async () => {
     try {
       await axios.post(`/logout`, {}, { withCredentials: true });
-
       setIsLoggedIn(false);
       setUserName(null);
-
       localStorage.clear();
       sessionStorage.clear();
-
       navigate('/');
     } catch (error) {
       console.error('Fehler beim Logout:', error instanceof Error ? error.message : error);
-    }
-  };
-
-  const fetchSettings = async () => {
-    try {
-      const response = await axios.get('/settings', { withCredentials: true });
-      setSelectedDays(response.data.days);
-      setTime(response.data.time);
-    } catch (error) {
-      console.error('Error fetching settings:', error);
     }
   };
 
@@ -127,88 +140,71 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    if (isLoggedIn) {
-      fetchSettings();
-    }
-  }, [isLoggedIn]);
-
   return (
-    <>
-      <SpotifyProvider
-        navigate={path => (window.location.href = path)}
-        pathname={window.location.pathname}
-      >
-        <Analytics />
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
+    <SpotifyProvider
+      navigate={path => (window.location.href = path)}
+      pathname={window.location.pathname}
+    >
+      <Analytics />
+      <Routes>
+        <Route path="/" element={<LandingPage  />} />
+        <Route
+          path="/login"
+          element={
+            isLoggedIn ? (
+              <Navigate to="/welcome" replace />
+            ) : (
+              <Login setIsLoggedIn={setIsLoggedIn} />
+            )
+          }
+        />
+        <Route path="/signup" element={<SignUp />} />
+        <Route element={<ProtectedRoute isLoggedIn={isLoggedIn} isLoading={isLoading} />}>
+          <Route path="/welcome" element={<WelcomePage userName={userName} />} />
           <Route
-            path="/login"
+            path="/settings"
             element={
-              isLoggedIn ? (
-                <Navigate to="/welcome" replace />
-              ) : (
-                <Login setIsLoggedIn={setIsLoggedIn} />
-              )
+              <SettingsPage
+                selectedDays={selectedDays}
+                toggleDay={toggleDay}
+                time={time}
+                setTime={setTime}
+                saveSettings={saveSettings}
+              />
             }
           />
-          <Route path="/signup" element={<SignUp />} />
-          <Route element={<ProtectedRoute isLoggedIn={isLoggedIn} isLoading={isLoading} />}>
-            {' '}
-            <Route path="/welcome" element={<WelcomePage userName={userName} />} />
-            <Route
-              path="/settings"
-              element={
-                <SettingsPage
-                  selectedDays={selectedDays}
-                  toggleDay={day =>
-                    setSelectedDays(prev =>
-                      prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day]
-                    )
-                  }
-                  time={time}
-                  setTime={setTime}
-                  saveSettings={saveSettings}
-                />
-              }
-            />
-            <Route
-              path="/home"
-              element={
-                <Home userName={userName} onSearch={handleSearch} searchQuery={searchQuery} />
-              }
-            />
-            <Route
-              path="/userpage"
-              element={
-                <UserPage
-                  selectedDays={selectedDays}
-                  toggleDay={toggleDay}
-                  userName={userName}
-                  handleLogout={handleLogout}
-                  onSearch={handleSearch}
-                  searchQuery={searchQuery}
-                />
-              }
-            />
-            <Route
-              path="/yoga"
-              element={
-                <Yoga onSearch={handleSearch} userName={userName} searchQuery={searchQuery} />
-              }
-            />
-            <Route
-              path="/meditation"
-              element={
-                <Meditation onSearch={handleSearch} userName={userName} searchQuery={searchQuery} />
-              }
-            />
-            <Route path="/music" element={<Music onSearch={handleSearch} userName={userName} />} />
-          </Route>
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </SpotifyProvider>
-    </>
+          <Route
+            path="/home"
+            element={<Home userName={userName} onSearch={handleSearch} searchQuery={searchQuery} />}
+          />
+          <Route
+            path="/userpage"
+            element={
+              <UserPage
+                selectedDays={selectedDays}
+                toggleDay={toggleDay}
+                userName={userName}
+                handleLogout={handleLogout}
+                onSearch={handleSearch}
+                searchQuery={searchQuery}
+              />
+            }
+          />
+          <Route
+            path="/yoga"
+            element={<Yoga userName={userName} onSearch={handleSearch} searchQuery={searchQuery} />}
+          />
+          <Route
+            path="/meditation"
+            element={
+              <Meditation userName={userName} onSearch={handleSearch} searchQuery={searchQuery} />
+            }
+          />
+          <Route path="/music" element={<Music userName={userName} onSearch={handleSearch} />} />
+        </Route>
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </SpotifyProvider>
   );
 }
 
