@@ -14,7 +14,7 @@ const Favorite: React.FC<FavoriteProps> = ({contentId}) => {
 
     const fetchFavoriteStatus = async () => {
       try {
-        const response = await axios.get("/favoritevideos", {
+        const response = await axios.get("/checkFavoriteStatus", {
           params: { userId, contentId },
         });
 

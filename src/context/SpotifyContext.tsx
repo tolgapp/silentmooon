@@ -41,7 +41,9 @@ export const SpotifyProvider: React.FC<{
     } else {
       const params = new URLSearchParams(window.location.search);
       const code = params.get("code");
-  
+      console.log("CODE", code);
+      console.log("PATHNAME", pathname);
+      console.log("REDIRECT URI", `${pathname === "/meditation" ? MEDI : MUSIC}`);
       if (code) {
         fetchSpotifyToken(code, `${pathname === "/meditation" ? MEDI : MUSIC}`)
           .then((token) => {

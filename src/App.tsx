@@ -20,7 +20,7 @@ type ProtectedProps = {
   isLoading: boolean;
 };
 
-axios.defaults.baseURL = import.meta.env.VITE_API_URL || 'http://localhost:10000/';
+axios.defaults.baseURL = import.meta.env.VITE_API_URL;
 axios.defaults.withCredentials = true;
 
 const ProtectedRoute: React.FC<ProtectedProps> = ({ isLoggedIn, isLoading }) => {

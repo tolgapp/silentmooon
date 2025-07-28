@@ -35,7 +35,7 @@ const Music: React.FC<MusicProps> = ({ userName }) => {
           />
         </div>
       ) : (
-        <div className="min-h-screen flex flex-col items-center justify-center">
+        <div className="h-screen flex flex-col items-center justify-center">
           <h3 className="text-3xl font-semibold bg-gradient-to-r from-white to-black text-transparent bg-clip-text text-center mb-8 w-[84%]">
             Get the full potential by connecting to Spotify for your playlists.
           </h3>
