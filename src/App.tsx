@@ -108,18 +108,24 @@ function App() {
     setSearchQuery(query);
   };
 
-  const handleLogout = async () => {
-    try {
-      await axios.post(`/logout`, {}, { withCredentials: true });
-      setIsLoggedIn(false);
-      setUserName(null);
-      localStorage.clear();
-      sessionStorage.clear();
-      navigate('/');
-    } catch (error) {
-      console.error('Fehler beim Logout:', error instanceof Error ? error.message : error);
-    }
-  };
+const handleLogout = async () => {
+  try {
+    await axios.post(`/logout`, {}, { withCredentials: true });
+
+    setIsLoggedIn(false);
+    setUserName(null);
+    localStorage.clear();
+    sessionStorage.clear();
+
+    window.location.href = `https://accounts.spotify.com/en/logout?continue=${encodeURIComponent(
+      window.location.origin
+    )}`;
+
+  } catch (error) {
+    console.error('Fehler beim Logout:', error instanceof Error ? error.message : error);
+  }
+};
+
 
   const saveSettings = async (days: number[], time: string) => {
     try {
