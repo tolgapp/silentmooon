@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from 'react-router-dom';
 
 type BackButtonProps = {
   onClose?: () => void;
@@ -8,7 +8,7 @@ const BackButton: React.FC<BackButtonProps> = ({ onClose }) => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
-  const knownRoutes = ["/yoga", "/meditation", "/home", "/userpage"];
+  const knownRoutes = ['/yoga', '/meditation', '/home', '/userpage'];
 
   const isKnownRoute = knownRoutes.includes(pathname);
 

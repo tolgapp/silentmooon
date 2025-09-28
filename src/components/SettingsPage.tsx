@@ -13,12 +13,7 @@ type SettingsPageProps = {
   time: string;
 };
 
-const SettingsPage: React.FC<SettingsPageProps> = ({
-  selectedDays,
-  toggleDay,
-  time,
-  setTime,
-}) => {
+const SettingsPage: React.FC<SettingsPageProps> = ({ selectedDays, toggleDay, time, setTime }) => {
   const navigate = useNavigate();
 
   const onChange = (timeValue: string) => {

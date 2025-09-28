@@ -1,15 +1,13 @@
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 type ButtonProps = {
   text: string;
-  type?: "submit" | "reset" | "button" | undefined;
+  type?: 'submit' | 'reset' | 'button' | undefined;
   onClick?: () => void;
 };
 
 const Button: React.FC<ButtonProps> = ({ text, type, onClick }) => {
-
-
-  if (type === "submit") {
+  if (type === 'submit') {
     return (
       <button
         className="py-8 text-center rounded-full w-full bg-red-400 text-2xl text-white"
@@ -21,7 +19,7 @@ const Button: React.FC<ButtonProps> = ({ text, type, onClick }) => {
     );
   }
 
-  if (text === "GET STARTED") {
+  if (text === 'GET STARTED') {
     return (
       <Link className="w-full" to={`/settings`}>
         <button
@@ -34,9 +32,8 @@ const Button: React.FC<ButtonProps> = ({ text, type, onClick }) => {
     );
   }
 
-
   return (
-    <Link className="w-full" to={`/${text.replace(" ", "").toLowerCase()}`}>
+    <Link className="w-full" to={`/${text.replace(' ', '').toLowerCase()}`}>
       <button
         className="py-8 text-center rounded-full w-full bg-red-400 text-2xl text-white"
         type={type}

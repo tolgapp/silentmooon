@@ -1,9 +1,9 @@
-import axios from "axios";
-import { useState } from "react";
-import BackButton from "./BackButton";
-import Button from "./Button";
-import Input from "./Input";
-import { useNavigate } from "react-router-dom";
+import axios from 'axios';
+import { useState } from 'react';
+import BackButton from './BackButton';
+import Button from './Button';
+import Input from './Input';
+import { useNavigate } from 'react-router-dom';
 
 type FormData = {
   name: string;
@@ -15,10 +15,10 @@ type FormData = {
 const SignUp: React.FC = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState<FormData>({
-    name: "",
-    surname: "",
-    email: "",
-    password: "",
+    name: '',
+    surname: '',
+    email: '',
+    password: '',
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,33 +33,29 @@ const SignUp: React.FC = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(
-        `/signup`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await axios.post(`/signup`, formData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
       if (response.status === 200 || response.status === 201) {
-        navigate("/login", {
-          state: { message: "Registration successful! Please login." },
+        navigate('/login', {
+          state: { message: 'Registration successful! Please login.' },
         });
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
         if (error.response) {
-          console.error("Server error:", error.response.data);
-          console.error("Status:", error.response.status);
+          console.error('Server error:', error.response.data);
+          console.error('Status:', error.response.status);
         } else if (error.request) {
-          console.error("No response received:", error.request);
+          console.error('No response received:', error.request);
         } else {
-          console.error("Error:", error.message);
+          console.error('Error:', error.message);
         }
       } else {
-        console.error("Unexpected error:", error);
+        console.error('Unexpected error:', error);
       }
     }
   };
@@ -68,9 +64,7 @@ const SignUp: React.FC = () => {
     <div className="bg-[url('/images/motiveBg.jpg')] bg-no-repeat bg-contain min-h-screen flex flex-col items-center justify-center bg-[#FEFCF8] gap-4">
       <BackButton />
       <div className="greeting flex mb-48">
-        <h2 className="text-5xl tracking-wider font-bold text-[#4A503D]">
-          Create your account
-        </h2>
+        <h2 className="text-5xl tracking-wider font-bold text-[#4A503D]">Create your account</h2>
       </div>
       <form
         className="login-data flex flex-col items-center gap-4 w-full pl-6 pr-6"

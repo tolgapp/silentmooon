@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useCallback, useEffect, useState } from "react";
-import axios from "axios";
-import { MEDI, MUSIC } from "../helper/helperFunctions";
+import React, { createContext, useContext, useCallback, useEffect, useState } from 'react';
+import axios from 'axios';
+import { MEDI, MUSIC } from '../helper/helperFunctions';
 
 type SpotifyContextType = {
   isSpotifyConnected: boolean;
@@ -20,9 +20,9 @@ export const SpotifyProvider: React.FC<{
   pathname: string;
 }> = ({ children, navigate, pathname }) => {
   const [isSpotifyConnected, setIsSpotifyConnected] = useState(false);
-  const [spotifyToken, setSpotifyToken] = useState<string>("");
+  const [spotifyToken, setSpotifyToken] = useState<string>('');
   const [selectedUri, setSelectedUri] = useState(() => {
-    return localStorage.getItem("spotifyUri") || "";
+    return localStorage.getItem('spotifyUri') || '';
   });
 
   useEffect(() => {
@@ -34,27 +34,26 @@ export const SpotifyProvider: React.FC<{
   }, [spotifyToken]);
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("spotify_token");
+    const storedToken = localStorage.getItem('spotify_token');
     if (storedToken) {
       setSpotifyToken(storedToken);
       setIsSpotifyConnected(true);
     } else {
       const params = new URLSearchParams(window.location.search);
-      const code = params.get("code");
+      const code = params.get('code');
       if (code) {
-        fetchSpotifyToken(code, `${pathname === "/meditation" ? MEDI : MUSIC}`)
-          .then((token) => {
-            setSpotifyToken(token || ""); 
-            localStorage.setItem("spotify_token", token || "");
+        fetchSpotifyToken(code, `${pathname === '/meditation' ? MEDI : MUSIC}`)
+          .then(token => {
+            setSpotifyToken(token || '');
+            localStorage.setItem('spotify_token', token || '');
             setIsSpotifyConnected(true);
           })
-          .catch((error) => {
-            console.error("Error authenticating with Spotify:", error);
+          .catch(error => {
+            console.error('Error authenticating with Spotify:', error);
           });
       }
     }
   }, []);
-  
 
   const fetchSpotifyToken = async (code: string, redirectUri: string): Promise<string> => {
     try {
@@ -70,29 +69,26 @@ export const SpotifyProvider: React.FC<{
   };
 
   const fetchPlaylists = useCallback(
-    async (q = "meditation") => {
+    async (q = 'meditation') => {
       if (!spotifyToken) {
-        console.warn("No Spotify token found.");
+        console.warn('No Spotify token found.');
         return [];
       }
       try {
-        const response = await axios.get("/spotify/playlists", {
+        const response = await axios.get('/spotify/playlists', {
           headers: { Authorization: `Bearer ${spotifyToken}` },
           params: { q },
         });
 
         if (!response.data || !Array.isArray(response.data.playlists)) {
-          throw new Error("Playlists not found in response.");
+          throw new Error('Playlists not found in response.');
         }
 
         return response.data.playlists.filter(
-          (playlist: any) =>
-            playlist?.images?.length > 0 &&
-            playlist?.name &&
-            playlist?.owner?.id
+          (playlist: any) => playlist?.images?.length > 0 && playlist?.name && playlist?.owner?.id
         );
       } catch (error) {
-        console.error("Error fetching playlists:", error);
+        console.error('Error fetching playlists:', error);
         return [];
       }
     },
@@ -107,26 +103,26 @@ export const SpotifyProvider: React.FC<{
       });
       return response.data.items;
     } catch (error) {
-      console.error("Error fetching tracks:", error);
+      console.error('Error fetching tracks:', error);
       return [];
     }
   };
 
   const handleTrackUri = useCallback(
     (uri: string) => {
-      localStorage.setItem("spotifyUri", uri);
+      localStorage.setItem('spotifyUri', uri);
       setSelectedUri(uri);
-      
-      if (pathname === "/meditation" || pathname === "/home" || pathname === "/userpage") {
-        navigate("/music");
+
+      if (pathname === '/meditation' || pathname === '/home' || pathname === '/userpage') {
+        navigate('/music');
       }
     },
     [pathname, navigate]
   );
 
   const handleLogout = () => {
-    localStorage.removeItem("spotify_token");
-    setSpotifyToken("");
+    localStorage.removeItem('spotify_token');
+    setSpotifyToken('');
     setIsSpotifyConnected(false);
   };
 
@@ -146,7 +142,7 @@ export const SpotifyProvider: React.FC<{
 export const useSpotify = (): SpotifyContextType => {
   const context = useContext(SpotifyContext);
   if (!context) {
-    throw new Error("useSpotify must be used within a SpotifyProvider");
+    throw new Error('useSpotify must be used within a SpotifyProvider');
   }
   return context;
 };

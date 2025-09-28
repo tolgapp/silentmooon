@@ -1,4 +1,4 @@
-import daysData from "../data/daysData.json";
+import daysData from '../data/daysData.json';
 
 type Icons = {
   active: string;
@@ -32,11 +32,7 @@ const DayPicker: React.FC<DayPickerProps> = ({ toggleDay, selectedDays }) => {
           `}
         >
           <img
-            src={
-              selectedDays.includes(day.id)
-                ? day.icons.active
-                : day.icons.inactive
-            }
+            src={selectedDays.includes(day.id) ? day.icons.active : day.icons.inactive}
             alt={day.value}
             className="w-24  h-22 object-contain"
           />

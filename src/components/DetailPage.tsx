@@ -1,7 +1,7 @@
-import { useRef, useState } from "react";
-import SilentMoonLogo from "./SilentMoonLogo";
-import BackButton from "./BackButton";
-import Favorite from "./Favorite";
+import { useRef, useState } from 'react';
+import SilentMoonLogo from './SilentMoonLogo';
+import BackButton from './BackButton';
+import Favorite from './Favorite';
 
 type DetailPageProps = {
   title?: string | undefined;
@@ -20,7 +20,7 @@ const DetailPage: React.FC<DetailPageProps> = ({
   videoUrl,
   onClose,
 }) => {
-  const backendURL = import.meta.env.VITE_API_URL 
+  const backendURL = import.meta.env.VITE_API_URL;
   const [isPlaying, setIsPlaying] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -34,9 +34,9 @@ const DetailPage: React.FC<DetailPageProps> = ({
     <div
       className={`fixed bottom-0 left-0 w-full h-[99.5%] bg-black text-white z-[50] rounded-t-xl 
                  transition-transform transform ${
-                   isClosing ? "animate-slide-down" : "animate-slide-up"
+                   isClosing ? 'animate-slide-down' : 'animate-slide-up'
                  }`}
-      onClick={(e) => e.stopPropagation()}
+      onClick={e => e.stopPropagation()}
       onAnimationEnd={() => isClosing && onClose()}
     >
       <SilentMoonLogo />

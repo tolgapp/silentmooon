@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
-import DayPicker from "../components/DayPicker";
-import Button from "../components/Button";
-import axios from "axios";
-import Navbar from "../components/Navbar";
-import SearchBar from "../components/SearchBar";
-import SilentMoonLogo from "../components/SilentMoonLogo";
-import { DataItem, UserPageCombined } from "../helper/props";
-import Recommended from "../components/Recommended";
-import PlaylistCard from "../components/PlaylistCard";
-import { useSpotify } from "../context/SpotifyContext";
+import { useEffect, useState } from 'react';
+import DayPicker from '../components/DayPicker';
+import Button from '../components/Button';
+import axios from 'axios';
+import Navbar from '../components/Navbar';
+import SearchBar from '../components/SearchBar';
+import SilentMoonLogo from '../components/SilentMoonLogo';
+import { DataItem, UserPageCombined } from '../helper/props';
+import Recommended from '../components/Recommended';
+import PlaylistCard from '../components/PlaylistCard';
+import { useSpotify } from '../context/SpotifyContext';
 
 type UserValues = {
   time: string;
@@ -23,47 +23,40 @@ const UserPage: React.FC<UserPageCombined> = ({
   onSearch,
   searchQuery,
 }) => {
-  const {
-    handleTrackUri,
-    isSpotifyConnected,
-  } = useSpotify();
+  const { handleTrackUri, isSpotifyConnected } = useSpotify();
   const [userValues, setUserValues] = useState<UserValues>({
-    time: "18:30",
+    time: '18:30',
     days: [],
   });
   const [favoriteVideos, setFavoriteVideos] = useState<DataItem[]>([]);
-  const [favoriteAudioGuides, setFavoriteAudioGuides] = useState<DataItem[]>(
-    []
-  );
+  const [favoriteAudioGuides, setFavoriteAudioGuides] = useState<DataItem[]>([]);
   const [filteredVideos, setFilteredVideos] = useState<DataItem[]>([]);
-  const [filteredAudioGuides, setFilteredAudioGuides] = useState<DataItem[]>(
-    []
-  );
-  const spotifyToken = localStorage.getItem("spotify_token");
-  const userId = localStorage.getItem("userId") || "";
+  const [filteredAudioGuides, setFilteredAudioGuides] = useState<DataItem[]>([]);
+  const spotifyToken = localStorage.getItem('spotify_token');
+  const userId = localStorage.getItem('userId') || '';
   const backendURL = import.meta.env.VITE_BACKEND_URL;
 
   const fetchFavoriteVideos = async () => {
     try {
       const response = await axios.get(`/favorites`, {
         withCredentials: true,
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
       });
       setFavoriteVideos(response.data);
     } catch (error) {
-      console.error("Error fetching favorite videos:", error);
+      console.error('Error fetching favorite videos:', error);
     }
   };
 
   const fetchFavoriteAudioGuides = async () => {
     try {
-      const response = await axios.get("/user/spotify-favorites/details", {
+      const response = await axios.get('/user/spotify-favorites/details', {
         headers: { Authorization: `Bearer ${spotifyToken}` },
         params: { userId },
       });
       setFavoriteAudioGuides(response.data || []);
     } catch (error) {
-      console.error("Error fetching favorite audio guides:", error);
+      console.error('Error fetching favorite audio guides:', error);
     }
   };
 
@@ -71,14 +64,10 @@ const UserPage: React.FC<UserPageCombined> = ({
     if (searchQuery) {
       const lowercasedQuery = searchQuery.toLowerCase();
       setFilteredVideos(
-        favoriteVideos.filter((video) =>
-          video.title?.toLowerCase().includes(lowercasedQuery)
-        )
+        favoriteVideos.filter(video => video.title?.toLowerCase().includes(lowercasedQuery))
       );
       setFilteredAudioGuides(
-        favoriteAudioGuides.filter((audio) =>
-          audio.name?.toLowerCase().includes(lowercasedQuery)
-        )
+        favoriteAudioGuides.filter(audio => audio.name?.toLowerCase().includes(lowercasedQuery))
       );
     } else {
       setFilteredVideos(favoriteVideos);
@@ -98,7 +87,7 @@ const UserPage: React.FC<UserPageCombined> = ({
         { time: userValues.time, days: selectedDays },
         {
           withCredentials: true,
-          headers: { "Content-Type": "application/json" },
+          headers: { 'Content-Type': 'application/json' },
         }
       );
       setUserValues({
@@ -106,10 +95,7 @@ const UserPage: React.FC<UserPageCombined> = ({
         days: response.data.days,
       });
     } catch (error: unknown) {
-      console.error(
-        "Error updating settings:",
-        error instanceof Error ? error.message : error
-      );
+      console.error('Error updating settings:', error instanceof Error ? error.message : error);
     }
   };
 
@@ -119,9 +105,7 @@ const UserPage: React.FC<UserPageCombined> = ({
       <div className="flex items-center w-full mt-36 px-8 justify-between">
         <section className="flex items-center">
           <img src="/images/user.png" alt="user image" className="h-16 w-16" />
-          <h3 className="text-5xl font-extrabold pl-8 text-[#4A503D]">
-            {userName}
-          </h3>
+          <h3 className="text-5xl font-extrabold pl-8 text-[#4A503D]">{userName}</h3>
         </section>
         <button
           className="py-4 px-10 bg-red-400 text-white text-2xl rounded-xl"
@@ -137,11 +121,11 @@ const UserPage: React.FC<UserPageCombined> = ({
         </h3>
         <div
           className={`flex overflow-x-auto gap-10 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 px-8 min-h-[200px] ${
-            filteredVideos.length === 0 ? "justify-center items-center" : ""
+            filteredVideos.length === 0 ? 'justify-center items-center' : ''
           }`}
         >
           {filteredVideos.length > 0 ? (
-            filteredVideos.map((video) => (
+            filteredVideos.map(video => (
               <Recommended
                 key={video.id}
                 title={video.title}
@@ -164,17 +148,12 @@ const UserPage: React.FC<UserPageCombined> = ({
         </h3>
         <div
           className={`flex overflow-x-auto gap-10 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 px-8 min-h-[200px] ${
-            filteredAudioGuides.length === 0
-              ? "justify-center items-center"
-              : ""
+            filteredAudioGuides.length === 0 ? 'justify-center items-center' : ''
           }`}
         >
           {filteredAudioGuides.length > 0 ? (
             filteredAudioGuides.map((audio: any, index: number) => (
-              <div
-                key={audio.id || `playlist-${index}`}
-                className="flex-shrink-0"
-              >
+              <div key={audio.id || `playlist-${index}`} className="flex-shrink-0">
                 <PlaylistCard
                   playlist={audio}
                   placeholder="/images/placeholder.jpg"
@@ -186,9 +165,7 @@ const UserPage: React.FC<UserPageCombined> = ({
           ) : isSpotifyConnected ? (
             <p className="text-gray-500 text-2xl">No audio guides found.</p>
           ) : (
-            <p className="text-gray-500 text-2xl">
-              Connect with Spotify to see your favorites
-            </p>
+            <p className="text-gray-500 text-2xl">Connect with Spotify to see your favorites</p>
           )}
         </div>
       </section>

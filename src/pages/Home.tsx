@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
-import Navbar from "../components/Navbar";
-import SilentMoonLogo from "../components/SilentMoonLogo";
-import SearchBar from "../components/SearchBar";
-import RandomYoga from "../components/RandomYoga";
-import axios from "axios";
-import Recommended from "../components/Recommended";
-import { DataItem } from "../helper/props";
+import { useState, useEffect } from 'react';
+import Navbar from '../components/Navbar';
+import SilentMoonLogo from '../components/SilentMoonLogo';
+import SearchBar from '../components/SearchBar';
+import RandomYoga from '../components/RandomYoga';
+import axios from 'axios';
+import Recommended from '../components/Recommended';
+import { DataItem } from '../helper/props';
 
 type HomeProps = {
   userName: string | null;
@@ -14,8 +14,8 @@ type HomeProps = {
 };
 
 const Home: React.FC<HomeProps> = ({ userName, onSearch, searchQuery }) => {
-  const [greeting, setGreeting] = useState("");
-  const [dayMessage, setDayMessage] = useState("");
+  const [greeting, setGreeting] = useState('');
+  const [dayMessage, setDayMessage] = useState('');
   const [yogaVideos, setYogaVideos] = useState<DataItem[]>([]);
   const [filteredVideos, setFilteredVideos] = useState<DataItem[]>([]);
   const [recommendedVideos, setRecommendedVideos] = useState<DataItem[]>([]);
@@ -25,14 +25,14 @@ const Home: React.FC<HomeProps> = ({ userName, onSearch, searchQuery }) => {
     const hour = new Date().getHours();
 
     if (hour >= 5 && hour < 12) {
-      setGreeting("Good Morning");
-      setDayMessage("We hope you have a great start to your day");
+      setGreeting('Good Morning');
+      setDayMessage('We hope you have a great start to your day');
     } else if (hour >= 12 && hour < 18) {
-      setGreeting("Good Afternoon");
+      setGreeting('Good Afternoon');
       setDayMessage("We hope you're having a wonderful day");
     } else {
-      setGreeting("Good Evening");
-      setDayMessage("We hope you had a great day");
+      setGreeting('Good Evening');
+      setDayMessage('We hope you had a great day');
     }
   };
 
@@ -45,9 +45,9 @@ const Home: React.FC<HomeProps> = ({ userName, onSearch, searchQuery }) => {
 
   const fetchYogaVideos = async () => {
     try {
-      const response = await axios.get("/yogaVideos", {
+      const response = await axios.get('/yogaVideos', {
         withCredentials: true,
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
       });
 
       if (response.status === 200 && response.data) {
@@ -62,7 +62,7 @@ const Home: React.FC<HomeProps> = ({ userName, onSearch, searchQuery }) => {
         setRecommendedVideos(shuffled.slice(0, 4));
       }
     } catch (error) {
-      console.error("Error fetching yoga videos:", error);
+      console.error('Error fetching yoga videos:', error);
     }
   };
 
@@ -72,7 +72,7 @@ const Home: React.FC<HomeProps> = ({ userName, onSearch, searchQuery }) => {
 
   useEffect(() => {
     if (searchQuery) {
-      const filtered = yogaVideos.filter((video) =>
+      const filtered = yogaVideos.filter(video =>
         video.title?.toLowerCase().includes(searchQuery.toLowerCase())
       );
       setFilteredVideos(filtered);
@@ -96,11 +96,11 @@ const Home: React.FC<HomeProps> = ({ userName, onSearch, searchQuery }) => {
       <SearchBar onSearch={onSearch} />
       <section className="w-full mt-10">
         <h3 className="text-3xl font-semibold mb-10 mt-4 px-8">
-          {searchQuery ? `Results for "${searchQuery}"` : "Recommended yoga for you"}
+          {searchQuery ? `Results for "${searchQuery}"` : 'Recommended yoga for you'}
         </h3>
         <div className="flex overflow-x-auto gap-9 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 px-8">
           {displayedVideos.length > 0 ? (
-            displayedVideos.map((video) => (
+            displayedVideos.map(video => (
               <Recommended
                 id={video.id}
                 key={video.id}

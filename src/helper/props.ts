@@ -1,10 +1,10 @@
 export type DataItem = {
   id?: string | undefined;
   name?: string | undefined;
-  type?: "video" | "audio" | undefined;
+  type?: 'video' | 'audio' | undefined;
   url?: string | undefined;
   videoUrl?: string | undefined;
-  category?: "yoga" | "meditation" | "music" | undefined;
+  category?: 'yoga' | 'meditation' | 'music' | undefined;
   image?: string | undefined;
   title?: string;
   level?: string | undefined;

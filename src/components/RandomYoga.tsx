@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { randomNum } from "../helper/helperFunctions";
-import { useSpotify } from "../context/SpotifyContext";
-import DetailPage from "./DetailPage"; 
-import { DataItem } from "../helper/props";
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { randomNum } from '../helper/helperFunctions';
+import { useSpotify } from '../context/SpotifyContext';
+import DetailPage from './DetailPage';
+import { DataItem } from '../helper/props';
 
 type Random = {
   data?: DataItem[];
@@ -30,13 +30,13 @@ const RandomYoga: React.FC<Random> = () => {
   const [showDetail, setShowDetail] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState<DataItem | null>(null);
   const backendURL = import.meta.env.VITE_BACKEND_URL;
-  const accessToken = localStorage.getItem("spotify_token");
+  const accessToken = localStorage.getItem('spotify_token');
 
   const fetchYogaVideos = async () => {
     try {
-      const response = await axios.get("/yogaVideos", {
+      const response = await axios.get('/yogaVideos', {
         withCredentials: true,
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
       });
 
       if (response.status === 200 && response.data) {
@@ -50,47 +50,45 @@ const RandomYoga: React.FC<Random> = () => {
         );
       }
     } catch (error) {
-      console.error("Error fetching yoga videos:", error);
+      console.error('Error fetching yoga videos:', error);
     }
   };
 
   const fetchMeditateData = async () => {
     try {
-      const response = await axios.get("/meditation", {
+      const response = await axios.get('/meditation', {
         withCredentials: true,
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
       });
 
       if (response.status === 200 && response.data) {
-        const transformedData: SimplifiedMeditationData[] = response.data.map(
-          (item: any) => ({
-            time: item.time,
-            title: item.title,
-            image: item.image,
-          })
-        );
+        const transformedData: SimplifiedMeditationData[] = response.data.map((item: any) => ({
+          time: item.time,
+          title: item.title,
+          image: item.image,
+        }));
         setMeditateData(transformedData);
       }
     } catch (error) {
-      console.error("Error fetching meditation data:", error);
+      console.error('Error fetching meditation data:', error);
     }
   };
 
   const fetchRandomMeditationAudio = async (): Promise<void> => {
-   if (isSpotifyConnected) {
-    try {
-      const response = await axios.get("/playlists/meditation/random-audio", {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
+    if (isSpotifyConnected) {
+      try {
+        const response = await axios.get('/playlists/meditation/random-audio', {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
 
-      const data = response.data;
-      setRandomMeditationAudio(data);
-    } catch (error) {
-      console.error("Error fetching random meditation audio:", error);
+        const data = response.data;
+        setRandomMeditationAudio(data);
+      } catch (error) {
+        console.error('Error fetching random meditation audio:', error);
+      }
+    } else {
+      return;
     }
-   } else {
-    return;
-   }
   };
 
   useEffect(() => {
@@ -114,12 +112,12 @@ const RandomYoga: React.FC<Random> = () => {
   const randomVideo1 =
     randomIndex1 !== null && yogaVideos[randomIndex1]
       ? yogaVideos[randomIndex1]
-      : { image: "", title: "Loading...", time: "", video: "" };
+      : { image: '', title: 'Loading...', time: '', video: '' };
 
   const randomMeditateImage =
     randomMeditateIndex !== null && meditateData[randomMeditateIndex]
       ? meditateData[randomMeditateIndex]
-      : { image: "", title: "Loading...", time: "" };
+      : { image: '', title: 'Loading...', time: '' };
 
   const showDetailPage = (video: DataItem) => {
     setSelectedVideo(video);
@@ -140,7 +138,7 @@ const RandomYoga: React.FC<Random> = () => {
             ? `url(${backendURL + randomVideo1.image})`
             : "url('/path/to/placeholder.jpg')",
         }}
-        onClick={() => showDetailPage(randomVideo1)} 
+        onClick={() => showDetailPage(randomVideo1)}
       >
         <h3 className="absolute bottom-32 left-5 text-3xl text-white font-semibold text-balance w-1/2">
           {randomVideo1.title}
@@ -171,7 +169,7 @@ const RandomYoga: React.FC<Random> = () => {
               if (randomMeditationAudio?.playlist?.uri) {
                 handleTrackUri(randomMeditationAudio.playlist.uri);
               } else {
-                console.warn("Keine gültige URI verfügbar");
+                console.warn('Keine gültige URI verfügbar');
               }
             }}
           >

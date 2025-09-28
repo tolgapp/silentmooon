@@ -20,9 +20,13 @@ type ProtectedProps = {
   isLoading: boolean;
 };
 
+// Set the base URL for all Axios requests using the environment variable 
 axios.defaults.baseURL = import.meta.env.VITE_API_URL;
+
+// Include cookies (e.g. session tokens) with every request to support authentication
 axios.defaults.withCredentials = true;
 
+// if user is logged in, this route returns the needed routes like /yoga; /userpage etc. 
 const ProtectedRoute: React.FC<ProtectedProps> = ({ isLoggedIn, isLoading }) => {
   if (isLoading) return null;
   if (!isLoggedIn) return <Navigate to="/login" replace />;
@@ -44,37 +48,37 @@ function App() {
     if (isLoggedIn && !isLoading && !settingsLoading) {
       if (!hasCompletedSettings) {
         navigate('/settings');
-      } 
+      }
     }
   }, [isLoggedIn, isLoading, settingsLoading, hasCompletedSettings]);
 
-   useEffect(() => {
-     const checkAuthStatus = async () => {
-       setIsLoading(true);
-       try {
-         const response = await axios.get('/protected');
-         if (response.status === 200) {
-           setIsLoggedIn(true);
-           const userName = response.data.userName;
-           const capitalizedUserName = userName.charAt(0).toUpperCase() + userName.slice(1);
-           setUserName(capitalizedUserName);
-         } else {
-           setIsLoggedIn(false);
-         }
-       } catch (error: any) {
-         if (axios.isAxiosError(error) && error.response?.status === 401) {
-           console.log('User not authenticated (401).');
-           setIsLoggedIn(false);
-         } else {
-           console.error('Unexpected error during auth check:', error);
-         }
-       } finally {
-         setIsLoading(false);
-       }
-     };
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      setIsLoading(true);
+      try {
+        const response = await axios.get('/protected');
+        if (response.status === 200) {
+          setIsLoggedIn(true);
+          const userName = response.data.userName;
+          const capitalizedUserName = userName.charAt(0).toUpperCase() + userName.slice(1);
+          setUserName(capitalizedUserName);
+        } else {
+          setIsLoggedIn(false);
+        }
+      } catch (error: any) {
+        if (axios.isAxiosError(error) && error.response?.status === 401) {
+          console.log('User not authenticated (401).');
+          setIsLoggedIn(false);
+        } else {
+          console.error('Unexpected error during auth check:', error);
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-     checkAuthStatus();
-   }, [isLoggedIn]);
+    checkAuthStatus();
+  }, [isLoggedIn]);
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -108,24 +112,22 @@ function App() {
     setSearchQuery(query);
   };
 
-const handleLogout = async () => {
-  try {
-    await axios.post(`/logout`, {}, { withCredentials: true });
+  const handleLogout = async () => {
+    try {
+      await axios.post(`/logout`, {}, { withCredentials: true });
 
-    setIsLoggedIn(false);
-    setUserName(null);
-    localStorage.clear();
-    sessionStorage.clear();
+      setIsLoggedIn(false);
+      setUserName(null);
+      localStorage.clear();
+      sessionStorage.clear();
 
-    window.location.href = `https://accounts.spotify.com/en/logout?continue=${encodeURIComponent(
-      window.location.origin
-    )}`;
-
-  } catch (error) {
-    console.error('Fehler beim Logout:', error instanceof Error ? error.message : error);
-  }
-};
-
+      window.location.href = `https://accounts.spotify.com/en/logout?continue=${encodeURIComponent(
+        window.location.origin
+      )}`;
+    } catch (error) {
+      console.error('Fehler beim Logout:', error instanceof Error ? error.message : error);
+    }
+  };
 
   const saveSettings = async (days: number[], time: string) => {
     try {
@@ -151,7 +153,7 @@ const handleLogout = async () => {
     >
       <Analytics />
       <Routes>
-        <Route path="/" element={<LandingPage  />} />
+        <Route path="/" element={<LandingPage />} />
         <Route
           path="/login"
           element={
